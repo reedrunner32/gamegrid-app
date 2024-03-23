@@ -39,21 +39,33 @@ class _MainPageState extends State<MainPage> {
         Column(
           children: [
             // Slideshow
-            Container(
-              width: MediaQuery.of(context).size.width,
-              child: Image.asset(
-                'assets/images/helldivers.jpg',
-                height: 350,
-                fit: BoxFit.fitHeight,
-              ),
+            Stack(
+              children: [
+                Image.asset(
+                  'assets/images/helldivers.jpg',
+                  height: MediaQuery.of(context).size.height/2.2,
+                  fit: BoxFit.fitHeight,
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height/2.2 + 1,
+                  decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                  colors: [Color.fromRGBO(25, 28, 33, 1), Colors.transparent],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.center,
+                  ),
+                  ),
+                ),
+              ],
             ),
             // Main page icon
             Container(
               child:
               Image.asset(
                 'assets/images/controllericon.png',
-                height: 150,
-                width: 150,
+                height: 130,
+                width: 180,
               ),
             ),
             // TITLE
@@ -74,7 +86,7 @@ class _MainPageState extends State<MainPage> {
                 style: OutlinedButton.styleFrom(
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                  side: BorderSide(color: Color.fromRGBO(155, 168, 183, 1), width: 0.25),
+                  side: BorderSide(color: Color.fromRGBO(155, 168, 183, 1), width: 0.15),
                 ),
                 onPressed: ()
                 {
@@ -82,7 +94,7 @@ class _MainPageState extends State<MainPage> {
                 },
                 child: Container(
                   alignment: Alignment.centerLeft,
-                  child: Text('Sign in',style: TextStyle(fontSize: 17 ,color: Color.fromRGBO(155, 168, 183, 1), fontWeight: FontWeight.w300),),
+                  child: Text('Sign in',style: TextStyle(fontSize: 17 ,color: Color.fromRGBO(155, 168, 183, 1), fontWeight: FontWeight.w400),),
                 )
               ),
             ),
@@ -95,7 +107,7 @@ class _MainPageState extends State<MainPage> {
                   style: OutlinedButton.styleFrom(
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                    side: BorderSide(color: Color.fromRGBO(155, 168, 183, 1), width: 0.25),
+                    side: BorderSide(color: Color.fromRGBO(155, 168, 183, 1), width: 0.15),
                   ),
                   onPressed: ()
                   {
@@ -103,10 +115,26 @@ class _MainPageState extends State<MainPage> {
                   },
                   child: Container(
                     alignment: Alignment.centerLeft,
-                    child: Text('Create Account',style: TextStyle(fontSize: 17 ,color: Color.fromRGBO(155, 168, 183, 1), fontWeight: FontWeight.w300),),
+                    child: Text('Create Account',style: TextStyle(fontSize: 17 ,color: Color.fromRGBO(155, 168, 183, 1), fontWeight: FontWeight.w400),),
                   )
               ),
             ),
+            Expanded(
+              child: Align(
+                alignment: FractionalOffset(0.5, 0.9),
+                child: RichText(
+                text: TextSpan(
+                  text: 'Artwork from',
+                  style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1), fontSize: 12),
+                  children: [
+                    TextSpan(
+                      text: ' Helldivers 2',
+                      style: TextStyle(fontWeight: FontWeight.w700),
+                    ),
+                  ]
+                ),
+              ),
+            ),)
           ],
         )
     );
