@@ -142,7 +142,7 @@ class _MainPageState extends State<MainPage> {
             Row(
               children: <Widget>[
                 ElevatedButton(
-                  child: Text('Register',style: TextStyle(fontSize: 14 ,color:Colors.black)),
+                  child: Text('Go to Register',style: TextStyle(fontSize: 14 ,color:Colors.black)),
                   onPressed: ()
                   {
                     Navigator.pushNamed(context, '/register');
