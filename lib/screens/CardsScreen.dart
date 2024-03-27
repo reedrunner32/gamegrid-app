@@ -190,7 +190,7 @@ class _MainPageState extends State<MainPage> {
                     child: Text('Logout',style: TextStyle(fontSize: 14 ,color:Colors.black)),
                     onPressed: ()
                     {
-                      Navigator.pushNamed(context, '/login');
+                      Navigator.pushNamed(context, '/home');
                     },
 
                 )
