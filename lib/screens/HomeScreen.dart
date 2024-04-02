@@ -407,7 +407,7 @@ class _MainPageState extends State<MainPage> {
                                           else {
                                             GlobalData.userID = userID;
                                             GlobalData.displayName = jsonObject["displayName"];
-                                            Navigator.pushNamed(context, '/cards');
+                                            Navigator.pushNamed(context, '/content');
                                           }
                                         }
                                       },
@@ -710,7 +710,7 @@ class _MainPageState extends State<MainPage> {
                                                         }
                                                         if( error == '' )
                                                         {
-                                                          newMessageText = "User added";
+                                                          newMessageText = "*Please verify your email before logging in";
                                                           changeText();
                                                         }
                                                       }
