@@ -42,6 +42,7 @@ dev_dependencies:
     sdk: flutter
   flutter_styled_toast: ^2.0.1
   flutter_sliding_up_panel: ^2.1.1
+  elegant_notification: ^2.0.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

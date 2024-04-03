@@ -1,9 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'dart:convert';
 import 'package:gamegrid/utils/getAPI.dart';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
+import 'package:elegant_notification/resources/stacked_options.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -29,7 +30,7 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin{
 
   ///The controller of sliding up panel
   SlidingUpPanelController panelController = SlidingUpPanelController();
@@ -47,13 +48,52 @@ class _MainPageState extends State<MainPage> {
   String usernameR = '';
   String passwordR = '';
 
-  String message = '';
-  String newMessageText = '';
+  void displayResetPassword() {
+    ElegantNotification.info(
+      width: 360,
+      stackedOptions: StackedOptions(
+        key: 'top',
+        type: StackedType.same,
+        itemOffset: Offset(-5, -5),
+      ),
+      position: Alignment.topCenter,
+      animation: AnimationType.fromTop,
+      title: Text('Reset Password'),
+      description: Text('Check your email for instructions'),
+      onDismiss: () {
+        //Message when the notification is dismissed
+      },
+      onNotificationPressed: () {
+        //Message when the notification is pressed
+      },
+      shadow: BoxShadow(
+        color: Colors.blue.withOpacity(0.2),
+        spreadRadius: 2,
+        blurRadius: 5,
+        offset: const Offset(0, 4), // changes position of shadow
+      ),
+    ).show(context);
+  }
 
-  void changeText() {
-    setState(() {
-      message = newMessageText;
-    });
+  void displayLoginError(String err) {
+    ElegantNotification.error(
+      width: 360,
+      stackedOptions: StackedOptions(
+        key: 'top',
+        type: StackedType.same,
+        itemOffset: Offset(-5, -5),
+      ),
+      position: Alignment.topCenter,
+      animation: AnimationType.fromTop,
+      title: Text('Error'),
+      description: Text(err),
+      shadow: BoxShadow(
+        color: Colors.red.withOpacity(0.2),
+        spreadRadius: 2,
+        blurRadius: 5,
+        offset: const Offset(0, 4), // changes position of shadow
+      ),
+    ).show(context);
   }
 
   @override
@@ -63,6 +103,7 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Stack (
       children: [
         SingleChildScrollView(
@@ -74,7 +115,7 @@ class _MainPageState extends State<MainPage> {
             Stack(
               children: [
                 Container(
-                  height: MediaQuery.of(context).size.height/2.1,
+                  height: size.height/2.1,
                   child:
                   Image.asset(
                     'assets/images/helldivers.jpg',
@@ -82,8 +123,8 @@ class _MainPageState extends State<MainPage> {
                   ),
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height/2.1 + 1,
+                  width: size.width,
+                  height: size.height/2.1 + 1,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [background_color, Colors.transparent],
@@ -105,7 +146,7 @@ class _MainPageState extends State<MainPage> {
             ),
             // TITLE
             Container(
-                width: MediaQuery.of(context).size.width,
+                width: size.width,
                 alignment: Alignment.center,
                 child:
               Text(
@@ -115,7 +156,7 @@ class _MainPageState extends State<MainPage> {
             ),
             // Sign in button
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: size.width,
               child:
               OutlinedButton(
                 style: OutlinedButton.styleFrom(
@@ -136,7 +177,7 @@ class _MainPageState extends State<MainPage> {
             ),
             // Register account button
             Container(
-              width: MediaQuery.of(context).size.width,
+              width: size.width,
               margin: EdgeInsets.all(0),
               child:
               OutlinedButton(
@@ -158,7 +199,7 @@ class _MainPageState extends State<MainPage> {
             ),
             // Hint text for slideshow
             Container(
-              height: MediaQuery.of(context).size.height/5.1,
+              height: size.height/5.1,
               child: Align(
                 alignment: Alignment.bottomCenter,
                 child: RichText(
@@ -189,7 +230,7 @@ class _MainPageState extends State<MainPage> {
           enableOnTap: true,
           child:
           Container(
-            width: MediaQuery.of(context).size.width,
+            width: size.width,
             decoration: BoxDecoration(
               color: background_color,
               borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
@@ -205,7 +246,7 @@ class _MainPageState extends State<MainPage> {
                       borderRadius: BorderRadius.circular(15),
                       child: Image.asset(
                         'assets/images/apex.jpg',
-                        height: MediaQuery.of(context).size.height/1.45,
+                        height: size.height/1.45,
                         fit: BoxFit.fitHeight,
                         ),
                       ),
@@ -227,8 +268,8 @@ class _MainPageState extends State<MainPage> {
                         alignment: Alignment.bottomCenter,
                         child:
                         Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height/2.4,
+                          width: size.width,
+                          height: size.height/2.4,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [background_color, Colors.transparent],
@@ -243,7 +284,7 @@ class _MainPageState extends State<MainPage> {
                             children: [
                               Positioned(
                                 top: 50,
-                                left: MediaQuery.of(context).size.width/2 - 40,
+                                left: size.width/2 - 40,
                                 child:
                                 Container(
                                   child:
@@ -255,7 +296,7 @@ class _MainPageState extends State<MainPage> {
                                 ),
                               ),
                               Positioned(
-                                  width: MediaQuery.of(context).size.width,
+                                  width: size.width,
                                 top: 110,
                                   child:
                                   Text(
@@ -266,7 +307,7 @@ class _MainPageState extends State<MainPage> {
                               ),
                               Positioned(
                                 top: 150,
-                                width: MediaQuery.of(context).size.width,
+                                width: size.width,
                                 height: 45,
                                 child:
                                 TextField (
@@ -290,7 +331,7 @@ class _MainPageState extends State<MainPage> {
                               ),
                               Positioned(
                                 top: 194,
-                                width: MediaQuery.of(context).size.width,
+                                width: size.width,
                                 height: 45,
                                 child:
                                 TextField (
@@ -315,7 +356,7 @@ class _MainPageState extends State<MainPage> {
                               ),
                               Positioned(
                                 top: 245,
-                                width: MediaQuery.of(context).size.width,
+                                width: size.width,
                                 child:
                                 Row(
                                 children: [
@@ -351,7 +392,7 @@ class _MainPageState extends State<MainPage> {
                                     child:
                                     ElevatedButton(
                                         onPressed: () {
-
+                                          displayResetPassword();
                                         },
                                         style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -377,32 +418,32 @@ class _MainPageState extends State<MainPage> {
                                     child:
                                     ElevatedButton(
                                       onPressed: () async {
-                                        if(email == '' || password == '') {
-                                          newMessageText = "*Some fields are empty";
-                                          changeText();
+                                        if(email == '') {
+                                          displayLoginError("Please enter an Email.");
+                                        }
+                                        else if(password == '') {
+                                          displayLoginError("Please enter a Password.");
                                         }
                                         else {
-                                          newMessageText = "";
-                                          changeText();
                                           String payload = '{"email":"' + email.trim() +
                                               '","password":"' +
                                               password.trim() + '"}';
                                           var userID;
                                           var jsonObject;
+                                          var error;
                                           try {
                                             String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/login';
                                             String ret = await CardsData.getJson(url, payload);
                                             jsonObject = json.decode(ret);
                                             userID = jsonObject["id"];
+                                            error = jsonObject["error"];
                                           }
                                           catch (e) {
-                                            newMessageText = e.toString();
-                                            changeText();
+                                            displayLoginError(e.toString());
                                             return;
                                           }
                                           if (userID == -1) {
-                                            newMessageText = "Incorrect Login/Password";
-                                            changeText();
+                                            displayLoginError(error);
                                           }
                                           else {
                                             GlobalData.userID = userID;
@@ -433,25 +474,6 @@ class _MainPageState extends State<MainPage> {
                                 ],
                               ),
                               ),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 10),
-                                child:
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: RichText(
-                                    text: TextSpan(
-                                        text: 'Artwork from',
-                                        style: TextStyle(color: text_color, fontSize: 12),
-                                        children: [
-                                          TextSpan(
-                                            text: ' Apex Legends',
-                                            style: TextStyle(fontWeight: FontWeight.w700),
-                                          ),
-                                        ]
-                                    ),
-                                  ),
-                                ),
-                              )
                             ]
                           )
                         )
@@ -474,7 +496,7 @@ class _MainPageState extends State<MainPage> {
           enableOnTap: true,
           child:
           Container(
-            width: MediaQuery.of(context).size.width,
+            width: size.width,
             decoration: BoxDecoration(
               color: background_color,
               borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
@@ -490,7 +512,7 @@ class _MainPageState extends State<MainPage> {
                           borderRadius: BorderRadius.circular(15),
                           child: Image.asset(
                             'assets/images/mw2.jpg',
-                            height: MediaQuery.of(context).size.height/1.45,
+                            height: size.height/1.45,
                             fit: BoxFit.fitHeight,
                           ),
                         ),
@@ -512,8 +534,8 @@ class _MainPageState extends State<MainPage> {
                             alignment: Alignment.bottomCenter,
                             child:
                             Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height/2.1,
+                                width: size.width,
+                                height: size.height/2.1,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                       colors: [background_color, Colors.transparent],
@@ -528,7 +550,7 @@ class _MainPageState extends State<MainPage> {
                                     children: [
                                       Positioned(
                                         top: 50,
-                                        left: MediaQuery.of(context).size.width/2 - 40,
+                                        left: size.width/2 - 40,
                                         child:
                                         Container(
                                           child:
@@ -540,7 +562,7 @@ class _MainPageState extends State<MainPage> {
                                         ),
                                       ),
                                       Positioned(
-                                          width: MediaQuery.of(context).size.width,
+                                          width: size.width,
                                           top: 110,
                                           child:
                                           Text(
@@ -551,7 +573,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       Positioned(
                                         top: 150,
-                                        width: MediaQuery.of(context).size.width,
+                                        width: size.width,
                                         height: 45,
                                         child:
                                         TextField (
@@ -575,7 +597,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       Positioned(
                                         top: 194,
-                                        width: MediaQuery.of(context).size.width,
+                                        width: size.width,
                                         height: 45,
                                         child:
                                         TextField (
@@ -599,7 +621,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       Positioned(
                                         top: 238,
-                                        width: MediaQuery.of(context).size.width,
+                                        width: size.width,
                                         height: 45,
                                         child:
                                         TextField (
@@ -624,7 +646,7 @@ class _MainPageState extends State<MainPage> {
                                       ),
                                       Positioned(
                                         top: 290,
-                                        width: MediaQuery.of(context).size.width,
+                                        width: size.width,
                                         child:
                                         Row(
                                           children: [
@@ -684,13 +706,19 @@ class _MainPageState extends State<MainPage> {
                                                 child:
                                                 ElevatedButton(
                                                     onPressed: () async {
-                                                      if(usernameR == '' || emailR == '' || passwordR == '') {
-                                                        newMessageText = "*Some fields are empty";
-                                                        changeText();
+                                                      if(emailR == '') {
+                                                      displayLoginError(
+                                                      "Please enter an Email.");
+                                                      }
+                                                      else if(usernameR == '') {
+                                                        displayLoginError(
+                                                            "Please enter a Username.");
+                                                      }
+                                                      else if(passwordR == '') {
+                                                        displayLoginError(
+                                                            "Please enter a Password.");
                                                       }
                                                       else {
-                                                        newMessageText = "";
-                                                        changeText();
                                                         String payload = '{"email":"' + emailR.trim() + '","password":"' +
                                                             passwordR.trim() + '","displayName":"' + usernameR.trim() + '"}';
                                                         String error = '';
@@ -704,14 +732,31 @@ class _MainPageState extends State<MainPage> {
                                                         }
                                                         catch(e)
                                                         {
-                                                          newMessageText = e.toString();
-                                                          changeText();
+                                                          displayLoginError(e.toString());
                                                           return;
                                                         }
                                                         if( error == '' )
                                                         {
-                                                          newMessageText = "*Please verify your email before logging in";
-                                                          changeText();
+                                                          ElegantNotification.success(
+                                                            width: 360,
+                                                            stackedOptions: StackedOptions(
+                                                              key: 'top',
+                                                              type: StackedType.same,
+                                                              itemOffset: Offset(-5, -5),
+                                                            ),
+                                                            position: Alignment.topCenter,
+                                                            animation: AnimationType.fromTop,
+                                                            description: Text("Account Successfully Created"),
+                                                            shadow: BoxShadow(
+                                                              color: Colors.green.withOpacity(0.2),
+                                                              spreadRadius: 2,
+                                                              blurRadius: 5,
+                                                              offset: const Offset(0, 4), // changes position of shadow
+                                                            ),
+                                                          ).show(context);
+                                                        }
+                                                        else {
+                                                          displayLoginError(error);
                                                         }
                                                       }
                                                     },
