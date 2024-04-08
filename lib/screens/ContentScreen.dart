@@ -1,6 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:gamegrid/utils/getAPI.dart';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 
 class ContentScreen extends StatefulWidget {
   const ContentScreen({super.key});
@@ -16,12 +19,51 @@ class _ContentScreenState extends State<ContentScreen> {
 
   int currentPageIndex = 0;
 
+  int limit = 15;
+  int offset = 0;
+
+  final _scrollController = ScrollController();
+  final _list = <String>[];
+  String search = '';
+
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_loadMore);
+    _fetchData();
   }
+
+  Future<void> _fetchData() async {
+    String payload = '{"limit":"' + limit.toString() +
+        '","offset":"' + offset.toString() + '","genre":"' + '' + '","search":"' + search + '"}';
+    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/games';
+    final response = await CardsData.getJson(url, payload);
+    var decoded = json.decode(response);
+    List<String> temp = <String>[];
+    for(int i = 0; i<limit; i++){
+      temp.add('https:' + decoded[i]['cover']['url'].replaceAll('t_thumb','t_cover_big'));
+    }
+    setState(() {
+      _list.addAll(temp);
+      offset += limit;
+    });
+  }
+
+  void _loadMore() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      _fetchData();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: background_color,
       bottomNavigationBar: NavigationBar(
@@ -55,6 +97,7 @@ class _ContentScreenState extends State<ContentScreen> {
         Container(
 
         ),
+
         /// Search page
         Container(
           child: Column(
@@ -65,26 +108,49 @@ class _ContentScreenState extends State<ContentScreen> {
                 centerTitle: true,
                 backgroundColor: Colors.black,
                 title:
-                  Column(
+                Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text('Search', style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
                       SizedBox(
-                        height: 45,
+                        height: 35,
                         child:
                         TextField(
                           style: TextStyle(fontSize: 12),
                           decoration: InputDecoration(
                             filled: true,
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15)
+                                borderRadius: BorderRadius.circular(15)
                             ),
                             fillColor: Color.fromRGBO(131, 146, 158, 1),
                             labelText: 'Search',
                           ),
+                          onChanged: (text) {
+                            search = text;
+                            offset = 0;
+                            _list.clear();
+                            _fetchData();
+                          },
                         ),
                       )
                     ]
-                  ),
+                ),
+              ),
+              Expanded(
+                child:
+                GridView.builder(
+                  controller: _scrollController,
+                  itemCount: _list.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, childAspectRatio: 0.8),
+
+                  itemBuilder: (BuildContext context, int index) {
+                    return
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.network(_list[index])
+                      );
+                  },
+                ),
               ),
             ],
           ),
