@@ -746,7 +746,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                             ),
                                                             position: Alignment.topCenter,
                                                             animation: AnimationType.fromTop,
-                                                            description: Text("Account Successfully Created"),
+                                                            title: Text("Account Successfully Created!"),
+                                                            description: Text("Please verify account before logging in."),
                                                             shadow: BoxShadow(
                                                               color: Colors.green.withOpacity(0.2),
                                                               spreadRadius: 2,
