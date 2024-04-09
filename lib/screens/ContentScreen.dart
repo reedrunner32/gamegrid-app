@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:gamegrid/utils/getAPI.dart';
+import 'package:gamegrid/screens/GameScreen.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
+
 
 class ContentScreen extends StatefulWidget {
   const ContentScreen({super.key});
@@ -23,8 +25,12 @@ class _ContentScreenState extends State<ContentScreen> {
   int offset = 0;
 
   final _scrollController = ScrollController();
-  final _list = <String>[];
+  final _urlList = <String>[];
   String search = '';
+
+  bool showPopGames = true;
+
+  List<GameInfo> games = [];
 
   @override
   void initState() {
@@ -39,12 +45,16 @@ class _ContentScreenState extends State<ContentScreen> {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/games';
     final response = await CardsData.getJson(url, payload);
     var decoded = json.decode(response);
-    List<String> temp = <String>[];
+    List<String> tempUrl = <String>[];
+    List<GameInfo> tempGames = [];
     for(int i = 0; i<limit; i++){
-      temp.add('https:' + decoded[i]['cover']['url'].replaceAll('t_thumb','t_cover_big'));
+      String formattedUrl = 'https:' + decoded[i]['cover']['url'].replaceAll('t_thumb','t_cover_big');
+      tempUrl.add(formattedUrl);
+      tempGames.add(GameInfo(decoded[i]['name'], formattedUrl, decoded[i]['summary']));
     }
     setState(() {
-      _list.addAll(temp);
+      games.addAll(tempGames);
+      _urlList.addAll(tempUrl);
       offset += limit;
     });
   }
@@ -125,11 +135,12 @@ class _ContentScreenState extends State<ContentScreen> {
                             fillColor: Color.fromRGBO(131, 146, 158, 1),
                             labelText: 'Search',
                           ),
-                          onChanged: (text) {
+                          onChanged: (text) async {
                             search = text;
                             offset = 0;
-                            _list.clear();
-                            _fetchData();
+                            _urlList.clear();
+                            games.clear();
+                            await _fetchData();
                           },
                         ),
                       )
@@ -140,15 +151,36 @@ class _ContentScreenState extends State<ContentScreen> {
                 child:
                 GridView.builder(
                   controller: _scrollController,
-                  itemCount: _list.length,
+                  itemCount: _urlList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, childAspectRatio: 0.8),
 
                   itemBuilder: (BuildContext context, int index) {
                     return
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GameScreen(),
+                            settings: RouteSettings(
+                              arguments: games[index],
+                            ),
+                          ),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        splashFactory: NoSplash.splashFactory,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        padding: EdgeInsets.zero,
+                      ),
+                      child:
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Image.network(_list[index])
-                      );
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(_urlList[index])
+                      )
+                    );
+
                   },
                 ),
               ),
