@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
@@ -104,9 +106,55 @@ class _ContentScreenState extends State<ContentScreen> {
       ),
       body: <Widget>[
         ///  page
-        Container(
-
+       DefaultTabController(
+      initialIndex: 1,
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('GameGrid',style: TextStyle(fontWeight: FontWeight.w800,color: Colors.white),),
+          backgroundColor: Colors.black,
+          bottom: const TabBar(
+            tabs: <Widget>[
+               Tab(
+                child: Text(
+                  'Home',
+                  style: TextStyle(color: Colors.white), // Set text color
+                ),
+              ),
+              Tab(
+                child: Text(
+                  'Friends',
+                  style: TextStyle(color: Colors.white), // Set text color
+                ),
+              ),
+              Tab(
+                child: Text(
+                  'Activity',
+                  style: TextStyle(color: Colors.white), // Set text color
+                ),
+              ),
+            ],
+          ),
         ),
+       
+        body: TabBarView(
+          children: <Widget>[
+            Container(
+              color: Color.fromRGBO(25, 28, 33, 1),
+              child: Text('Home Page',style: TextStyle(fontWeight: FontWeight.w800, color:  Colors.white),),
+            ),
+            Container(
+              color: Color.fromRGBO(25, 28, 33, 1),
+              child: Text('Friend Page',style: TextStyle(fontWeight: FontWeight.w800, color:  Colors.white),),
+            ),
+            Container(
+              color: Color.fromRGBO(25, 28, 33, 1),
+              child: Text('Activity Page',style: TextStyle(fontWeight: FontWeight.w800, color:  Colors.white),),
+            ),
+          ],
+        ),
+      ),
+       ),
 
         /// Search page
         Container(
@@ -241,5 +289,13 @@ class _MainPageState extends State<MainPage> {
 
     );
   }
+
+
+
+
+
+
+
+
 
 }
