@@ -18,6 +18,7 @@ class _ContentScreenState extends State<ContentScreen> {
 
   Color background_color = Color.fromRGBO(25, 28, 33, 1);
   Color text_color = Color.fromRGBO(155, 168, 183, 1);
+  Color button_color = Color.fromRGBO(10, 147, 150, 0.5);
 
   int currentPageIndex = 0;
 
@@ -85,7 +86,7 @@ class _ContentScreenState extends State<ContentScreen> {
         height: 70,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         selectedIndex: currentPageIndex,
-        indicatorColor: Colors.white24,
+        indicatorColor: button_color,
         backgroundColor: Color.fromRGBO(54, 75, 94, 1),
         destinations: <Widget>[
           NavigationDestination(
@@ -126,14 +127,22 @@ class _ContentScreenState extends State<ContentScreen> {
                         height: 35,
                         child:
                         TextField(
-                          style: TextStyle(fontSize: 12),
+                          style: TextStyle(fontSize: 16, color: text_color, decoration: TextDecoration.none),
+                          cursorColor: Colors.black,
                           decoration: InputDecoration(
                             filled: true,
+                            floatingLabelBehavior: FloatingLabelBehavior.never,
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15)
+                                borderRadius: BorderRadius.circular(10),
+                            ),
+                            focusColor: Colors.black,
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide(color: Colors.transparent, )
                             ),
                             fillColor: Color.fromRGBO(131, 146, 158, 1),
                             labelText: 'Search',
+                            prefixIcon: Icon(Icons.search, size: 20,),
                           ),
                           onChanged: (text) async {
                             search = text;
