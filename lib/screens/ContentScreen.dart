@@ -108,23 +108,33 @@ class _ContentScreenState extends State<ContentScreen> {
       body: <Widget>[
         ///  page
        DefaultTabController(
-      initialIndex: 1,
-      length: 3,
+      initialIndex: 0,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('GameGrid',style: TextStyle(fontWeight: FontWeight.w800,color: Colors.white),),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+          //const Text('GameGrid',style: TextStyle(fontWeight: FontWeight.w800,color: Colors.white),),
+          SizedBox(width: 8),
+          Container(
+            child: Center(
+            child: Image.asset('assets/images/controllericon.png',scale: 10,),
+            ),
+          ),
+            ],
+          ),
+          //centerTitle: true,
           backgroundColor: Colors.black,
+          automaticallyImplyLeading: false,
           bottom: const TabBar(
+            indicatorColor: Colors.white,
+            indicatorSize: TabBarIndicatorSize.label,
+            splashFactory: NoSplash.splashFactory,
             tabs: <Widget>[
                Tab(
                 child: Text(
                   'Home',
-                  style: TextStyle(color: Colors.white), // Set text color
-                ),
-              ),
-              Tab(
-                child: Text(
-                  'Friends',
                   style: TextStyle(color: Colors.white), // Set text color
                 ),
               ),
@@ -135,18 +145,18 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
               ),
             ],
+            dividerColor: Color.fromRGBO(25, 28, 33, 1),
           ),
         ),
        
         body: TabBarView(
           children: <Widget>[
+
+
+            
             Container(
               color: Color.fromRGBO(25, 28, 33, 1),
               child: Text('Home Page',style: TextStyle(fontWeight: FontWeight.w800, color:  Colors.white),),
-            ),
-            Container(
-              color: Color.fromRGBO(25, 28, 33, 1),
-              child: Text('Friend Page',style: TextStyle(fontWeight: FontWeight.w800, color:  Colors.white),),
             ),
             Container(
               color: Color.fromRGBO(25, 28, 33, 1),
