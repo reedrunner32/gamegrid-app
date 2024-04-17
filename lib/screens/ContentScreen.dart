@@ -134,13 +134,13 @@ class _ContentScreenState extends State<ContentScreen> {
             tabs: <Widget>[
                Tab(
                 child: Text(
-                  'Home',
+                  'New Releases',
                   style: TextStyle(color: Colors.white), // Set text color
                 ),
               ),
               Tab(
                 child: Text(
-                  'Activity',
+                  'Recent Reviews',
                   style: TextStyle(color: Colors.white), // Set text color
                 ),
               ),
@@ -148,22 +148,99 @@ class _ContentScreenState extends State<ContentScreen> {
             dividerColor: Color.fromRGBO(25, 28, 33, 1),
           ),
         ),
-       
-        body: TabBarView(
-          children: <Widget>[
-
-
-            
-            Container(
-              color: Color.fromRGBO(25, 28, 33, 1),
-              child: Text('Home Page',style: TextStyle(fontWeight: FontWeight.w800, color:  Colors.white),),
-            ),
-            Container(
-              color: Color.fromRGBO(25, 28, 33, 1),
-              child: Text('Activity Page',style: TextStyle(fontWeight: FontWeight.w800, color:  Colors.white),),
-            ),
-          ],
+     body: TabBarView(
+  children: <Widget>[
+    // New content for new releases page
+    Container(
+      color: Color.fromRGBO(25, 28, 33, 1),
+      child: GridView.builder(
+        itemCount: 15, // Placeholder for number of new release games
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 3,
+          mainAxisSpacing: 5,
+          crossAxisSpacing: 5,
+          childAspectRatio: 2 / 3, // Aspect ratio for each game placeholder
         ),
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            padding: EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 120, // Placeholder height for game cover image
+                  color: Colors.grey[700],
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'Game Title $index', // Placeholder game title
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Release Date', // Placeholder release date
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    ),
+    // Previous content for recent reviews page
+    Container(
+      color: Color.fromRGBO(25, 28, 33, 1),
+      child: ListView.builder(
+        itemCount: 5, // Placeholder for number of reviews
+        itemBuilder: (context, index) {
+          return Container(
+            padding: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              border: Border(bottom: BorderSide(color: Colors.grey)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'User $index', // Placeholder username
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  '2 hours ago', // Placeholder timestamp
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  'This is a placeholder review text.', // Placeholder review text
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+                // Add more elements for additional info like ratings, likes, etc.
+              ],
+            ),
+          );
+        },
+      ),
+    ),
+  ],
+),
       ),
        ),
 
@@ -256,36 +333,172 @@ class _ContentScreenState extends State<ContentScreen> {
         ),
 
         /// Profile page
-        Container(
-          child: Column(
-            children: [
-              AppBar(
-                toolbarHeight: 80,
-                automaticallyImplyLeading: false,
-                centerTitle: true,
-                backgroundColor: Colors.black,
-                actions: [
-                  TextButton(
+  Container(
+  child: Column(
+    children: [
+      AppBar(
+        leading: GestureDetector(
+          onTap: () {
+            // Add your notifications icon onPressed functionality here
+            // Navigate to the notification page
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Scaffold(
+                appBar: AppBar(
+                  leading: IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
-
+                      Navigator.pop(context); // Navigate back to the previous page
                     },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      splashFactory: NoSplash.splashFactory,
-                    ),
-                    child: Icon(Icons.settings, color: text_color, size: 30,)
-                  )
-                ],
-                title:
-                Column(
-                  children: [
-                    Text(GlobalData.displayName, style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
-                  ]
+                  ),
+                  title: Text('Notifications'),
+                  backgroundColor: Colors.black,
                 ),
-              ),
-            ],
-          ),
+                body: Center(
+                  child: Text(
+                    'Notification Page Content',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                ),
+              )),
+            );
+          },
+          child: Icon(Icons.notifications, color: text_color, size: 30,),
         ),
+        toolbarHeight: 80,
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        backgroundColor: Colors.black,
+        actions: [
+          TextButton(
+            onPressed: () {
+              // Add your settings button onPressed functionality here
+            },
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              splashFactory: NoSplash.splashFactory,
+            ),
+            child: Icon(Icons.settings, color: text_color, size: 30,)
+          ),
+        ],
+        title: Column(
+          children: [
+            Text(GlobalData.displayName, style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
+          ]
+        ),
+      ),
+      ListTile(
+        leading: Icon(Icons.rate_review),
+        title: Text('Your Activity'),
+        onTap: () {
+          // Navigate to your activity page
+          // Updated to display review activity placeholders
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text('Your Review Activity'),
+              backgroundColor: Colors.black,
+            ),
+            body: ListView(
+              children: [
+                ListTile(
+                  title: Text('Review 1'),
+                  subtitle: Text('Details of review 1'),
+                ),
+                Divider(height: 0), // Adding a border
+                ListTile(
+                  title: Text('Review 2'),
+                  subtitle: Text('Details of review 2'),
+                ),
+                Divider(height: 0), // Adding a border
+                // Add more review placeholders as needed
+              ],
+            ),
+          )));
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.people),
+        title: Text('Friends'),
+        onTap: () {
+          // Navigate to friends page
+          // Updated to display a vertical list of friends
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text('Friends'),
+              backgroundColor: Colors.black,
+            ),
+            body: ListView(
+              children: [
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Friend 1'),
+                ),
+                Divider(height: 0), // Adding a border
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Friend 2'),
+                ),
+                Divider(height: 0), // Adding a border
+                // Add more friend placeholders as needed
+              ],
+            ),
+          )));
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.games),
+        title: Text('Game List'),
+        onTap: () {
+          // Navigate to game list page
+          // Updated to display a grid view of games
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text('Game List'),
+              backgroundColor: Colors.black,
+            ),
+            body: GridView.count(
+              crossAxisCount: 2, // Number of columns in the grid
+              children: [
+                Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.gamepad, size: 50),
+                      SizedBox(height: 10),
+                      Text('Game 1'),
+                    ],
+                  ),
+                ),
+                Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.gamepad, size: 50),
+                      SizedBox(height: 10),
+                      Text('Game 2'),
+                    ],
+                  ),
+                ),
+                Card(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.gamepad, size: 50),
+                      SizedBox(height: 10),
+                      Text('Game 3'),
+                    ],
+                  ),
+                ),
+                // Add more placeholders for additional games
+              ],
+            ),
+          )));
+        },
+      ),
+      // Add more buttons as needed
+    ],
+  ),
+),
       ][currentPageIndex],
     );
   }
