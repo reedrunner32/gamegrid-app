@@ -54,18 +54,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       stackedOptions: StackedOptions(
         key: 'top',
         type: StackedType.same,
-        itemOffset: Offset(-5, -5),
+        itemOffset: const Offset(-5, -5),
       ),
       position: Alignment.topCenter,
       animation: AnimationType.fromTop,
-      title: Text('Reset Password'),
-      description: Text('Check your email for instructions'),
-      onDismiss: () {
-        //Message when the notification is dismissed
-      },
-      onNotificationPressed: () {
-        //Message when the notification is pressed
-      },
+      title: const Text('Reset Password'),
+      description: const Text('Check your email for instructions'),
       shadow: BoxShadow(
         color: Colors.blue.withOpacity(0.2),
         spreadRadius: 2,
@@ -81,11 +75,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       stackedOptions: StackedOptions(
         key: 'top',
         type: StackedType.same,
-        itemOffset: Offset(-5, -5),
+        itemOffset: const Offset(-5, -5),
       ),
       position: Alignment.topCenter,
       animation: AnimationType.fromTop,
-      title: Text('Error'),
+      title: const Text('Error'),
       description: Text(err),
       shadow: BoxShadow(
         color: Colors.red.withOpacity(0.2),
@@ -114,7 +108,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             // Slideshow
             Stack(
               children: [
-                Container(
+                SizedBox(
                   height: size.height/2.1,
                   child:
                   Image.asset(
@@ -136,26 +130,23 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               ],
             ),
             // Main page icon
-            Container(
-              child:
-              Image.asset(
-                'assets/images/controllericon.png',
-                height: 97,
-                width: 150,
-              ),
+            Image.asset(
+              'assets/images/controllericon.png',
+              height: 97,
+              width: 150,
             ),
             // TITLE
             Container(
                 width: size.width,
                 alignment: Alignment.center,
                 child:
-              Text(
+                const Text(
                   'GameGrid',
                   style: TextStyle(fontSize: 50, color: Colors.white, fontWeight: FontWeight.w900),
               )
             ),
             // Sign in button
-            Container(
+            SizedBox(
               width: size.width,
               child:
               OutlinedButton(
@@ -178,7 +169,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
             // Register account button
             Container(
               width: size.width,
-              margin: EdgeInsets.all(0),
+              margin: const EdgeInsets.all(0),
               child:
               OutlinedButton(
                   style: OutlinedButton.styleFrom(
@@ -198,7 +189,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
               ),
             ),
             // Hint text for slideshow
-            Container(
+            SizedBox(
               height: size.height/5.1,
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -206,7 +197,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 text: TextSpan(
                   text: 'Artwork from',
                   style: TextStyle(color: text_color, fontSize: 12),
-                  children: [
+                  children: const [
                     TextSpan(
                       text: ' Helldivers 2',
                       style: TextStyle(fontWeight: FontWeight.w700),
@@ -224,16 +215,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           minimumBound: 0,
           upperBound: 1,
           panelController: panelController,
-          onTap: () {
-
-          },
-          enableOnTap: true,
+          enableOnTap: false,
           child:
           Container(
             width: size.width,
             decoration: BoxDecoration(
               color: background_color,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
             ),
             child:
             Column(
@@ -257,7 +245,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                           onPressed: () {
                             panelController.collapse();
                           },
-                          child: Icon(
+                          child: const Icon(
                             Icons.close,
                             color: Colors.white,
                             size: 30,
@@ -275,7 +263,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                               colors: [background_color, Colors.transparent],
                               begin: Alignment.bottomCenter,
                               end: Alignment.topCenter,
-                              stops: [0.67, 1]
+                              stops: const [0.67, 1]
                             ),
                           ),
                             //color: background_color,
@@ -299,7 +287,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                   width: size.width,
                                 top: 110,
                                   child:
-                                  Text(
+                                  const Text(
                                     'Sign in to GameGrid',
                                     textAlign: TextAlign.center,
                                     style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w700),
@@ -316,7 +304,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                     fillColor: background_color,
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(color: text_color, width: 0.15),
-                                      borderRadius: BorderRadius.all(Radius.circular(0)),
+                                      borderRadius: const BorderRadius.all(Radius.circular(0)),
                                     ),
                                     labelText: 'Email',
                                   ),
@@ -340,7 +328,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                     fillColor: background_color,
                                     border: OutlineInputBorder(
                                       borderSide: BorderSide(color: text_color, width: 0.15),
-                                      borderRadius: BorderRadius.all(Radius.circular(0)),
+                                      borderRadius: const BorderRadius.all(Radius.circular(0)),
                                     ),
                                     labelText: 'Password',
                                   ),
@@ -361,7 +349,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 Row(
                                 children: [
                                   Container(
-                                    margin: EdgeInsets.fromLTRB(55, 0, 20, 0),
+                                    margin: const EdgeInsets.fromLTRB(55, 0, 20, 0),
                                     child:
                                     ElevatedButton(
                                       onPressed: () {
@@ -371,12 +359,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                         side: BorderSide(color: text_color, width: 0.15),
-                                        minimumSize: Size(50, 30),
+                                        minimumSize: const Size(50, 30),
                                         padding: EdgeInsets.zero,
-                                        backgroundColor: Color.fromRGBO(71, 84, 100, 1),
+                                        backgroundColor: const Color.fromRGBO(71, 84, 100, 1),
                                       ),
                                       child:
-                                      Text(
+                                      const Text(
                                         'JOIN',
                                         style: TextStyle(
                                           fontSize: 12,
@@ -388,21 +376,39 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                   ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                    margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                     child:
                                     ElevatedButton(
-                                        onPressed: () {
-                                          displayResetPassword();
+                                        onPressed: () async {
+                                          if(email == '') {
+                                            displayLoginError("Please enter an Email.");
+                                          }
+                                          else {
+                                            String payload = '{"email":"${email.trim()}"}';
+                                            var jsonObject;
+                                            try {
+                                              String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/forgot-password';
+                                              String ret = await CardsData.getJson(url, payload);
+                                              jsonObject = json.decode(ret);
+                                            }
+                                            catch (e) {
+                                              displayLoginError("Could not reset email");
+                                              return;
+                                            }
+                                            if(jsonObject["message"] != null) {
+                                              displayResetPassword();
+                                            }
+                                          }
                                         },
                                         style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                           side: BorderSide(color: text_color, width: 0.15),
-                                          minimumSize: Size(130, 30),
+                                          minimumSize: const Size(130, 30),
                                           padding: EdgeInsets.zero,
-                                          backgroundColor: Color.fromRGBO(71, 84, 100, 1),
+                                          backgroundColor: const Color.fromRGBO(71, 84, 100, 1),
                                         ),
                                         child:
-                                        Text(
+                                        const Text(
                                           'RESET PASSWORD',
                                           style: TextStyle(
                                             fontSize: 12,
@@ -414,7 +420,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                     ),
                                   ),
                                   Container(
-                                    margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                    margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                     child:
                                     ElevatedButton(
                                       onPressed: () async {
@@ -425,9 +431,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           displayLoginError("Please enter a Password.");
                                         }
                                         else {
-                                          String payload = '{"email":"' + email.trim() +
-                                              '","password":"' +
-                                              password.trim() + '"}';
+                                          String payload = '{"email":"${email.trim()}","password":"${password.trim()}"}';
                                           var userID;
                                           var jsonObject;
                                           var error;
@@ -455,12 +459,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                         side: BorderSide(color: text_color, width: 0.15),
-                                        minimumSize: Size(50, 30),
+                                        minimumSize: const Size(50, 30),
                                         padding: EdgeInsets.zero,
-                                        backgroundColor: Color.fromRGBO(86, 189, 72, 1),
+                                        backgroundColor: const Color.fromRGBO(86, 189, 72, 1),
                                       ),
                                       child:
-                                      Text(
+                                      const Text(
                                         'GO',
                                         style: TextStyle(
                                           fontSize: 12,
@@ -490,16 +494,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           minimumBound: 0,
           upperBound: 1,
           panelController: panelController2,
-          onTap: () {
-
-          },
-          enableOnTap: true,
+          enableOnTap: false,
           child:
           Container(
             width: size.width,
             decoration: BoxDecoration(
               color: background_color,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
             ),
             child:
             Column(
@@ -523,7 +524,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                             onPressed: () {
                               panelController2.collapse();
                             },
-                            child: Icon(
+                            child: const Icon(
                               Icons.close,
                               color: Colors.white,
                               size: 30,
@@ -541,7 +542,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                       colors: [background_color, Colors.transparent],
                                       begin: Alignment.bottomCenter,
                                       end: Alignment.topCenter,
-                                      stops: [0.7, 1]
+                                      stops: const [0.7, 1]
                                   ),
                                 ),
                                 //color: background_color,
@@ -552,20 +553,17 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         top: 50,
                                         left: size.width/2 - 40,
                                         child:
-                                        Container(
-                                          child:
-                                          Image.asset(
-                                            'assets/images/controllericon.png',
-                                            height: 52,
-                                            width: 80,
-                                          ),
+                                        Image.asset(
+                                          'assets/images/controllericon.png',
+                                          height: 52,
+                                          width: 80,
                                         ),
                                       ),
                                       Positioned(
                                           width: size.width,
                                           top: 110,
                                           child:
-                                          Text(
+                                          const Text(
                                             'Join GameGrid',
                                             textAlign: TextAlign.center,
                                             style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w700),
@@ -580,7 +578,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: background_color,
-                                            border: OutlineInputBorder(
+                                            border: const OutlineInputBorder(
                                               borderSide: BorderSide(color: Colors.white, width: 0.15),
                                               borderRadius: BorderRadius.all(Radius.circular(0)),
                                             ),
@@ -604,7 +602,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: background_color,
-                                            border: OutlineInputBorder(
+                                            border: const OutlineInputBorder(
                                               borderSide: BorderSide(color: Colors.white, width: 0.15),
                                               borderRadius: BorderRadius.all(Radius.circular(0)),
                                             ),
@@ -628,7 +626,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: background_color,
-                                            border: OutlineInputBorder(
+                                            border: const OutlineInputBorder(
                                               borderSide: BorderSide(color: Colors.white, width: 0.15),
                                               borderRadius: BorderRadius.all(Radius.circular(0)),
                                             ),
@@ -651,7 +649,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         Row(
                                           children: [
                                             Container(
-                                              margin: EdgeInsets.fromLTRB(45, 0, 20, 0),
+                                              margin: const EdgeInsets.fromLTRB(45, 0, 20, 0),
                                               child:
                                               OutlinedButton(
                                                   onPressed: () {
@@ -661,11 +659,11 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                   style: OutlinedButton.styleFrom(
                                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                                     side: BorderSide(color: text_color, width: 0.15),
-                                                    minimumSize: Size(65, 30),
+                                                    minimumSize: const Size(65, 30),
                                                     padding: EdgeInsets.zero,
                                                   ),
                                                   child:
-                                                  Text(
+                                                  const Text(
                                                     'SIGN IN',
                                                     style: TextStyle(
                                                       fontSize: 12,
@@ -677,20 +675,38 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               ),
                                             ),
                                             Container(
-                                              margin: EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                              margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                               child:
                                               OutlinedButton(
-                                                  onPressed: () {
-
+                                                  onPressed: () async {
+                                                    if(emailR == '') {
+                                                      displayLoginError("Please enter an Email.");
+                                                    }
+                                                    else {
+                                                      String payload = '{"email":"${emailR.trim()}"}';
+                                                      var jsonObject;
+                                                      try {
+                                                        String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/forgot-password';
+                                                        String ret = await CardsData.getJson(url, payload);
+                                                        jsonObject = json.decode(ret);
+                                                      }
+                                                      catch (e) {
+                                                        displayLoginError("Could not reset password");
+                                                        return;
+                                                      }
+                                                      if(jsonObject["message"] != null) {
+                                                        displayResetPassword();
+                                                      }
+                                                    }
                                                   },
                                                   style: OutlinedButton.styleFrom(
                                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                                     side: BorderSide(color: text_color, width: 0.15),
-                                                    minimumSize: Size(130, 30),
+                                                    minimumSize: const Size(130, 30),
                                                     padding: EdgeInsets.zero,
                                                   ),
                                                   child:
-                                                  Text(
+                                                  const Text(
                                                     'RESET PASSWORD',
                                                     style: TextStyle(
                                                       fontSize: 12,
@@ -702,7 +718,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               ),
                                             ),
                                             Container(
-                                                margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                                margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                                 child:
                                                 ElevatedButton(
                                                     onPressed: () async {
@@ -719,8 +735,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                             "Please enter a Password.");
                                                       }
                                                       else {
-                                                        String payload = '{"email":"' + emailR.trim() + '","password":"' +
-                                                            passwordR.trim() + '","displayName":"' + usernameR.trim() + '"}';
+                                                        String payload = '{"email":"${emailR.trim()}","password":"${passwordR.trim()}","displayName":"${usernameR.trim()}"}';
                                                         String error = '';
                                                         var jsonObject;
                                                         try
@@ -742,12 +757,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                             stackedOptions: StackedOptions(
                                                               key: 'top',
                                                               type: StackedType.same,
-                                                              itemOffset: Offset(-5, -5),
+                                                              itemOffset: const Offset(-5, -5),
                                                             ),
                                                             position: Alignment.topCenter,
                                                             animation: AnimationType.fromTop,
-                                                            title: Text("Account Successfully Created!"),
-                                                            description: Text("Please verify account before logging in."),
+                                                            title: const Text("Account Successfully Created!"),
+                                                            description: const Text("Please verify account before logging in."),
                                                             shadow: BoxShadow(
                                                               color: Colors.green.withOpacity(0.2),
                                                               spreadRadius: 2,
@@ -764,12 +779,12 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                     style: ElevatedButton.styleFrom(
                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                                       side: BorderSide(color: text_color, width: 0.15),
-                                                      minimumSize: Size(50, 30),
+                                                      minimumSize: const Size(50, 30),
                                                       padding: EdgeInsets.zero,
-                                                      backgroundColor: Color.fromRGBO(86, 189, 72, 1),
+                                                      backgroundColor: const Color.fromRGBO(86, 189, 72, 1),
                                                     ),
                                                     child:
-                                                    Text(
+                                                    const Text(
                                                       'JOIN',
                                                       style: TextStyle(
                                                         fontSize: 12,
@@ -784,7 +799,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         ),
                                       ),
                                       Container(
-                                        margin: EdgeInsets.only(bottom: 10),
+                                        margin: const EdgeInsets.only(bottom: 10),
                                         child:
                                         Align(
                                           alignment: Alignment.bottomCenter,
@@ -792,7 +807,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                             text: TextSpan(
                                                 text: 'Artwork from',
                                                 style: TextStyle(color: text_color, fontSize: 12),
-                                                children: [
+                                                children: const [
                                                   TextSpan(
                                                     text: ' Modern Warfare 2',
                                                     style: TextStyle(fontWeight: FontWeight.w700),
@@ -816,5 +831,4 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
       ]
     );
   }
-
 }
