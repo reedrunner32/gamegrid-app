@@ -594,9 +594,7 @@ Container(
                     ),
                     TextButton(
                       onPressed: () {
-                        // Send the friend request using the entered display name
-                        // You can add your API integration code here
-                        // After sending, close the dialog
+                        
                         Navigator.of(context).pop();
                       },
                       child: Text('Send'),
