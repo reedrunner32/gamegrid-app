@@ -200,15 +200,6 @@ class _ContentScreenState extends State<ContentScreen> {
     );
   }
 
-  GameInfo fetchedGameData = GameInfo("Name", "", "Desc");
-  void _getGameInfo(String videoGameId) async {
-    var gameCont = await ContentData.fetchGameInfo(videoGameId);
-    GameInfo temp = GameInfo(gameCont["name"], "", gameCont["summary"]);
-    setState(() {
-      fetchedGameData = temp;
-    });
-  }
-
   void _loadMore() {
     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
       _fetchData();
@@ -469,13 +460,12 @@ class _ContentScreenState extends State<ContentScreen> {
                     return
                     TextButton(
                       onPressed: () {
-                        _getGameInfo(curGameList[index].gameId);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const GameScreen(),
                             settings: RouteSettings(
-                              arguments: GameInfo(fetchedGameData.name, curGameList[index].imageURL, fetchedGameData.description),
+                              arguments: curGameList[index].gameId
                             ),
                           ),
                         );

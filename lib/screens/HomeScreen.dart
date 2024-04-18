@@ -425,37 +425,44 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                     child:
                                     ElevatedButton(
                                       onPressed: () async {
+
                                         if(email == '') {
                                           displayLoginError("Please enter an Email.");
+                                          return;
                                         }
-                                        else if(password == '') {
+                                        if(password == '') {
                                           displayLoginError("Please enter a Password.");
+                                          return;
+                                        }
+                                        if (!email.contains('@')) {
+                                          displayLoginError("Please enter a valid Email.");
+                                          return;
+                                        }
+
+                                        String payload = '{"email":"${email.trim()}","password":"${password.trim()}"}';
+                                        var userID;
+                                        var jsonObject;
+                                        var error;
+                                        try {
+                                          String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/login';
+                                          http.Response ret = await CardsData.postJson(url, payload);
+                                          jsonObject = json.decode(ret.body);
+                                          userID = jsonObject["id"];
+                                          error = jsonObject["error"];
+                                        }
+                                        catch (e) {
+                                          displayLoginError(e.toString());
+                                          return;
+                                        }
+                                        if (userID == -1) {
+                                          displayLoginError(error);
                                         }
                                         else {
-                                          String payload = '{"email":"${email.trim()}","password":"${password.trim()}"}';
-                                          var userID;
-                                          var jsonObject;
-                                          var error;
-                                          try {
-                                            String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/login';
-                                            http.Response ret = await CardsData.postJson(url, payload);
-                                            jsonObject = json.decode(ret.body);
-                                            userID = jsonObject["id"];
-                                            error = jsonObject["error"];
-                                          }
-                                          catch (e) {
-                                            displayLoginError(e.toString());
-                                            return;
-                                          }
-                                          if (userID == -1) {
-                                            displayLoginError(error);
-                                          }
-                                          else {
-                                            GlobalData.userID = userID;
-                                            GlobalData.displayName = jsonObject["displayName"];
-                                            Navigator.pushNamed(context, '/content');
-                                          }
+                                          GlobalData.userID = userID;
+                                          GlobalData.displayName = jsonObject["displayName"];
+                                          Navigator.pushNamed(context, '/content');
                                         }
+
                                       },
                                       style: ElevatedButton.styleFrom(
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
