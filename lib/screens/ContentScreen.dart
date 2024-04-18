@@ -773,22 +773,6 @@ class _ContentScreenState extends State<ContentScreen> {
           },
           child: Icon(Icons.notifications, color: text_color, size: 30,),
         ),
-        toolbarHeight: 80,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        backgroundColor: Colors.black,
-        actions: [
-          TextButton(
-            onPressed: () {
-              // Add your settings button onPressed functionality here
-            },
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              splashFactory: NoSplash.splashFactory,
-            ),
-            child: Icon(Icons.settings, color: text_color, size: 30,)
-          ),
-        ],
         title: Column(
           children: [
             Text(GlobalData.displayName, style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
