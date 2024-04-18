@@ -5,6 +5,7 @@ import 'package:gamegrid/utils/getAPI.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:elegant_notification/resources/stacked_options.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -388,8 +389,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                             var jsonObject;
                                             try {
                                               String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/forgot-password';
-                                              String ret = await CardsData.getJson(url, payload);
-                                              jsonObject = json.decode(ret);
+                                              http.Response ret = await CardsData.postJson(url, payload);
+                                              jsonObject = json.decode(ret.body);
                                             }
                                             catch (e) {
                                               displayLoginError("Could not reset email");
@@ -437,8 +438,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           var error;
                                           try {
                                             String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/login';
-                                            String ret = await CardsData.getJson(url, payload);
-                                            jsonObject = json.decode(ret);
+                                            http.Response ret = await CardsData.postJson(url, payload);
+                                            jsonObject = json.decode(ret.body);
                                             userID = jsonObject["id"];
                                             error = jsonObject["error"];
                                           }
@@ -687,15 +688,18 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                       var jsonObject;
                                                       try {
                                                         String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/forgot-password';
-                                                        String ret = await CardsData.getJson(url, payload);
-                                                        jsonObject = json.decode(ret);
+                                                        http.Response ret = await CardsData.postJson(url, payload);
+                                                        jsonObject = json.decode(ret.body);
                                                       }
                                                       catch (e) {
                                                         displayLoginError("Could not reset password");
                                                         return;
                                                       }
-                                                      if(jsonObject["message"] != null) {
+                                                      if(jsonObject.statusCode == 200) {
                                                         displayResetPassword();
+                                                      }
+                                                      else {
+                                                        displayLoginError("Could not reset password");
                                                       }
                                                     }
                                                   },
@@ -741,8 +745,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                         try
                                                         {
                                                           String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/register';
-                                                          String ret = await CardsData.getJson(url, payload);
-                                                          jsonObject = json.decode(ret);
+                                                          http.Response ret = await CardsData.postJson(url, payload);
+                                                          jsonObject = json.decode(ret.body);
                                                           error = jsonObject["error"];
                                                         }
                                                         catch(e)

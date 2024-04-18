@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'dart:convert';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
+import 'package:gamegrid/components/Debouncer.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
@@ -24,259 +22,14 @@ class _ContentScreenState extends State<ContentScreen> {
   Color button_color = Color.fromRGBO(10, 147, 150, 0.5);
 
   SlidingUpPanelController panelController = SlidingUpPanelController();
+  final _debouncer = Debouncer(milliseconds: 200);
 
   int currentPageIndex = 0;
 
-  int limit = 15;
-  int offset = 0;
-
   final _scrollController = ScrollController();
-  List<String> _urlList = <String>[];
   String search = '';
 
-  List<GameInfo> games = [];
-
-  /* -----------------------------
-  *  Game related API requests
-  *
-  *  -- Game info container
-    {
-          "id": 250616,
-          "cover": {
-              "id": 331836,
-              "url": "//images.igdb.com/igdb/image/upload/t_thumb/co741o.jpg"
-          },
-          "first_release_date": 1707350400,
-          "involved_companies": [
-              {
-                  "id": 216800,
-                  "company": {
-                      "id": 953,
-                      "name": "Arrowhead Game Studios"
-                  }
-              },
-              {
-                  "id": 219275,
-                  "company": {
-                      "id": 10100,
-                      "name": "Sony Interactive Entertainment"
-                  }
-              }
-          ],
-          "name": "Helldivers 2",
-          "platforms": [
-              {
-                  "id": 6,
-                  "name": "PC (Microsoft Windows)"
-              },
-              {
-                  "id": 167,
-                  "name": "PlayStation 5"
-              }
-          ],
-          "summary": "summary here",
-      }
-  * ----------------------------- */
-
-  // Add game to user's library (play list)
-  Future<void> _addGametoList(int gameId) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/addGame';
-    String payload = '{"email":"${GlobalData.email}","videoGameId":"$gameId"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    String retErr = decoded['error']; //returning status message
-  }
-
-  // Remove game from user's library
-  Future<void> _removeGameFromList(int gameId) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/user/games/${GlobalData.userID}/$gameId';
-    final response = await CardsData.delJson(url);
-    var decoded = json.decode(response);
-    String retMessage = decoded['message']; //returning status message
-  }
-
-  // Fetch info for a specific game
-  var gameInfo;
-  Future<void> _getGameInfo(String videoGameId) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/games/gameName';
-    String payload = '{"gameId":"$videoGameId"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    var info = decoded[0];
-    setState(() {
-      gameInfo = info;
-    });
-  }
-
-  // Fetch games list from specific user
-  var userGameList;
-  Future<void> _fetchUserGames(String userId) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/user/games/$userId';
-    final response = await CardsData.getJsonG(url);
-    var decoded = json.decode(response);
-    var receivedList = decoded["games"];
-    setState(() {
-      userGameList = receivedList;
-    });
-  }
-
-
-  /* -----------------------------
-  *  Friend related API requests
-  * ----------------------------- */
-
-  // Fetch user's incoming friend requests
-  // id = friendRequests[index]["id"]
-  // name = friendRequests[index]["displayName"]
-  var friendRequests;
-  Future<void> _fetchFriendRequest() async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/received-requests/${GlobalData.userID}';
-    final response = await CardsData.getJsonG(url);
-    var decoded = json.decode(response);
-    var receivedList = decoded["receivedRequests"];
-    setState(() {
-      friendRequests = receivedList;
-    });
-  }
-
-  // Send friend request to another user
-  Future<void> _sendFriendRequest(String friendId) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/send-request';
-    String payload = '{"userId":"${GlobalData.userID}","friendId":"$friendId"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    String retErr = decoded['error']; //returning status message
-  }
-
-  // Accept friend request from another user
-  Future<void> _acceptFriendRequest(String friendId) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/accept-request';
-    String payload = '{"userId":"${GlobalData.userID}","friendId":"$friendId"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    String retErr = decoded['error']; //returning status message
-  }
-
-  // Reject friend request from another user
-  Future<void> _rejectFriendRequest(String friendId) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/reject-request';
-    String payload = '{"userId":"${GlobalData.userID}","friendId":"$friendId"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    String retErr = decoded['error']; //returning status message
-  }
-
-  // Fetch all friends info
-  // id = friendList[index]["id"]
-  // email = friendList[index]["email"]
-  // name = friendList[index]["displayName"]
-  var friendList;
-  Future<void> _fetchFriendList() async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/${GlobalData.userID}';
-    final response = await CardsData.getJsonG(url);
-    var decoded = json.decode(response);
-    var receivedList = decoded["friends"];
-    setState(() {
-      friendList = receivedList;
-    });
-  }
-
-  /* -----------------------------
-  *  User specific API requests
-  * ----------------------------- */
-
-  // Update user display name, or email, or password
-  Future<void> _updateUserInfo(String password, String displayName, String email) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/updateuser';
-    String payload = '{"email":"${GlobalData.email}","newEmail":"$email","newPassword":"$password","newDisplayName":"$displayName"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    String retErr = decoded['error']; //returning status message
-  }
-
-  // Search for a user (returns list of users)
-  Future<void> _searchUsers(String displayName) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/searchusers';
-    String payload = '{"displayName":"$displayName"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    String retErr = decoded['error']; //returning status message
-    String userInfo = decoded['user'];
-
-    // add info handling here
-    /*
-    "user": {
-      "id": "660b375bda67e0e30895a46b",
-      "email": "richardzz3233@gmail.com",
-      "displayName": "richardzz32",
-      "dateCreated": "2024-04-01T22:38:19.338Z",
-      "dateLastLoggedIn": null
-    },
-    * */
-  }
-
-  // Delete a user --confirm to prevent accidental calls
-  Future<void> _deleteUser(bool confirm) async {
-    if(!confirm) return;
-
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/deleteuser';
-    String payload = '{"id":"${GlobalData.userID}"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-
-    String retErr = decoded['error']; //empty if successful
-    String userInfo = decoded['successMessage']; //empty if error
-  }
-
-  /* -----------------------------
-  *         REVIEWS APIs
-  *
-  *  -- Review container data
-        {
-            "_id": "6619bc03ad668a962cd885b8",
-            "dateWritten": "2024-04-12T22:56:03.974Z",
-            "textBody": "Its peak",
-            "rating": 5,
-            "videoGameId": "133236",
-            "displayName": null
-        },
-  *
-  * ----------------------------- */
-
-  // Update user display name, or email, or password
-  Future<void> _addReview(String textBody, String rating, String videoGameId, String displayName) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/updateuser';
-    String payload = '{"textBody":"$textBody","rating":"$rating","videoGameId":"$videoGameId","displayName":"$displayName"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    String retErr = decoded['error']; //returning status message
-  }
-
-  // Fetch reviews for an individual user
-  var reviewsList;
-  Future<void> _fetchUserReviews(String displayName) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/reviews/search/$displayName';
-    final response = await CardsData.getJsonG(url);
-    var decoded = json.decode(response);
-    var receivedList = decoded["reviews"];
-    setState(() {
-      reviewsList = receivedList;
-    });
-  }
-
-  // Fetches most recent reviews (default = 10; set pageSize for different amount)
-  var recentReviewsList;
-  Future<void> _fetchRecentReviews(int pageSize) async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/getRecentReviews';
-    String payload = '{"pageSize":"$pageSize"}';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    var receivedList = decoded['recentReviews'];
-    setState(() {
-      recentReviewsList = receivedList;
-    });
-  }
-
+  List<GameCard> games = [];
 
   // FOR TESTING PURPOSES
   void printDebug(String str) {
@@ -300,6 +53,11 @@ class _ContentScreenState extends State<ContentScreen> {
         );
       });
   }
+
+  // Settings page variables
+  String changeDisplayName = '';
+  String changeEmail = '';
+  String changePassword = '';
 
   Widget SettingsPage() {
     Size size = MediaQuery.of(context).size;
@@ -395,24 +153,46 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
               ),
               Container(
-                decoration: BoxDecoration(
-
-                ),
-                padding: EdgeInsets.only(left: 10, top: 16),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 width: size.width,
                 height: 50,
-                child: TextField(
-                  textAlign: TextAlign.right,
-                  textDirection: TextDirection.rtl,
-                  style: TextStyle(color: text_color, decoration: TextDecoration.none),
-                  cursorColor: text_color,
-                  decoration: InputDecoration(
-                    labelStyle: TextStyle(color: text_color),
-                    border: const UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.black),
+                child: Stack(
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        padding: EdgeInsets.zero,
+                        color: Color.fromRGBO(54, 75, 94, 1),
+                        child: Text(
+                          "Username",
+                          style: TextStyle(
+                            color: text_color,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                          ),
+                        ),
+                      )
                     ),
-                  ),
-                ),
+                    TextField(
+                      onChanged: (text) {
+                        changeDisplayName = text;
+                      },
+                      textAlign: TextAlign.right,
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(color: text_color, decoration: TextDecoration.none, fontSize: 18),
+                      cursorColor: text_color,
+                      decoration: InputDecoration(
+                        labelStyle: TextStyle(color: text_color),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 0.5),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black, width: 0.5),
+                        ),
+                      ),
+                    ),
+                  ]
+                )
               ),
             ],
           ),
@@ -420,22 +200,12 @@ class _ContentScreenState extends State<ContentScreen> {
     );
   }
 
-  Future<void> _fetchData() async {
-    String payload = '{"limit":"$limit","offset":"$offset","genre":"","search":"$search"}';
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/games';
-    final response = await CardsData.getJson(url, payload);
-    var decoded = json.decode(response);
-    List<String> tempUrl = <String>[];
-    List<GameInfo> tempGames = [];
-    for(int i = 0; i<limit; i++){
-      String formattedUrl = 'https:' + decoded[i]['cover']['url'].replaceAll('t_thumb','t_cover_big');
-      tempUrl.add(formattedUrl);
-      tempGames.add(GameInfo(decoded[i]['name'], formattedUrl, decoded[i]['summary']));
-    }
+  GameInfo fetchedGameData = GameInfo("Name", "", "Desc");
+  void _getGameInfo(String videoGameId) async {
+    var gameCont = await ContentData.fetchGameInfo(videoGameId);
+    GameInfo temp = GameInfo(gameCont["name"], "", gameCont["summary"]);
     setState(() {
-      games.addAll(tempGames);
-      _urlList.addAll(tempUrl);
-      offset += limit;
+      fetchedGameData = temp;
     });
   }
 
@@ -443,6 +213,19 @@ class _ContentScreenState extends State<ContentScreen> {
     if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
       _fetchData();
     }
+  }
+
+  int curLimit = 15;
+  int curOffset = 0;
+  String curSearch = '';
+  List<GameCard> curGameList = [];
+
+  void _fetchData() async {
+    List<GameCard> gameList = await ContentData.fetchGameCards(curLimit, curOffset, curSearch);
+    setState(() {
+      curGameList.addAll(gameList);
+      curOffset += curLimit;
+    });
   }
 
   @override
@@ -664,11 +447,12 @@ class _ContentScreenState extends State<ContentScreen> {
                             prefixIcon: Icon(Icons.search, size: 20,),
                           ),
                           onChanged: (text) {
-                            search = text;
-                            offset = 0;
-                            _urlList.clear();
-                            games.clear();
-                            _fetchData();
+                            _debouncer.run(() {
+                              curSearch = text;
+                              curOffset = 0;
+                              curGameList.clear();
+                              _fetchData();
+                            });
                           },
                         ),
                       )
@@ -679,18 +463,19 @@ class _ContentScreenState extends State<ContentScreen> {
                 child:
                 GridView.builder(
                   controller: _scrollController,
-                  itemCount: _urlList.length,
+                  itemCount: curGameList.length,
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisSpacing: 5, childAspectRatio: 0.8),
                   itemBuilder: (BuildContext context, int index) {
                     return
                     TextButton(
                       onPressed: () {
+                        _getGameInfo(curGameList[index].gameId);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const GameScreen(),
                             settings: RouteSettings(
-                              arguments: games[index],
+                              arguments: GameInfo(fetchedGameData.name, curGameList[index].imageURL, fetchedGameData.description),
                             ),
                           ),
                         );
@@ -704,7 +489,7 @@ class _ContentScreenState extends State<ContentScreen> {
                       child:
                       ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        child: Image.network(_urlList[index])
+                        child: Image.network(curGameList[index].imageURL)
                       )
                     );
 
