@@ -1,20 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:gamegrid/utils/getAPI.dart';
 
-class GameInfo {
-  final String name;
-  final String imageURL;
-  final String description;
-
-  const GameInfo(this.name, this.imageURL, this.description);
-
-}
-
-class GameScreen extends StatelessWidget {
+class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
   @override
+  State<GameScreen> createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
+
+  var game;
+  void _getGameData(String videoGameId) async {
+    var data = await ContentData.fetchGameInfo(videoGameId);
+    setState(() {
+      game = data;
+      built = true;
+    });
+  }
+
+  bool built = false;
+
+  @override
   Widget build(BuildContext context) {
-    final game = ModalRoute.of(context)!.settings.arguments as GameInfo;
+    if(!built) _getGameData(ModalRoute.of(context)!.settings.arguments as String);
     Color text_color = const Color.fromRGBO(155, 168, 183, 1);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -177,14 +186,14 @@ class GameScreen extends StatelessWidget {
           child:
           Stack(
             children: [
-              Container(
+              (game != null) ? Container(
                   child:
                   Column(
                       children: [
                         Container(
                             alignment: Alignment.centerLeft,
                             padding: EdgeInsets.only(left: 10),
-                            child: Text(game.name, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 24), )
+                            child: Text(game["name"], style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 24), )
                         ),
 
                         Container(
@@ -196,19 +205,19 @@ class GameScreen extends StatelessWidget {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(5),
                               child:
-                              Image.network(game.imageURL, scale: 1.7,),
+                              Image.network('https:' + game["cover"]["url"].replaceAll('t_thumb','t_cover_big'), scale: 1.7,),
                             )
                         ),
 
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 10),
                           child:
-                          Text(game.description, style: TextStyle(color: text_color, fontSize: 14),),
+                          Text(game["summary"], style: TextStyle(color: text_color, fontSize: 14),),
                         ),
 
                       ]
                   )
-              )
+              ) : Container(),
             ],
           ),
         )
