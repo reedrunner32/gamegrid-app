@@ -716,7 +716,7 @@ class _ContentScreenState extends State<ContentScreen> {
         ),
 
         /// Profile page
-  Container(
+Container(
   child: Column(
     children: [
       AppBar(
@@ -732,10 +732,12 @@ class _ContentScreenState extends State<ContentScreen> {
                 context: context,
                 builder: (BuildContext context) {
                   return StatefulBuilder(
-                  builder: (BuildContext context, StateSetter setState) {
+                    builder: (BuildContext context, StateSetter setState) {
+                      // API integration for settings page
                       return SettingsPage();
-                  });
-                }
+                    },
+                  );
+                },
               );
             },
             style: TextButton.styleFrom(
@@ -780,6 +782,72 @@ class _ContentScreenState extends State<ContentScreen> {
         ),
       ),
       ListTile(
+        leading: Icon(Icons.people),
+        title: Text('Friends'),
+        trailing: IconButton(
+          icon: Icon(Icons.add),
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                String displayName = ''; // Variable to hold the entered display name
+                return AlertDialog(
+                  title: Text('Send Friend Request'),
+                  content: TextField(
+                    onChanged: (value) {
+                      displayName = value; // Update the display name as it's typed
+                    },
+                    decoration: InputDecoration(hintText: 'Enter display name'),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        // Close the dialog
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        // Send the friend request using the entered display name
+                        // You can add your API integration code here
+                        // After sending, close the dialog
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('Send'),
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+        ),
+        onTap: () {
+          // Display friends list on a new page
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
+            appBar: AppBar(
+              title: Text('Friends'),
+              backgroundColor: Colors.black,
+            ),
+            body: ListView(
+              children: [
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Friend 1'),
+                ),
+                Divider(height: 0), // Adding a border
+                ListTile(
+                  leading: Icon(Icons.person),
+                  title: Text('Friend 2'),
+                ),
+                Divider(height: 0), // Adding a border
+                // Add more friend placeholders as needed
+              ],
+            ),
+          )));
+        },
+      ),
+      ListTile(
         leading: Icon(Icons.rate_review),
         title: Text('Your Activity'),
         onTap: () {
@@ -808,36 +876,7 @@ class _ContentScreenState extends State<ContentScreen> {
           )));
         },
       ),
-      ListTile(
-        leading: Icon(Icons.people),
-        title: Text('Friends'),
-        onTap: () {
-          // Navigate to friends page
-          // Updated to display a vertical list of friends
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text('Friends'),
-              backgroundColor: Colors.black,
-            ),
-            body: ListView(
-              children: [
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Friend 1'),
-                ),
-                Divider(height: 0), // Adding a border
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Friend 2'),
-                ),
-                Divider(height: 0), // Adding a border
-                // Add more friend placeholders as needed
-              ],
-            ),
-          )));
-        },
-      ),
-      ListTile(
+    ListTile(
         leading: Icon(Icons.games),
         title: Text('Game List'),
         onTap: () {
@@ -849,47 +888,23 @@ class _ContentScreenState extends State<ContentScreen> {
               backgroundColor: Colors.black,
             ),
             body: GridView.count(
-              crossAxisCount: 2, // Number of columns in the grid
+              crossAxisCount: 3, // Number of columns in the grid
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(), // Disable scrolling
               children: [
-                Card(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.gamepad, size: 50),
-                      SizedBox(height: 10),
-                      Text('Game 1'),
-                    ],
-                  ),
+                Image.network(
+                  'https://images.igdb.com/igdb/image/upload/t_cover_big/co741o.jpg', // URL of the image
+                  fit: BoxFit.cover, // Adjust the image to cover the whole space
                 ),
-                Card(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.gamepad, size: 50),
-                      SizedBox(height: 10),
-                      Text('Game 2'),
-                    ],
-                  ),
-                ),
-                Card(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.gamepad, size: 50),
-                      SizedBox(height: 10),
-                      Text('Game 3'),
-                    ],
-                  ),
-                ),
-                // Add more placeholders for additional games
+                // Add more images for additional games
               ],
             ),
-          )));
+          ))); 
         },
       ),
-      // Add more buttons as needed
     ],
-  ),
+      // Add more buttons as needed
+        ),
 ),
       ][currentPageIndex],
     );
