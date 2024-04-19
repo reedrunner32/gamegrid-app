@@ -79,6 +79,7 @@ class ContentData {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/games';
 
     final response = await CardsData.postJson(url, payload);
+    if(response.statusCode == 500) return [];
     var decoded = json.decode(response.body);
 
     List<GameCard> gameList = [];
