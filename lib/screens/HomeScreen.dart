@@ -95,7 +95,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     ).show(context);
   }
 
-  void _doLogin() async {
+  void _doResetPassword() async {
     if(email == '') {
       displayLoginError("Please enter an Email.");
       return;
@@ -206,7 +206,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Stack (
+    return PopScope(
+        canPop: false,
+        child:
+      Stack (
       children: [
         SingleChildScrollView(
         child:
@@ -266,7 +269,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 onPressed: ()
                 {
                   panelController.expand();
-                  //Navigator.pushNamed(context, '/login');
                 },
                 child: Container(
                   alignment: Alignment.centerLeft,
@@ -288,7 +290,6 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                   onPressed: ()
                   {
                     panelController2.expand();
-                    //Navigator.pushNamed(context, '/register');
                   },
                   child: Container(
                     alignment: Alignment.centerLeft,
@@ -497,7 +498,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                     child:
                                     ElevatedButton(
                                         onPressed: () {
-                                          _doLogin();
+                                          _doResetPassword();
                                         },
                                         style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -558,7 +559,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         else {
                                           GlobalData.userID = userID;
                                           GlobalData.displayName = jsonObject["displayName"];
-                                          Navigator.pushNamed(context, '/content');
+                                          Navigator.pushReplacementNamed(context, '/content');
                                         }
 
                                       },
@@ -912,6 +913,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
           ),
         ),
       ]
+    )
     );
   }
 }

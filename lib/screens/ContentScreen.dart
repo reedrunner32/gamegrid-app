@@ -127,7 +127,7 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushReplacementNamed(context, '/home');
                   },
                   child: Text(
                     'Sign out',
@@ -243,7 +243,10 @@ class _ContentScreenState extends State<ContentScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
+    return PopScope(
+        canPop: false,
+        child:
+      Scaffold(
       backgroundColor: background_color,
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -680,7 +683,7 @@ Container(
         ),
 ),
       ][currentPageIndex],
-    );
+    ));
   }
 }
 
