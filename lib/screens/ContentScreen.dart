@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamegrid/screens/FriendScreen.dart';
 import 'dart:convert';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
@@ -599,27 +600,7 @@ Container(
         ),
         onTap: () {
           // Display friends list on a new page
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text('Friends'),
-              backgroundColor: Colors.black,
-            ),
-            body: ListView(
-              children: [
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Friend 1'),
-                ),
-                Divider(height: 0), // Adding a border
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Friend 2'),
-                ),
-                Divider(height: 0), // Adding a border
-                // Add more friend placeholders as needed
-              ],
-            ),
-          )));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen()));
         },
       ),
       ListTile(

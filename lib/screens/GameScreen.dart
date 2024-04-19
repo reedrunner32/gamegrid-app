@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gamegrid/utils/getAPI.dart';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
+import 'package:elegant_notification/resources/stacked_options.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -10,6 +13,26 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
 
+  void displayReviewNotif(String message) {
+    ElegantNotification.info(
+      width: 360,
+      stackedOptions: StackedOptions(
+        key: 'top',
+        type: StackedType.same,
+        itemOffset: const Offset(-5, -5),
+      ),
+      position: Alignment.topCenter,
+      animation: AnimationType.fromTop,
+      description: Text(message),
+      shadow: BoxShadow(
+        color: Colors.blue.withOpacity(0.2),
+        spreadRadius: 2,
+        blurRadius: 5,
+        offset: const Offset(0, 4), // changes position of shadow
+      ),
+    ).show(context);
+  }
+
   var game;
   void _getGameData(String videoGameId) async {
     var data = await ContentData.fetchGameInfo(videoGameId);
@@ -19,11 +42,37 @@ class _GameScreenState extends State<GameScreen> {
     });
   }
 
+  int selectedRating = 0; // Initialize selectedRating to 0
+  String reviewText = '';
+  String response = '';
+  bool submitted = false;
+  void _submitReview(String videoGameId) async {
+    if(submitted) {
+      displayReviewNotif("You already submitted a review!");
+      return;
+    }
+    if(selectedRating == 0) {
+      displayReviewNotif("Please select a rating");
+      return;
+    }
+    if(reviewText == '') {
+      displayReviewNotif("Please write a review");
+      return;
+    }
+    var data = await ContentData.addReview(reviewText, '$selectedRating', videoGameId, GlobalData.displayName);
+    setState(() {
+      response = data;
+      submitted = true;
+    });
+
+  }
+
   bool built = false;
 
   @override
   Widget build(BuildContext context) {
-    if(!built) _getGameData(ModalRoute.of(context)!.settings.arguments as String);
+    final videoGameId = ModalRoute.of(context)!.settings.arguments as String;
+    if(!built) _getGameData(videoGameId);
     Color text_color = const Color.fromRGBO(155, 168, 183, 1);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -49,7 +98,6 @@ class _GameScreenState extends State<GameScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    int selectedRating = 0; // Initialize selectedRating to 0
 
                     return AlertDialog(
                       title: Text("Choose an action"),
@@ -82,10 +130,12 @@ class _GameScreenState extends State<GameScreen> {
                                                 ),
                                                 SizedBox(height: 20),
                                                 TextField(
-                                                  // Add your logic here to handle review text
                                                   decoration: InputDecoration(
                                                     hintText: "Write your review here",
                                                   ),
+                                                  onChanged: (text) {
+                                                    reviewText = text;
+                                                  },
                                                 ),
                                                 SizedBox(height: 20),
                                                 Text(
@@ -113,8 +163,13 @@ class _GameScreenState extends State<GameScreen> {
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     // Close the review bottom sheet
-                                                    Navigator.pop(context);
-                                                    // Add your logic here to handle the review submission
+                                                    _submitReview(videoGameId);
+                                                    setState(() {
+                                                      if(submitted) {
+                                                        Navigator.pop(context);
+                                                        displayReviewNotif(response);
+                                                      }
+                                                    });
                                                   },
                                                   child: Text("Submit"),
                                                 ),
