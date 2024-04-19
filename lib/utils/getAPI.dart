@@ -177,7 +177,7 @@ class ContentData {
       return info;
     }
 
-    return "";
+    return null;
   }
 
 // Fetch games list from specific user
@@ -203,7 +203,7 @@ class ContentData {
 // Fetch user's incoming friend requests
 // id = friendRequests[index]["id"]
 // name = friendRequests[index]["displayName"]
-  static Future<List<dynamic>> fetchFriendRequest() async {
+  static Future fetchFriendRequest() async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/received-requests/${GlobalData.userID}';
 
     final response = await CardsData.getJson(url);
@@ -213,7 +213,7 @@ class ContentData {
     if (response.statusCode == 200) {
       return receivedList;
     }
-    List<String> err = [decoded["error"]];
+    String err = decoded["error"];
     return err;
   }
 
@@ -279,7 +279,7 @@ class ContentData {
     if (response.statusCode == 200) {
       return receivedList;
     }
-    return "Failed to fetch friends";
+    return null;
   }
 
 /* -----------------------------

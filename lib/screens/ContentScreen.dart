@@ -4,6 +4,7 @@ import 'package:gamegrid/screens/GameListScreen.dart';
 import 'package:gamegrid/screens/UserReviewsScreen.dart';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
+import 'package:gamegrid/screens/NotificationScreen.dart';
 import 'package:gamegrid/components/Debouncer.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
@@ -294,11 +295,11 @@ class _ContentScreenState extends State<ContentScreen> {
           ),
           NavigationDestination(
             icon: Icon(Icons.search, color: text_color, size: 30,),
-            label: 'Notifications',
+            label: 'Search',
           ),
           NavigationDestination(
             icon: Icon(Icons.person, color: text_color, size: 30,),
-            label: 'Search',
+            label: 'Profile',
           ),
         ],
       ),
@@ -567,24 +568,7 @@ Container(
             // Navigate to the notification page
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Scaffold(
-                appBar: AppBar(
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () {
-                      Navigator.pop(context); // Navigate back to the previous page
-                    },
-                  ),
-                  title: Text('Notifications'),
-                  backgroundColor: Colors.black,
-                ),
-                body: Center(
-                  child: Text(
-                    'Notification Page Content',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              )),
+              MaterialPageRoute(builder: (context) => NotificationScreen()),
             );
           },
           child: Icon(Icons.notifications, color: text_color, size: 30,),
