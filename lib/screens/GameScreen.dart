@@ -50,13 +50,7 @@ class _GameScreenState extends State<GameScreen> {
 
   int selectedRating = 0; // Initialize selectedRating to 0
   String reviewText = '';
-  String response = '';
-  bool submitted = false;
   void _submitReview(String videoGameId) async {
-    if(submitted) {
-      displayReviewNotif("You already submitted a review!");
-      return;
-    }
     if(selectedRating == 0) {
       displayReviewNotif("Please select a rating");
       return;
@@ -66,10 +60,7 @@ class _GameScreenState extends State<GameScreen> {
       return;
     }
     var data = await ContentData.addReview(reviewText, '$selectedRating', videoGameId, GlobalData.displayName);
-    setState(() {
-      response = data;
-      submitted = true;
-    });
+    displayReviewNotif(data);
 
   }
 
@@ -180,14 +171,8 @@ class _GameScreenState extends State<GameScreen> {
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    // Close the review bottom sheet
                     _submitReview(videoGameId);
-                    setState(() {
-                      if(submitted) {
-                        Navigator.pop(context);
-                        displayReviewNotif(response);
-                      }
-                    });
+                    Navigator.pop(context);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(54, 75, 94, 1)), // Set background color
