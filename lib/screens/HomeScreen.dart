@@ -559,6 +559,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         else {
                                           GlobalData.userID = userID;
                                           GlobalData.displayName = jsonObject["displayName"];
+                                          GlobalData.email = email;
+                                          GlobalData.password = password;
                                           Navigator.pushReplacementNamed(context, '/content');
                                         }
 

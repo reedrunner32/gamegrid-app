@@ -16,6 +16,7 @@ class _GameScreenState extends State<GameScreen> {
   void displayReviewNotif(String message) {
     ElegantNotification.info(
       width: 360,
+      toastDuration: const Duration(milliseconds: 2500),
       stackedOptions: StackedOptions(
         key: 'top',
         type: StackedType.same,
@@ -31,6 +32,11 @@ class _GameScreenState extends State<GameScreen> {
         offset: const Offset(0, 4), // changes position of shadow
       ),
     ).show(context);
+  }
+
+  _addGametoList(String videoGameId) async {
+    var retMessage = await ContentData.addGametoList(videoGameId);
+    displayReviewNotif(retMessage);
   }
 
   var game;
@@ -202,8 +208,8 @@ class _GameScreenState extends State<GameScreen> {
           ),
           ListTile(
             onTap: () {
+              _addGametoList(videoGameId);
               Navigator.pop(context); // Close the original popup
-              // Add your logic here to handle adding to list
             },
             title: Text("Add to list", style: TextStyle(color: Colors.white)), // Set text color to white
             leading: Icon(Icons.playlist_add, color: Colors.white), // Set icon color to white

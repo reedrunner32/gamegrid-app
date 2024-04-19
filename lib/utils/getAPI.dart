@@ -135,7 +135,7 @@ class ContentData {
   * ----------------------------- */
 
 // Add game to user's library (play list)
-  static Future<String> addGametoList(int gameId) async {
+  static Future<String> addGametoList(String gameId) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/addGame';
     String payload = '{"email":"${GlobalData.email}","videoGameId":"$gameId"}';
 
