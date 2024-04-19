@@ -24,7 +24,7 @@ class _ContentScreenState extends State<ContentScreen> {
   Color text_color = Color.fromRGBO(155, 168, 183, 1);
   Color button_color = Color.fromRGBO(10, 147, 150, 0.5);
 
-  final _debouncer = Debouncer(milliseconds: 200);
+  final _debouncer = Debouncer(milliseconds: 300);
 
   int currentPageIndex = 0;
 
@@ -234,12 +234,14 @@ class _ContentScreenState extends State<ContentScreen> {
   int curOffset = 0;
   String curSearch = '';
   List<GameCard> curGameList = [];
+  bool searchLoaded = false;
 
   void _fetchData() async {
     List<GameCard> gameList = await ContentData.fetchGameCards(curLimit, curOffset, curSearch);
     setState(() {
       curGameList.addAll(gameList);
       curOffset += curLimit;
+      searchLoaded = true;
     });
   }
 
@@ -479,6 +481,9 @@ class _ContentScreenState extends State<ContentScreen> {
                           ),
                           onChanged: (text) {
                             _debouncer.run(() {
+                              setState(() {
+                                searchLoaded = false;
+                              });
                               curSearch = text;
                               curOffset = 0;
                               curGameList.clear();
@@ -490,7 +495,7 @@ class _ContentScreenState extends State<ContentScreen> {
                     ]
                 ),
               ),
-              Expanded(
+              (searchLoaded) ? Expanded(
                 child:
                 GridView.builder(
                   controller: _scrollController,
@@ -525,6 +530,13 @@ class _ContentScreenState extends State<ContentScreen> {
 
                   },
                 ),
+              ) : Container(
+                height: 100,
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 6,
+                    color: Color.fromRGBO(10, 147, 150, 0.5),
+                  )
               ),
             ],
           ),

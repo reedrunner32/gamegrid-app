@@ -258,7 +258,13 @@ class _GameScreenState extends State<GameScreen> {
 
                       ]
                   )
-              ) : Container(child: Text("Loading", style: TextStyle(color: text_color),)),
+              ) : const Align(
+                  alignment: Alignment.center,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 6,
+                    color: Color.fromRGBO(10, 147, 150, 0.5),
+                  )
+              ),
             ],
           ),
         )

@@ -50,7 +50,13 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
             ),
           ),
         ],
-      ) : Container(child: Text("Loading")),
+      ) : const Align(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(
+            strokeWidth: 6,
+            color: Color.fromRGBO(10, 147, 150, 0.5),
+          )
+      ),
     );
   }
 

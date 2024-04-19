@@ -75,7 +75,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
     else if(requests.runtimeType == String) {
       return Text(requests);
     }
-    return const Text("Loading");
+    return const Align(
+        alignment: Alignment.center,
+        child: CircularProgressIndicator(
+          strokeWidth: 6,
+          color: Color.fromRGBO(10, 147, 150, 0.5),
+        )
+    );
   }
 
   @override
