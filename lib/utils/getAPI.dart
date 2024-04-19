@@ -181,7 +181,7 @@ class ContentData {
   }
 
 // Fetch games list from specific user
-  static Future<List<dynamic>> fetchUserGames(String userId) async {
+  static Future fetchUserGames(String userId) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/user/games/$userId';
 
     final response = await CardsData.getJson(url);
@@ -191,7 +191,7 @@ class ContentData {
     if (response.statusCode == 200) {
       return info;
     }
-    List<String> err = [decoded["error"]];
+    String err = decoded["error"];
     return err;
   }
 
@@ -308,9 +308,8 @@ class ContentData {
     String retErr = decoded['error']; //returning status message
     var userInfo = decoded['user'];
 
-    if(retErr == '') {
-      List<String> err = [retErr];
-      return err;
+    if(retErr != '') {
+      return retErr;
     }
 
     return userInfo;
@@ -381,7 +380,7 @@ class ContentData {
 
 // Fetch reviews for an individual user
 
-  static Future<List<dynamic>> fetchUserReviews(String displayName) async {
+  static Future fetchUserReviews(String displayName) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/reviews/search/$displayName';
     final response = await CardsData.getJson(url);
 
@@ -391,7 +390,7 @@ class ContentData {
     if (response.statusCode == 200) {
       return receivedList;
     }
-    List<String> err = [decoded["error"]];
+    String err = decoded["error"];
     return err;
 
   }

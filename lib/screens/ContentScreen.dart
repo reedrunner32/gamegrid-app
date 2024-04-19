@@ -223,6 +223,9 @@ class _ContentScreenState extends State<ContentScreen> {
 
   void _friendRequest() async{
     var userData = await ContentData.searchUsers(displayName);
+
+    if(userData.runtimeType == String) return; //fetch error
+
     String friendId = userData["id"];
     String retMessage = await ContentData.sendFriendRequest(friendId); //return message
   }

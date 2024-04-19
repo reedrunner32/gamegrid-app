@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/getAPI.dart';
+import 'package:gamegrid/screens/ProfileScreen.dart';
 
 class FriendScreen extends StatefulWidget {
   const FriendScreen({super.key});
@@ -35,6 +36,10 @@ class _FriendScreenState extends State<FriendScreen> {
           return ListTile(
             leading: Icon(Icons.person),
             title: Text(friends[index]["displayName"]),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder:
+                  (context) => ProfileScreen(friends[index]["displayName"])));
+            }
           );
         }
       ) : Container(),
