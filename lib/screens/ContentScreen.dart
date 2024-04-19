@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gamegrid/screens/FriendScreen.dart';
-import 'dart:convert';
+import 'package:gamegrid/screens/GameListScreen.dart';
+import 'package:gamegrid/screens/UserReviewsScreen.dart';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
 import 'package:gamegrid/components/Debouncer.dart';
@@ -632,27 +633,7 @@ Container(
         onTap: () {
           // Navigate to your activity page
           // Updated to display review activity placeholders
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text('Your Review Activity'),
-              backgroundColor: Colors.black,
-            ),
-            body: ListView(
-              children: [
-                ListTile(
-                  title: Text('Review 1'),
-                  subtitle: Text('Details of review 1'),
-                ),
-                Divider(height: 0), // Adding a border
-                ListTile(
-                  title: Text('Review 2'),
-                  subtitle: Text('Details of review 2'),
-                ),
-                Divider(height: 0), // Adding a border
-                // Add more review placeholders as needed
-              ],
-            ),
-          )));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UserReviewsScreen()));
         },
       ),
     ListTile(
@@ -661,24 +642,7 @@ Container(
         onTap: () {
           // Navigate to game list page
           // Updated to display a grid view of games
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text('Game List'),
-              backgroundColor: Colors.black,
-            ),
-            body: GridView.count(
-              crossAxisCount: 3, // Number of columns in the grid
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(), // Disable scrolling
-              children: [
-                Image.network(
-                  'https://images.igdb.com/igdb/image/upload/t_cover_big/co741o.jpg', // URL of the image
-                  fit: BoxFit.cover, // Adjust the image to cover the whole space
-                ),
-                // Add more images for additional games
-              ],
-            ),
-          ))); 
+          Navigator.push(context, MaterialPageRoute(builder: (context) => GameListScreen()));
         },
       ),
     ],
