@@ -10,12 +10,12 @@ class GlobalData
 }
 
 class CardsData {
-  static Future<http.Response> postJson(String url, String outgoing) async
+  static Future postJson(String url, String outgoing) async
   {
-    http.Response ret = http.Response("", 101);
+    var ret;
     try
     {
-      http.Response response = await http.post(Uri.parse(url),
+      var response = await http.post(Uri.parse(url),
           headers:
           {
             "Accept": "application/json",
@@ -29,16 +29,17 @@ class CardsData {
     catch (e)
     {
       String err = e.toString();
+      return err;
     }
     return ret;
   }
 
-  static Future<http.Response> getJson(String url) async
+  static Future getJson(String url) async
   {
-    http.Response ret = http.Response("", 101);
+    var ret;
     try
     {
-      http.Response response = await http.get(Uri.parse(url));
+      var response = await http.get(Uri.parse(url));
       ret = response;
     }
     catch (e)
@@ -50,10 +51,10 @@ class CardsData {
 
   static Future<http.Response> delJson(String url) async
   {
-    http.Response ret = http.Response("", 101);
+    var ret;
     try
     {
-      http.Response response = await http.delete(Uri.parse(url));
+      var response = await http.delete(Uri.parse(url));
       ret = response;
     }
     catch (e)
@@ -264,11 +265,11 @@ class ContentData {
     return retErr;
   }
 
-// Fetch all friends info
-// id = friendList[index]["id"]
-// email = friendList[index]["email"]
-// name = friendList[index]["displayName"]
-  static Future<List<dynamic>> _fetchFriendList() async {
+  // Fetch all friends info
+  // id = friendList[index]["id"]
+  // email = friendList[index]["email"]
+  // name = friendList[index]["displayName"]
+  static Future fetchFriendList() async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/${GlobalData.userID}';
 
     final response = await CardsData.getJson(url);
@@ -278,8 +279,7 @@ class ContentData {
     if (response.statusCode == 200) {
       return receivedList;
     }
-    List<String> err = [decoded["error"]];
-    return err;
+    return "Failed to fetch friends";
   }
 
 /* -----------------------------
@@ -364,7 +364,7 @@ class ContentData {
   * ----------------------------- */
 
 // Update user display name, or email, or password
-  static Future<String> addReview(String textBody, String rating, String videoGameId, String displayName) async {
+  static Future addReview(String textBody, String rating, String videoGameId, String displayName) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/reviews';
     String payload = '{"textBody":"$textBody","rating":"$rating","videoGameId":"$videoGameId","displayName":"$displayName"}';
 

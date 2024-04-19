@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamegrid/screens/FriendScreen.dart';
 import 'dart:convert';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
@@ -28,7 +29,8 @@ class _ContentScreenState extends State<ContentScreen> {
 
   final _scrollController = ScrollController();
   String search = '';
-
+  
+  String displayName = '';
   List<GameCard> games = [];
 
   // FOR TESTING PURPOSES
@@ -217,6 +219,12 @@ class _ContentScreenState extends State<ContentScreen> {
       curGameList.addAll(gameList);
       curOffset += curLimit;
     });
+  }
+
+  void _friendRequest() async{
+    var userData = await ContentData.searchUsers(displayName);
+    String friendId = userData["id"];
+    String retMessage = await ContentData.sendFriendRequest(friendId); //return message
   }
 
   @override
@@ -557,37 +565,49 @@ Container(
         ),
       ),
       ListTile(
-        leading: Icon(Icons.people),
-        title: Text('Friends'),
+        leading: Icon(Icons.people, color: Colors.white), // Set icon color to white
+        title: Text('Friends', style: TextStyle(color: Colors.white)), // Set text color to white
         trailing: IconButton(
-          icon: Icon(Icons.add),
+           icon: Icon(Icons.add, color: Colors.white), // Set icon color to white
           onPressed: () {
             showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                String displayName = ''; // Variable to hold the entered display name
-                return AlertDialog(
-                  title: Text('Send Friend Request'),
-                  content: TextField(
-                    onChanged: (value) {
-                      displayName = value; // Update the display name as it's typed
-                    },
-                    decoration: InputDecoration(hintText: 'Enter display name'),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        // Close the dialog
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('Send'),
+  context: context,
+  builder: (BuildContext context) {
+    // Variable to hold the entered display name
+    return AlertDialog(
+      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Set background color
+      title: Text('Send Friend Request', style: TextStyle(color: Colors.white)), // Set text color to white
+      content: TextField(
+        onChanged: (value) {
+          displayName = value; // Update the display name as it's typed
+        },
+        decoration: InputDecoration(
+          hintText: 'Enter display name',
+          hintStyle: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white), // Set underline color to white
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Colors.white), // Set focused underline color to white
+          ),
+        ),
+        cursorColor: Colors.white, // Set cursor color to white
+        style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color to white
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            // Close the dialog
+            Navigator.of(context).pop();
+          },
+          child: Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
+        ),
+        TextButton(
+          onPressed: () {
+            _friendRequest();
+            Navigator.of(context).pop();
+          },
+          child: Text('Send', style: TextStyle(color: Colors.white)), // Set text color to white
                     ),
                   ],
                 );
@@ -597,32 +617,12 @@ Container(
         ),
         onTap: () {
           // Display friends list on a new page
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text('Friends'),
-              backgroundColor: Colors.black,
-            ),
-            body: ListView(
-              children: [
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Friend 1'),
-                ),
-                Divider(height: 0), // Adding a border
-                ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Friend 2'),
-                ),
-                Divider(height: 0), // Adding a border
-                // Add more friend placeholders as needed
-              ],
-            ),
-          )));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen()));
         },
       ),
       ListTile(
-        leading: Icon(Icons.rate_review),
-        title: Text('Your Activity'),
+        leading: Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
+        title: Text('Your Activity', style: TextStyle(color: Colors.white)), // Set text color to white
         onTap: () {
           // Navigate to your activity page
           // Updated to display review activity placeholders
@@ -650,8 +650,8 @@ Container(
         },
       ),
     ListTile(
-        leading: Icon(Icons.games),
-        title: Text('Game List'),
+         leading: Icon(Icons.games, color: Colors.white), // Set icon color to white
+        title: Text('Game List', style: TextStyle(color: Colors.white)), // Set text color to
         onTap: () {
           // Navigate to game list page
           // Updated to display a grid view of games
@@ -683,6 +683,7 @@ Container(
     );
   }
 }
+
 
 class MainPage extends StatefulWidget {
   @override
