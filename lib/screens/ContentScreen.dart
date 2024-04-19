@@ -7,7 +7,7 @@ import 'package:gamegrid/screens/GameScreen.dart';
 import 'package:gamegrid/components/Debouncer.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
-import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
+import 'package:elegant_notification/resources/stacked_options.dart';
 
 
 class ContentScreen extends StatefulWidget {
@@ -23,7 +23,6 @@ class _ContentScreenState extends State<ContentScreen> {
   Color text_color = Color.fromRGBO(155, 168, 183, 1);
   Color button_color = Color.fromRGBO(10, 147, 150, 0.5);
 
-  SlidingUpPanelController panelController = SlidingUpPanelController();
   final _debouncer = Debouncer(milliseconds: 200);
 
   int currentPageIndex = 0;
@@ -31,8 +30,29 @@ class _ContentScreenState extends State<ContentScreen> {
   final _scrollController = ScrollController();
   String search = '';
   
-  String displayName = '';
+  String addFriendTextField = '';
   List<GameCard> games = [];
+
+  void displayNotif(String message) {
+    ElegantNotification.info(
+      width: 360,
+      toastDuration: const Duration(milliseconds: 2500),
+      stackedOptions: StackedOptions(
+        key: 'top',
+        type: StackedType.same,
+        itemOffset: const Offset(-5, -5),
+      ),
+      position: Alignment.topCenter,
+      animation: AnimationType.fromTop,
+      description: Text(message),
+      shadow: BoxShadow(
+        color: Colors.blue.withOpacity(0.2),
+        spreadRadius: 2,
+        blurRadius: 5,
+        offset: const Offset(0, 4), // changes position of shadow
+      ),
+    ).show(context);
+  }
 
   // FOR TESTING PURPOSES
   void printDebug(String str) {
@@ -222,13 +242,17 @@ class _ContentScreenState extends State<ContentScreen> {
     });
   }
 
-  void _friendRequest() async{
-    var userData = await ContentData.searchUsers(displayName);
+  void _sendFriendRequest() async{
+    var userData = await ContentData.searchUsers(addFriendTextField);
 
-    if(userData.runtimeType == String) return; //fetch error
+    if(userData.runtimeType == String) {
+      displayNotif("User does not exist");
+      return; //fetch error
+    }
 
     String friendId = userData["id"];
     String retMessage = await ContentData.sendFriendRequest(friendId); //return message
+    displayNotif(retMessage);
   }
 
   @override
@@ -586,7 +610,7 @@ Container(
       title: Text('Send Friend Request', style: TextStyle(color: Colors.white)), // Set text color to white
       content: TextField(
         onChanged: (value) {
-          displayName = value; // Update the display name as it's typed
+          addFriendTextField = value; // Update the display name as it's typed
         },
         decoration: InputDecoration(
           hintText: 'Enter display name',
@@ -604,14 +628,13 @@ Container(
       actions: [
         TextButton(
           onPressed: () {
-            // Close the dialog
             Navigator.of(context).pop();
           },
           child: Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
         ),
         TextButton(
           onPressed: () {
-            _friendRequest();
+            _sendFriendRequest();
             Navigator.of(context).pop();
           },
           child: Text('Send', style: TextStyle(color: Colors.white)), // Set text color to white
