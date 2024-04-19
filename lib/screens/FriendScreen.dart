@@ -42,7 +42,7 @@ class _FriendScreenState extends State<FriendScreen> {
             }
           );
         }
-      ) : Container(),
+      ) : Container(child: Text("Loading")),
     );
   }
 }
