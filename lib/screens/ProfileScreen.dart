@@ -30,6 +30,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     List<GameCard> temp = [];
     for(int i = 0; i<userGameIds.length; i++) {
       var gameData = await ContentData.fetchGameInfo(userGameIds[i]);
+      if (gameData == null) continue;
       temp.add(GameCard('https:${gameData["cover"]["url"].replaceAll('t_thumb','t_cover_big')}', '${gameData["id"]}'));
     }
 
