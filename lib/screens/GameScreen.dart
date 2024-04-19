@@ -267,7 +267,7 @@ class _GameScreenState extends State<GameScreen> {
 
                       ]
                   )
-              ) : Container(),
+              ) : Container(child: Text("Loading", style: TextStyle(color: text_color),)),
             ],
           ),
         )
