@@ -227,8 +227,6 @@ class _ContentScreenState extends State<ContentScreen> {
     String retMessage = await ContentData.sendFriendRequest(friendId); //return message
   }
 
-
-
   @override
   void dispose() {
     _scrollController.dispose();

@@ -134,10 +134,10 @@ class _GameScreenState extends State<GameScreen> {
                 TextField(
                   // Add your logic here to handle review text
                   cursorColor: Colors.white, // Set cursor color to white
+                  onChanged: (text) {
+                    reviewText = text;
+                  },
                   decoration: InputDecoration(
-                    onChanged: (text) {
-                      reviewText = text;
-                    },
                     hintText: "Write your review here",
                     hintStyle: TextStyle(color:Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
                     enabledBorder: UnderlineInputBorder(
