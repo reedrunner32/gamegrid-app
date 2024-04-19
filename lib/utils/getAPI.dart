@@ -299,7 +299,7 @@ class ContentData {
   }
 
 // Search for a user (returns list of users)
-  static Future<List<dynamic>> searchUsers(String displayName) async {
+  static Future searchUsers(String displayName) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/searchusers';
     String payload = '{"displayName":"$displayName"}';
 
