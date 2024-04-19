@@ -8,6 +8,8 @@ import 'package:elegant_notification/resources/stacked_options.dart';
 import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -20,13 +22,15 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(25, 28, 33, 1),
+      backgroundColor: const Color.fromRGBO(25, 28, 33, 1),
       body: MainPage(),
     );
   }
 }
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
   @override
   _MainPageState createState() => _MainPageState();
 }
@@ -37,8 +41,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   SlidingUpPanelController panelController = SlidingUpPanelController();
   SlidingUpPanelController panelController2 = SlidingUpPanelController();
 
-  Color background_color = Color.fromRGBO(25, 28, 33, 1);
-  Color text_color = Color.fromRGBO(155, 168, 183, 1);
+  Color background_color = const Color.fromRGBO(25, 28, 33, 1);
+  Color text_color = const Color.fromRGBO(155, 168, 183, 1);
 
   // Login fields
   String email = '';
@@ -89,6 +93,109 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
         offset: const Offset(0, 4), // changes position of shadow
       ),
     ).show(context);
+  }
+
+  void _doLogin() async {
+    if(email == '') {
+      displayLoginError("Please enter an Email.");
+      return;
+    }
+    if (!email.contains('@')) {
+      displayLoginError("Please enter a valid Email.");
+      return;
+    }
+    else {
+      String payload = '{"email":"$email"}';
+      var jsonObject;
+      try {
+        String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/forgot-password';
+        var ret = await CardsData.postJson(url, payload);
+        jsonObject = ret;
+      }
+      catch (e) {
+        displayLoginError("Could not reset password");
+        return;
+      }
+      if(jsonObject.statusCode == 200) {
+        displayResetPassword();
+      }
+      else if(jsonObject.statusCode == 404) {
+        displayLoginError("User not found");
+      }
+      else {
+        displayLoginError("Could not reset password");
+      }
+    }
+  }
+
+  void _doRegister() async {
+    if(emailR == '') {
+      displayLoginError("Please enter an Email.");
+      return;
+    }
+    if(usernameR == '') {
+      displayLoginError("Please enter a Username.");
+      return;
+    }
+    if(passwordR == '') {
+      displayLoginError("Please enter a Password.");
+      return;
+    }
+    if (!emailR.contains('@')) {
+      displayLoginError("Please enter a valid Email.");
+      return;
+    }
+    if(passwordR.length < 8 && !passwordR.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      displayLoginError('Password must be at least 8 characters long and contain a special character');
+      return;
+    }
+    if (passwordR.length < 8) {
+      displayLoginError('Password must be at least 8 characters long');
+      return;
+    }
+    if (!passwordR.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      displayLoginError('Password must contain at least one special character');
+      return;
+    }
+
+    String payload = '{"email":"$emailR","password":"$passwordR","displayName":"$usernameR"}';
+    String error = '';
+    try
+    {
+      String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/register';
+      var ret = await CardsData.postJson(url, payload);
+      var jsonObject = json.decode(ret.body);
+      error = jsonObject["error"];
+    }
+    catch(e)
+    {
+      displayLoginError(e.toString());
+      return;
+    }
+    if( error == '' )
+    {
+      ElegantNotification.success(
+        width: 360,
+        stackedOptions: StackedOptions(
+          key: 'top',
+          type: StackedType.same,
+          itemOffset: const Offset(-5, -5),
+        ),
+        position: Alignment.topCenter,
+        animation: AnimationType.fromTop,
+        title: const Text("Account Successfully Created!"),
+        description: const Text("Please verify account before logging in."),
+        shadow: BoxShadow(
+          color: Colors.green.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 4), // changes position of shadow
+        ),
+      ).show(context);
+    }
+    else {
+      displayLoginError(error);
+    }
   }
 
   @override
@@ -275,13 +382,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                 top: 50,
                                 left: size.width/2 - 40,
                                 child:
-                                Container(
-                                  child:
-                                  Image.asset(
-                                    'assets/images/controllericon.png',
-                                    height: 52,
-                                    width: 80,
-                                  ),
+                                Image.asset(
+                                  'assets/images/controllericon.png',
+                                  height: 52,
+                                  width: 80,
                                 ),
                               ),
                               Positioned(
@@ -307,8 +411,14 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                       borderSide: BorderSide(color: text_color, width: 0.15),
                                       borderRadius: const BorderRadius.all(Radius.circular(0)),
                                     ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.white, width: 0.15),
+                                      borderRadius: BorderRadius.all(Radius.circular(0)),
+                                    ),
+                                    floatingLabelStyle: TextStyle(color: text_color),
                                     labelText: 'Email',
                                   ),
+                                  cursorColor: text_color,
                                   style: TextStyle(
                                     color: text_color,
                                   ),
@@ -331,8 +441,14 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                       borderSide: BorderSide(color: text_color, width: 0.15),
                                       borderRadius: const BorderRadius.all(Radius.circular(0)),
                                     ),
+                                    focusedBorder: const OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.white, width: 0.15),
+                                      borderRadius: BorderRadius.all(Radius.circular(0)),
+                                    ),
+                                    floatingLabelStyle: TextStyle(color: text_color),
                                     labelText: 'Password',
                                   ),
+                                  cursorColor: text_color,
                                   style: TextStyle(
                                     color: text_color,
                                   ),
@@ -380,26 +496,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                     margin: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                     child:
                                     ElevatedButton(
-                                        onPressed: () async {
-                                          if(email == '') {
-                                            displayLoginError("Please enter an Email.");
-                                          }
-                                          else {
-                                            String payload = '{"email":"${email.trim()}"}';
-                                            var jsonObject;
-                                            try {
-                                              String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/forgot-password';
-                                              http.Response ret = await CardsData.postJson(url, payload);
-                                              jsonObject = json.decode(ret.body);
-                                            }
-                                            catch (e) {
-                                              displayLoginError("Could not reset email");
-                                              return;
-                                            }
-                                            if(jsonObject["message"] != null) {
-                                              displayResetPassword();
-                                            }
-                                          }
+                                        onPressed: () {
+                                          _doLogin();
                                         },
                                         style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -439,13 +537,13 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                           return;
                                         }
 
-                                        String payload = '{"email":"${email.trim()}","password":"${password.trim()}"}';
+                                        String payload = '{"email":"$email","password":"$password"}';
                                         var userID;
                                         var jsonObject;
                                         var error;
                                         try {
                                           String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/login';
-                                          http.Response ret = await CardsData.postJson(url, payload);
+                                          var ret = await CardsData.postJson(url, payload);
                                           jsonObject = json.decode(ret.body);
                                           userID = jsonObject["id"];
                                           error = jsonObject["error"];
@@ -590,11 +688,17 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               borderSide: BorderSide(color: Colors.white, width: 0.15),
                                               borderRadius: BorderRadius.all(Radius.circular(0)),
                                             ),
+                                            focusedBorder: const OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white, width: 0.15),
+                                              borderRadius: BorderRadius.all(Radius.circular(0)),
+                                            ),
+                                            floatingLabelStyle: TextStyle(color: text_color),
                                             labelText: 'Email',
                                           ),
                                           style: TextStyle(
                                             color: text_color,
                                           ),
+                                          cursorColor: text_color,
                                           onChanged: (text)
                                           {
                                             emailR = text;
@@ -614,8 +718,14 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               borderSide: BorderSide(color: Colors.white, width: 0.15),
                                               borderRadius: BorderRadius.all(Radius.circular(0)),
                                             ),
+                                            focusedBorder: const OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white, width: 0.15),
+                                              borderRadius: BorderRadius.all(Radius.circular(0)),
+                                            ),
+                                            floatingLabelStyle: TextStyle(color: text_color),
                                             labelText: 'Username',
                                           ),
+                                          cursorColor: text_color,
                                           style: TextStyle(
                                             color: text_color,
                                           ),
@@ -638,9 +748,15 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                               borderSide: BorderSide(color: Colors.white, width: 0.15),
                                               borderRadius: BorderRadius.all(Radius.circular(0)),
                                             ),
+                                            focusedBorder: const OutlineInputBorder(
+                                              borderSide: BorderSide(color: Colors.white, width: 0.15),
+                                              borderRadius: BorderRadius.all(Radius.circular(0)),
+                                            ),
+                                            floatingLabelStyle: TextStyle(color: text_color),
                                             labelText: 'Password',
                                           ),
                                           obscureText: true,
+                                          cursorColor: text_color,
                                           style: TextStyle(
                                             color: text_color,
                                           ),
@@ -689,14 +805,19 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                   onPressed: () async {
                                                     if(emailR == '') {
                                                       displayLoginError("Please enter an Email.");
+                                                      return;
+                                                    }
+                                                    if (!emailR.contains('@')) {
+                                                      displayLoginError("Please enter a valid Email.");
+                                                      return;
                                                     }
                                                     else {
-                                                      String payload = '{"email":"${emailR.trim()}"}';
+                                                      String payload = '{"email":"$emailR"}';
                                                       var jsonObject;
                                                       try {
                                                         String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/forgot-password';
-                                                        http.Response ret = await CardsData.postJson(url, payload);
-                                                        jsonObject = json.decode(ret.body);
+                                                        var ret = await CardsData.postJson(url, payload);
+                                                        jsonObject = ret;
                                                       }
                                                       catch (e) {
                                                         displayLoginError("Could not reset password");
@@ -704,6 +825,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                       }
                                                       if(jsonObject.statusCode == 200) {
                                                         displayResetPassword();
+                                                      }
+                                                      else if(jsonObject.statusCode == 404) {
+                                                        displayLoginError("User not found");
                                                       }
                                                       else {
                                                         displayLoginError("Could not reset password");
@@ -732,60 +856,8 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                                 margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                                                 child:
                                                 ElevatedButton(
-                                                    onPressed: () async {
-                                                      if(emailR == '') {
-                                                      displayLoginError(
-                                                      "Please enter an Email.");
-                                                      }
-                                                      else if(usernameR == '') {
-                                                        displayLoginError(
-                                                            "Please enter a Username.");
-                                                      }
-                                                      else if(passwordR == '') {
-                                                        displayLoginError(
-                                                            "Please enter a Password.");
-                                                      }
-                                                      else {
-                                                        String payload = '{"email":"${emailR.trim()}","password":"${passwordR.trim()}","displayName":"${usernameR.trim()}"}';
-                                                        String error = '';
-                                                        var jsonObject;
-                                                        try
-                                                        {
-                                                          String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/register';
-                                                          http.Response ret = await CardsData.postJson(url, payload);
-                                                          jsonObject = json.decode(ret.body);
-                                                          error = jsonObject["error"];
-                                                        }
-                                                        catch(e)
-                                                        {
-                                                          displayLoginError(e.toString());
-                                                          return;
-                                                        }
-                                                        if( error == '' )
-                                                        {
-                                                          ElegantNotification.success(
-                                                            width: 360,
-                                                            stackedOptions: StackedOptions(
-                                                              key: 'top',
-                                                              type: StackedType.same,
-                                                              itemOffset: const Offset(-5, -5),
-                                                            ),
-                                                            position: Alignment.topCenter,
-                                                            animation: AnimationType.fromTop,
-                                                            title: const Text("Account Successfully Created!"),
-                                                            description: const Text("Please verify account before logging in."),
-                                                            shadow: BoxShadow(
-                                                              color: Colors.green.withOpacity(0.2),
-                                                              spreadRadius: 2,
-                                                              blurRadius: 5,
-                                                              offset: const Offset(0, 4), // changes position of shadow
-                                                            ),
-                                                          ).show(context);
-                                                        }
-                                                        else {
-                                                          displayLoginError(error);
-                                                        }
-                                                      }
+                                                    onPressed: () {
+                                                      _doRegister();
                                                     },
                                                     style: ElevatedButton.styleFrom(
                                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
