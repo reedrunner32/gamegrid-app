@@ -96,130 +96,125 @@ class _GameScreenState extends State<GameScreen> {
             GestureDetector(
               onTap: () {
                 showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
+  context: context,
+  builder: (BuildContext context) {
 
-                    return AlertDialog(
-                      title: Text("Choose an action"),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context); // Close the original popup
-                                showModalBottomSheet(
-                                  isScrollControlled: true,
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return StatefulBuilder(
-                                      builder: (BuildContext context, StateSetter setState) {
-                                        return SingleChildScrollView(
-                                          child: Container(
-                                            padding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(context).viewInsets.bottom,
-                                              left: 20,
-                                              right: 20,
-                                            ),
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: <Widget>[
-                                                SizedBox(height: 20),
-                                                Text(
-                                                  "Add a Review",
-                                                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                                ),
-                                                SizedBox(height: 20),
-                                                TextField(
-                                                  decoration: InputDecoration(
-                                                    hintText: "Write your review here",
-                                                  ),
-                                                  onChanged: (text) {
-                                                    reviewText = text;
-                                                  },
-                                                ),
-                                                SizedBox(height: 20),
-                                                Text(
-                                                  "Rate:",
-                                                  style: TextStyle(fontSize: 16),
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: List.generate(5, (index) {
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          selectedRating = index + 1;
-                                                        });
-                                                      },
-                                                      child: Icon(
-                                                        index < selectedRating ? Icons.star : Icons.star_border,
-                                                        size: 40,
-                                                        color: index < selectedRating ? Colors.orange : Colors.grey,
-                                                      ),
-                                                    );
-                                                  }),
-                                                ),
-                                                SizedBox(height: 20),
-                                                ElevatedButton(
-                                                  onPressed: () {
-                                                    // Close the review bottom sheet
-                                                    _submitReview(videoGameId);
-                                                    setState(() {
-                                                      if(submitted) {
-                                                        Navigator.pop(context);
-                                                        displayReviewNotif(response);
-                                                      }
-                                                    });
-                                                  },
-                                                  child: Text("Submit"),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
-                                );
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Colors.black38,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  "Add a review",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context); // Close the original popup
-                                // Add your logic here to handle adding to list
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(10),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Colors.black38,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Text(
-                                  "Add to list",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+    return AlertDialog(
+      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Set the background color
+      title: Text("Choose an action", style: TextStyle(color: Colors.white)), // Set text color to white
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            onTap: () {
+              Navigator.pop(context); // Close the original popup
+          showModalBottomSheet(
+  isScrollControlled: true,
+  context: context,
+  builder: (BuildContext context) {
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return SingleChildScrollView(
+          child: Container(
+            color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom,
+              left: 20,
+              right: 20,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                SizedBox(height: 20),
+                Text(
+                  "Add a Review",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
+                ),
+                SizedBox(height: 20),
+                TextField(
+                  // Add your logic here to handle review text
+                  cursorColor: Colors.white, // Set cursor color to white
+                  decoration: InputDecoration(
+                    onChanged: (text) {
+                      reviewText = text;
+                    },
+                    hintText: "Write your review here",
+                    hintStyle: TextStyle(color:Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
+                    enabledBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white), // Set underline color to white
+                    ),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white), // Set underline color to white
+                    ),
+                  ),
+                  style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color inside the text field
+                ),
+                SizedBox(height: 20),
+                Text(
+                  "Rate:",
+                  style: TextStyle(fontSize: 16, color: Colors.white), // Set text color to white
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(5, (index) {
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedRating = index + 1;
+                        });
+                      },
+                      child: Icon(
+                        index < selectedRating ? Icons.star : Icons.star_border,
+                        size: 40,
+                        color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 0.5) : Colors.white, // Set star color
                       ),
                     );
+                  }),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // Close the review bottom sheet
+                    _submitReview(videoGameId);
+                    setState(() {
+                      if(submitted) {
+                        Navigator.pop(context);
+                        displayReviewNotif(response);
+                      }
+                    });
                   },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(54, 75, 94, 1)), // Set background color
+                  ),
+                  child: Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                },
+              );
+            },
+            title: Text("Add a review", style: TextStyle(color: Colors.white)), // Set text color to white
+            leading: Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
+          ),
+          ListTile(
+            onTap: () {
+              Navigator.pop(context); // Close the original popup
+              // Add your logic here to handle adding to list
+            },
+            title: Text("Add to list", style: TextStyle(color: Colors.white)), // Set text color to white
+            leading: Icon(Icons.playlist_add, color: Colors.white), // Set icon color to white
+         ),
+        ],
+      ),
+    );
+  },
                 );
               },
+
               child: Container(
                 margin: EdgeInsets.all(10),
                 alignment: Alignment.center,
