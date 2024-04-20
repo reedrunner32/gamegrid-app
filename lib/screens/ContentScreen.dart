@@ -236,7 +236,7 @@ class _ContentScreenState extends State<ContentScreen> {
   List<GameCard> curGameList = [];
   bool searchLoaded = false;
 
-  void _fetchData() async {
+  Future<void> _fetchData() async {
     List<GameCard> gameList = await ContentData.fetchGameCards(curLimit, curOffset, curSearch);
     setState(() {
       curGameList.addAll(gameList);
@@ -246,7 +246,7 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   List<GameCardRelease> newReleases = [];
-  void _getNewReleases() async {
+  Future<void> _getNewReleases() async {
     List<GameCardRelease> temp = await ContentData.fetchNewReleaseGameCards(15, 0);
     setState(() {
       newReleases.addAll(temp);
@@ -254,7 +254,8 @@ class _ContentScreenState extends State<ContentScreen> {
   }
 
   var recentReview;
-  void _getRecentReviews() async {
+  Future<void> _getRecentReviews() async {
+    Future.delayed(const Duration(seconds: 2));
     var data = await ContentData.fetchRecentReviews(10);
     if(data == null) return;
     setState(() {
@@ -262,7 +263,7 @@ class _ContentScreenState extends State<ContentScreen> {
     });
   }
 
-  void _sendFriendRequest() async{
+  Future<void> _sendFriendRequest() async{
     var userData = await ContentData.searchUsers(addFriendTextField);
 
     if(userData.runtimeType == String) {
@@ -370,7 +371,7 @@ class _ContentScreenState extends State<ContentScreen> {
      body: TabBarView(
   children: <Widget>[
     // New content for new releases page
-    Container(
+      Container(
       color: Color.fromRGBO(25, 28, 33, 1),
       child: GridView.builder(
         itemCount: newReleases.length, // Placeholder for number of new release games
@@ -388,7 +389,25 @@ class _ContentScreenState extends State<ContentScreen> {
               color: Colors.grey[900],
               borderRadius: BorderRadius.circular(8.0),
             ),
-            child: Column(
+            child: TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GameScreen(),
+                    settings: RouteSettings(
+                        arguments: iteratorGame.gameId
+                    ),
+                  ),
+                );
+              },
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                splashFactory: NoSplash.splashFactory,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                padding: EdgeInsets.zero,
+              ),
+              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
@@ -422,99 +441,108 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
               ],
             ),
+          )
           );
         },
       ),
     ),
     // Previous content for recent reviews page
-    Container(
-      color: Color.fromRGBO(25, 28, 33, 1),
-      child: (recentReview != null) ? ListView.builder(
-        itemCount: recentReview.length, // Placeholder for number of reviews
-        itemBuilder: (context, index) {
-          var iteratorReview = recentReview[index];
-          DateTime currentTime = DateTime.now();
-          Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
-          return Container(
-            padding: EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: text_color)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  iteratorReview["videoGameId"],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+    RefreshIndicator(
+      onRefresh: _getRecentReviews,
+      child:
+      Container(
+        color: Color.fromRGBO(25, 28, 33, 1),
+        child: (recentReview != null) ? ListView.builder(
+          itemCount: recentReview.length, // Placeholder for number of reviews
+          itemBuilder: (context, index) {
+            var iteratorReview = recentReview[index];
+            DateTime currentTime = DateTime.now();
+            Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
+            return Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: text_color)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    iteratorReview["videoGameId"],
+                    style: TextStyle(
+                      color: Colors.orange,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Rating - ${iteratorReview["rating"]}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 16,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(int.parse(iteratorReview["rating"]), (index) {
+                            return Icon(
+                                Icons.star,
+                                size: 20,
+                                color: button_color
+                              );
+                          }),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        iteratorReview["displayName"],
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 16,
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          iteratorReview["displayName"],
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: text_color,
+                          fontSize: 16,
+                        ),
+                        ),
                       ),
-                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    iteratorReview["textBody"],
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
                     ),
-                  ],
-                ),
-                SizedBox(height: 4),
-                Text(
-                  iteratorReview["textBody"],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
                   ),
-                ),
-                (timeSince.inHours < 1) ? Text(
-                  'less than an hour ago',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ) : (timeSince.inDays < 1) ?
-                Text(
-                  '${timeSince.inHours} hours ago',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ) : Text(
-                  '${timeSince.inDays} days ago',
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                )
-              ],
-            ),
-          );
-        },
-      ) : const Align(
-          alignment: Alignment.center,
-          child: CircularProgressIndicator(
-            strokeWidth: 6,
-            color: Color.fromRGBO(10, 147, 150, 0.5),
-          )
+                  (timeSince.inHours < 1) ? Text(
+                    'less than an hour ago',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ) : (timeSince.inDays < 1) ?
+                  Text(
+                    '${timeSince.inHours} hours ago',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ) : Text(
+                    '${timeSince.inDays} days ago',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        ) : const Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              strokeWidth: 6,
+              color: Color.fromRGBO(10, 147, 150, 0.5),
+            )
+        ),
       ),
-    ),
+    )
   ],
 ),
       ),
