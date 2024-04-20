@@ -245,6 +245,23 @@ class _ContentScreenState extends State<ContentScreen> {
     });
   }
 
+  List<GameCardRelease> newReleases = [];
+  void _getNewReleases() async {
+    List<GameCardRelease> temp = await ContentData.fetchNewReleaseGameCards(15, 0);
+    setState(() {
+      newReleases.addAll(temp);
+    });
+  }
+
+  var recentReview;
+  void _getRecentReviews() async {
+    var data = await ContentData.fetchRecentReviews(10);
+    if(data == null) return;
+    setState(() {
+      recentReview = data;
+    });
+  }
+
   void _sendFriendRequest() async{
     var userData = await ContentData.searchUsers(addFriendTextField);
 
@@ -269,6 +286,8 @@ class _ContentScreenState extends State<ContentScreen> {
     super.initState();
     _scrollController.addListener(_loadMore);
     _fetchData();
+    _getRecentReviews();
+    _getNewReleases();
   }
 
   @override
@@ -354,14 +373,15 @@ class _ContentScreenState extends State<ContentScreen> {
     Container(
       color: Color.fromRGBO(25, 28, 33, 1),
       child: GridView.builder(
-        itemCount: 15, // Placeholder for number of new release games
+        itemCount: newReleases.length, // Placeholder for number of new release games
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           mainAxisSpacing: 5,
           crossAxisSpacing: 5,
-          childAspectRatio: 2 / 3, // Aspect ratio for each game placeholder
+          childAspectRatio: 1.6 / 3, // Aspect ratio for each game placeholder
         ),
         itemBuilder: (BuildContext context, int index) {
+          GameCardRelease iteratorGame = newReleases[index];
           return Container(
             padding: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
@@ -374,10 +394,13 @@ class _ContentScreenState extends State<ContentScreen> {
                 Container(
                   height: 120, // Placeholder height for game cover image
                   color: Colors.grey[700],
+                  child: Image.network(iteratorGame.imageURL, height: 120, fit: BoxFit.fitWidth,),
                 ),
                 SizedBox(height: 8),
                 Text(
-                  'Game Title $index', // Placeholder game title
+                  iteratorGame.gameName,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -386,7 +409,13 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  'Release Date', // Placeholder release date
+                  'Release Date: ',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  iteratorGame.releaseDate,
                   style: TextStyle(
                     color: Colors.grey,
                   ),
@@ -400,43 +429,90 @@ class _ContentScreenState extends State<ContentScreen> {
     // Previous content for recent reviews page
     Container(
       color: Color.fromRGBO(25, 28, 33, 1),
-      child: ListView.builder(
-        itemCount: 5, // Placeholder for number of reviews
+      child: (recentReview != null) ? ListView.builder(
+        itemCount: recentReview.length, // Placeholder for number of reviews
         itemBuilder: (context, index) {
+          var iteratorReview = recentReview[index];
+          DateTime currentTime = DateTime.now();
+          Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
           return Container(
             padding: EdgeInsets.all(16.0),
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey)),
+              border: Border(bottom: BorderSide(color: text_color)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'User $index', // Placeholder username
+                  iteratorReview["videoGameId"],
                   style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Rating - ${iteratorReview["rating"]}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        iteratorReview["displayName"],
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: 4),
                 Text(
-                  '2 hours ago', // Placeholder timestamp
+                  iteratorReview["textBody"],
                   style: TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'This is a placeholder review text.', // Placeholder review text
-                  style: TextStyle(
+                    color: Colors.white,
                     fontSize: 16,
                   ),
                 ),
-                // Add more elements for additional info like ratings, likes, etc.
+                (timeSince.inHours < 1) ? Text(
+                  'less than an hour ago',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ) : (timeSince.inDays < 1) ?
+                Text(
+                  '${timeSince.inHours} hours ago',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                ) : Text(
+                  '${timeSince.inDays} days ago',
+                  style: TextStyle(
+                    color: Colors.grey,
+                  ),
+                )
               ],
             ),
           );
         },
+      ) : const Align(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(
+            strokeWidth: 6,
+            color: Color.fromRGBO(10, 147, 150, 0.5),
+          )
       ),
     ),
   ],

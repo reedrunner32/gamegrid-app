@@ -171,7 +171,7 @@ class _GameScreenState extends State<GameScreen> {
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
-                    _submitReview(videoGameId);
+                    _submitReview(game["name"]);
                     Navigator.pop(context);
                   },
                   style: ButtonStyle(
@@ -264,7 +264,7 @@ class _GameScreenState extends State<GameScreen> {
                     strokeWidth: 6,
                     color: Color.fromRGBO(10, 147, 150, 0.5),
                   )
-              ),
+              ) ,
             ],
           ),
         )

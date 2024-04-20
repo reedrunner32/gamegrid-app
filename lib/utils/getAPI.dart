@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:intl/intl.dart';
 
 class GlobalData
 {
@@ -72,6 +73,15 @@ class GameCard {
   const GameCard(this.imageURL,  this.gameId);
 }
 
+class GameCardRelease {
+  final String imageURL;
+  final String gameId;
+  final String releaseDate;
+  final String gameName;
+
+  const GameCardRelease(this.imageURL,  this.gameId, this.releaseDate, this.gameName);
+}
+
 class ContentData {
 
   static Future<List<GameCard>> fetchGameCards(int limit, int offset, String search) async {
@@ -85,9 +95,32 @@ class ContentData {
     List<GameCard> gameList = [];
 
     for(int i = 0; i<decoded.length; i++){
-      String formattedUrl = 'https:' + decoded[i]['cover']['url'].replaceAll('t_thumb','t_cover_big');
+      String formattedUrl = 'https:${decoded[i]['cover']['url'].replaceAll('t_thumb', 't_cover_big')}';
       String gameId = '${decoded[i]['id']}';
       gameList.add(GameCard(formattedUrl, gameId));
+    }
+
+    return gameList;
+  }
+
+  static Future<List<GameCardRelease>> fetchNewReleaseGameCards(int limit, int offset) async {
+    String payload = '{"limit":"$limit","offset":"$offset","genre":"","search":""}';
+    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/games';
+
+    final response = await CardsData.postJson(url, payload);
+    if(response.statusCode == 500) return [];
+    var decoded = json.decode(response.body);
+
+    List<GameCardRelease> gameList = [];
+
+    for(int i = 0; i<decoded.length; i++){
+      String formattedUrl = 'https:${decoded[i]['cover']['url'].replaceAll('t_thumb', 't_cover_big')}';
+      String gameId = '${decoded[i]['id']}';
+      int releaseDate = decoded[i]['first_release_date'];
+      DateTime date = DateTime.fromMillisecondsSinceEpoch(releaseDate * 1000);
+      String formattedDate = DateFormat('MM/dd/yyyy').format(date);
+      String gameName = decoded[i]['name'];
+      gameList.add(GameCardRelease(formattedUrl, gameId, formattedDate, gameName));
     }
 
     return gameList;
@@ -397,9 +430,9 @@ class ContentData {
   }
 
 // Fetches most recent reviews (default = 10; set pageSize for different amount)
-  static Future<List<dynamic>> fetchRecentReviews(int pageSize) async {
+  static Future fetchRecentReviews(int pageSize) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/getRecentReviews';
-    String payload = '{"pageSize":"$pageSize"}';
+    String payload = '{"pageSize":$pageSize}';
 
     final response = await CardsData.postJson(url, payload);
     var decoded = json.decode(response.body);
