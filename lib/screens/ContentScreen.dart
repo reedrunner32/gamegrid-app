@@ -298,7 +298,7 @@ class _ContentScreenState extends State<ContentScreen> {
         height: 70,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         selectedIndex: currentPageIndex,
-        indicatorColor: button_color,
+        indicatorColor: Color.fromRGBO(10, 147, 150, 0.5),
         indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,

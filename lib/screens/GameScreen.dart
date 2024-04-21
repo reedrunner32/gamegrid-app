@@ -523,7 +523,7 @@ class _GameScreenState extends State<GameScreen> {
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
                               decoration: BoxDecoration(
-                                border: Border(bottom: BorderSide(color: text_color)),
+                                border: Border(bottom: BorderSide(color: Colors.white38)),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

@@ -18,6 +18,7 @@ class ReviewScreen extends StatelessWidget {
       backgroundColor: const Color.fromRGBO(25, 28, 33, 1),
       appBar: AppBar(
         backgroundColor: Colors.black,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -31,7 +32,7 @@ class ReviewScreen extends StatelessWidget {
             (gameName != '') ? Text(
               gameName,
               style: TextStyle(
-                color: Colors.orange,
+                color: text_color,
                 fontSize: 30,
                 fontWeight: FontWeight.w600,
               ),

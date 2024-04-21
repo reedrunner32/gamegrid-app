@@ -80,7 +80,7 @@ class _FriendScreenState extends State<FriendScreen> {
     Color text_color = Color.fromRGBO(155, 168, 183, 1);
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Friends',
           style: TextStyle(
             color: Colors.white,
