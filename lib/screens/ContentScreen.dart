@@ -4,6 +4,7 @@ import 'package:gamegrid/screens/GameListScreen.dart';
 import 'package:gamegrid/screens/UserReviewsScreen.dart';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
+import 'package:gamegrid/screens/ReviewScreen.dart';
 import 'package:gamegrid/screens/NotificationScreen.dart';
 import 'package:gamegrid/components/Debouncer.dart';
 import 'package:elegant_notification/elegant_notification.dart';
@@ -458,7 +459,22 @@ class _ContentScreenState extends State<ContentScreen> {
             var iteratorReview = recentReview[index];
             DateTime currentTime = DateTime.now();
             Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
-            return Container(
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                padding: EdgeInsets.zero,
+                shadowColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                splashFactory: NoSplash.splashFactory,
+              ),
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReviewScreen(iteratorReview["videoGameId"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                  );
+                },
+                child: Container(
               padding: EdgeInsets.all(16.0),
               decoration: BoxDecoration(
                 border: Border(bottom: BorderSide(color: text_color)),
@@ -532,6 +548,7 @@ class _ContentScreenState extends State<ContentScreen> {
                   )
                 ],
               ),
+            )
             );
           },
         ) : const Align(

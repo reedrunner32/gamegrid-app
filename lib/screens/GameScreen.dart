@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamegrid/utils/getAPI.dart';
+import 'package:gamegrid/screens/ReviewScreen.dart';
 import 'package:intl/intl.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
@@ -404,7 +405,22 @@ class _GameScreenState extends State<GameScreen> {
                             var iteratorReview = reviews[index];
                             DateTime currentTime = DateTime.now();
                             Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
-                            return Container(
+                            return ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                padding: EdgeInsets.zero,
+                                shadowColor: Colors.transparent,
+                                surfaceTintColor: Colors.transparent,
+                                splashFactory: NoSplash.splashFactory,
+                                ),
+                                onPressed: (){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ReviewScreen('', iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                                  );
+                                },
+                            child: Container(
                               padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
                               decoration: BoxDecoration(
                                 border: Border(bottom: BorderSide(color: text_color)),
@@ -419,7 +435,7 @@ class _GameScreenState extends State<GameScreen> {
                                         alignment: Alignment.centerLeft,
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
-                                          children: List.generate(int.parse(iteratorReview["rating"]), (index) {
+                                          children: List.generate(iteratorReview["rating"], (index) {
                                             return Icon(
                                                 Icons.star,
                                                 size: 20,
@@ -470,6 +486,7 @@ class _GameScreenState extends State<GameScreen> {
                                   )
                                 ],
                               ),
+                            )
                             );
                           },
                         )) : Container(),
