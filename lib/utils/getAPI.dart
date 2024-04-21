@@ -299,6 +299,24 @@ class ContentData {
     return retErr;
   }
 
+  // Remove friend from friends list
+  static Future<String> removeFriend(String friendId) async {
+    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/remove';
+    String payload = '{"userId":"${GlobalData.userID}","friendId":"$friendId"}';
+
+    final response = await CardsData.postJson(url, payload);
+    var decoded = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      String mess = "Friend removed";
+      return mess;
+    }
+    String retErr = decoded['error']; //returning status message
+    return retErr;
+  }
+
+
+
   // Fetch all friends info
   // id = friendList[index]["id"]
   // email = friendList[index]["email"]

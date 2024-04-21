@@ -474,7 +474,7 @@ class _ContentScreenState extends State<ContentScreen> {
                   Text(
                     iteratorReview["videoGameId"],
                     style: TextStyle(
-                      color: Colors.orange,
+                      color: text_color,
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),

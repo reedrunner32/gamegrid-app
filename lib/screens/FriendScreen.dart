@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../utils/getAPI.dart';
 import 'package:gamegrid/screens/ProfileScreen.dart';
@@ -45,7 +46,7 @@ class _FriendScreenState extends State<FriendScreen> {
   }
 
   String addFriendTextField = '';
-  Future<void> _sendFriendRequest() async{
+  Future<void> _sendFriendRequest() async {
     var userData = await ContentData.searchUsers(addFriendTextField);
 
     if(userData.runtimeType == String) {
@@ -56,6 +57,18 @@ class _FriendScreenState extends State<FriendScreen> {
     String friendId = userData["id"];
     String retMessage = await ContentData.sendFriendRequest(friendId); //return message
     displayNotif(retMessage);
+  }
+
+  Future<void> _removeFriend(String friendId) async {
+    var message = await ContentData.removeFriend(friendId);
+
+    int i;
+    for(i = 0; i<friends.length; i++) {
+      if(friends[i]["id"] == friendId) break;
+    }
+    setState(() {
+      friends.removeAt(i);
+    });
   }
 
   bool built = false;
@@ -78,6 +91,9 @@ class _FriendScreenState extends State<FriendScreen> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
         actions: [
+          Container(
+          margin: EdgeInsets.only(right: 10),
+          child:
           IconButton(
             style: IconButton.styleFrom(
               backgroundColor: Color.fromRGBO(10, 147, 150, 0.5),
@@ -131,6 +147,7 @@ class _FriendScreenState extends State<FriendScreen> {
               );
             },
           ),
+          )
         ],
       ),
       body: (friends != null) ? Container(
@@ -150,6 +167,17 @@ class _FriendScreenState extends State<FriendScreen> {
                     fontWeight: FontWeight.w600,
                     letterSpacing: 1,
                   ),
+                ),
+                trailing: IconButton(
+                  style: IconButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    splashFactory: NoSplash.splashFactory,
+                  ),
+                  icon: Icon(Icons.delete,),
+                  onPressed: () {
+                    _removeFriend(friends[index]["id"]);
+                  }
                 ),
                 onTap: () {
                   Navigator.push(context, MaterialPageRoute(builder:
