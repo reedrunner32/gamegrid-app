@@ -481,7 +481,7 @@ class _ContentScreenState extends State<ContentScreen> {
                         alignment: Alignment.centerLeft,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(int.parse(iteratorReview["rating"]), (index) {
+                          children: List.generate(iteratorReview["rating"], (index) {
                             return Icon(
                                 Icons.star,
                                 size: 20,

@@ -399,7 +399,7 @@ class ContentData {
 // Update user display name, or email, or password
   static Future<String> addReview(String textBody, String rating, String videoGameId, String displayName) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/reviews';
-    String payload = '{"textBody":"$textBody","rating":"$rating","videoGameId":"$videoGameId","displayName":"$displayName"}';
+    String payload = '{"textBody":"$textBody","rating":$rating,"videoGameId":"$videoGameId","displayName":"$displayName"}';
 
     final response = await CardsData.postJson(url, payload);
     var decoded = json.decode(response.body);
