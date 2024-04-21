@@ -40,6 +40,17 @@ class _GameScreenState extends State<GameScreen> {
   _addGametoList(String videoGameId) async {
     var retMessage = await ContentData.addGametoList(videoGameId);
     displayReviewNotif(retMessage);
+    setState(() {
+      _isGameAdded = true;
+    });
+  }
+
+  _removeGameFromList(int gameId) async {
+    var retMessage = await ContentData.removeGameFromList(gameId);
+    displayReviewNotif("Game removed from list successfully");
+    setState(() {
+      _isGameAdded = false;
+    });
   }
 
   bool _isTextVisible = true;
@@ -93,13 +104,46 @@ class _GameScreenState extends State<GameScreen> {
   var game;
   var reviews;
   int descLength = 0;
+  String companies = '';
+  String platforms = '';
+  bool _isGameAdded = false;
   void _getGameData(String videoGameId) async {
     var data = await ContentData.fetchGameInfo(videoGameId);
     var gameReviews = await ContentData.fetchGameReviews(data["name"]);
+
+    //Check if game is added to library yet
+    bool flag = false;
+    String addGameMessage = await ContentData.addGametoList(videoGameId);
+    if(addGameMessage.length == 24) {
+      flag = true;
+    }
+    else {
+      String removeGameMessage = await ContentData.removeGameFromList(data["id"]);
+    }
+
     descLength = data["summary"].length;
+    var gameCompanies = data["involved_companies"];
+    for(int i = 0; i<gameCompanies.length; i++) {
+      if(i != gameCompanies.length - 1) {
+        companies += '${data["involved_companies"][i]["company"]["name"]}, ';
+      } else {
+        companies += '${data["involved_companies"][i]["company"]["name"]}';
+      }
+    }
+
+    var gamePlatforms = data["platforms"];
+    for(int i = 0; i<gamePlatforms.length; i++) {
+      if(i != gamePlatforms.length - 1) {
+        platforms += '${data["platforms"][i]["name"]}, ';
+      } else {
+        platforms += '${data["platforms"][i]["name"]}';
+      }
+    }
+
     setState(() {
       game = data;
       reviews = gameReviews;
+      _isGameAdded = flag;
       built = true;
     });
   }
@@ -117,6 +161,10 @@ class _GameScreenState extends State<GameScreen> {
     }
     var data = await ContentData.addReview(reviewText, '$selectedRating', videoGameId, GlobalData.displayName);
     displayReviewNotif(data);
+
+    setState(() {
+      _isGameAdded = true;
+    });
 
   }
 
@@ -161,104 +209,111 @@ class _GameScreenState extends State<GameScreen> {
                           ListTile(
                             onTap: () {
                               Navigator.pop(context); // Close the original popup
-            showModalBottomSheet(
-            isScrollControlled: true,
-            context: context,
-            builder: (BuildContext context) {
-              return StatefulBuilder(
-                builder: (BuildContext context, StateSetter setState) {
-                  return SingleChildScrollView(
-                    child: Container(
-                      color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
-                      padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                        left: 20,
-                        right: 20,
-                      ),
-              child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                SizedBox(height: 20),
-                Text(
-                  "Add a Review",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
-                ),
-                SizedBox(height: 20),
-                TextField(
-                  // Add your logic here to handle review text
-                  cursorColor: Colors.white, // Set cursor color to white
-                  onChanged: (text) {
-                    reviewText = text;
-                  },
-                  decoration: InputDecoration(
-                    hintText: "Write your review here",
-                    hintStyle: TextStyle(color:Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white), // Set underline color to white
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white), // Set underline color to white
-                    ),
-                  ),
-                  style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color inside the text field
-                ),
-                SizedBox(height: 20),
-                Text(
-                  "Rate:",
-                  style: TextStyle(fontSize: 16, color: Colors.white), // Set text color to white
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(5, (index) {
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          selectedRating = index + 1;
-                        });
-                      },
-                      child: Icon(
-                        index < selectedRating ? Icons.star : Icons.star_border,
-                        size: 40,
-                        color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 0.5) : Colors.white, // Set star color
-                      ),
-                    );
-                  }),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _submitReview(game["name"]);
-                    Navigator.pop(context);
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(54, 75, 94, 1)), // Set background color
-                  ),
-                  child: Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
-                              ),
-                            ],
+                              showModalBottomSheet(
+                              isScrollControlled: true,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return StatefulBuilder(
+                                  builder: (BuildContext context, StateSetter setState) {
+                                    return SingleChildScrollView(
+                                      child: Container(
+                                        color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
+                                        padding: EdgeInsets.only(
+                                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                                          left: 20,
+                                          right: 20,
+                                        ),
+                                child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "Add a Review",
+                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
+                                  ),
+                                  SizedBox(height: 20),
+                                  TextField(
+                                    // Add your logic here to handle review text
+                                    cursorColor: Colors.white, // Set cursor color to white
+                                    onChanged: (text) {
+                                      reviewText = text;
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: "Write your review here",
+                                      hintStyle: TextStyle(color:Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.white), // Set underline color to white
+                                      ),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(color: Colors.white), // Set underline color to white
+                                      ),
+                                    ),
+                                    style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color inside the text field
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    "Rate:",
+                                    style: TextStyle(fontSize: 16, color: Colors.white), // Set text color to white
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: List.generate(5, (index) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            selectedRating = index + 1;
+                                          });
+                                        },
+                                        child: Icon(
+                                          index < selectedRating ? Icons.star : Icons.star_border,
+                                          size: 40,
+                                          color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 0.5) : Colors.white, // Set star color
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                  SizedBox(height: 20),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      _submitReview(game["name"]);
+                                      Navigator.pop(context);
+                                    },
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(54, 75, 94, 1)), // Set background color
+                                    ),
+                                    child: Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                );
+                              },
+                              title: Text("Add a review", style: TextStyle(color: Colors.white)), // Set text color to white
+                              leading: Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
+                            ),
+                          (!_isGameAdded) ? ListTile(
+                              onTap: () {
+                                _addGametoList(videoGameId);
+                                Navigator.pop(context); // Close the original popup
+                              },
+                              title: Text("Add to list", style: TextStyle(color: Colors.white)), // Set text color to white
+                              leading: Icon(Icons.playlist_add, color: Colors.white), // Set icon color to white
+                           ) : ListTile(
+                            onTap: () {
+                              _removeGameFromList(game["id"]);
+                              Navigator.pop(context); // Close the original popup
+                            },
+                            title: Text("Remove from list", style: TextStyle(color: Colors.white)), // Set text color to white
+                            leading: Icon(Icons.playlist_remove, color: Colors.white), // Set icon color to white
                           ),
+                          ],
                         ),
                       );
                     },
-                  );
-                },
-              );
-            },
-            title: Text("Add a review", style: TextStyle(color: Colors.white)), // Set text color to white
-            leading: Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
-          ),
-          ListTile(
-            onTap: () {
-              _addGametoList(videoGameId);
-              Navigator.pop(context); // Close the original popup
-            },
-            title: Text("Add to list", style: TextStyle(color: Colors.white)), // Set text color to white
-            leading: Icon(Icons.playlist_add, color: Colors.white), // Set icon color to white
-         ),
-        ],
-      ),
-    );
-  },
                 );
               },
 
@@ -290,35 +345,80 @@ class _GameScreenState extends State<GameScreen> {
                       children: [
                         Container(
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            margin: EdgeInsets.only(bottom: 7),
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child:
                                 Text(game["name"], style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 30), )
                             )
                         ),
-
-                        Container(
-                          margin: EdgeInsets.only(left: 5),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(width: 0.5, color: text_color)
-                            ),
-                            child:
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child:
-                              Image.network('https:' + game["cover"]["url"].replaceAll('t_thumb','t_cover_big'), scale: 1.7,),
-                            )
-                        ),
-                        Text(
-                          'Release date: ${DateFormat('MM/dd/yyyy').format(DateTime.fromMillisecondsSinceEpoch(game['first_release_date'] * 1000))}',
-                          style: TextStyle(color: text_color),
-                        ),
                         Row(
-                          children: List.generate(game["involved_companies"].length, (index) {
-                            return Text('${game["involved_companies"][index]["company"]["name"]}, ', style: TextStyle(color: text_color),);
-                          }),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                                margin: EdgeInsets.only(left: 10),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(width: 0.5, color: text_color)
+                                ),
+                                child:
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child:
+                                  Image.network('https:' + game["cover"]["url"].replaceAll('t_thumb','t_cover_big'), scale: 1.7,),
+                                )
+                            ),
+                            const SizedBox(width: 15,),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const SizedBox(height: 40,),
+                                RichText(
+                                  text: TextSpan(
+                                      text: 'Release date: ',
+                                      style: TextStyle(color: text_color),
+                                      children: [
+                                        TextSpan(
+                                          text: DateFormat('MM/dd/yyyy').format(DateTime.fromMillisecondsSinceEpoch(game['first_release_date'] * 1000)),
+                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                        ),
+                                      ]
+                                  ),
+                                ),
+                                const SizedBox(height: 15,),
+                                SizedBox(width: 200, child:
+                                RichText(
+                                  text: TextSpan(
+                                      text: 'Related companies: ',
+                                      style: TextStyle(color: text_color),
+                                      children: [
+                                        TextSpan(
+                                          text: companies,
+                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                        ),
+                                      ]
+                                  ),
+                                )
+                                ),
+                                const SizedBox(height: 15,),
+                                SizedBox(width: 200, child:
+                                RichText(
+                                  text: TextSpan(
+                                      text: 'Platforms: ',
+                                      style: TextStyle(color: text_color),
+                                      children: [
+                                        TextSpan(
+                                          text: platforms,
+                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                        ),
+                                      ]
+                                  ),
+                                )
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 5, top: 30),
@@ -359,7 +459,7 @@ class _GameScreenState extends State<GameScreen> {
                                       gradient: LinearGradient(
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
-                                        colors: [Colors.transparent, Colors.black.withOpacity(1)],
+                                        colors: [Colors.transparent, Colors.black.withOpacity(0.9)],
                                       ),
                                     ),
                                   ) : const SizedBox(),
