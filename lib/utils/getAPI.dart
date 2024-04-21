@@ -429,6 +429,20 @@ class ContentData {
 
   }
 
+  // Fetches reviews for a specific review
+  static Future fetchGameReviews(String gameName) async {
+    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/getReviews';
+    String payload = '{"videoGameId":"$gameName"}';
+
+    final response = await CardsData.postJson(url, payload);
+    var decoded = json.decode(response.body);
+
+    var receivedList = decoded['reviews'];
+    return receivedList;
+
+  }
+
+
 // Fetches most recent reviews (default = 10; set pageSize for different amount)
   static Future fetchRecentReviews(int pageSize) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/getRecentReviews';

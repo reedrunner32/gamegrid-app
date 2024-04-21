@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamegrid/utils/getAPI.dart';
+import 'package:intl/intl.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:elegant_notification/resources/stacked_options.dart';
@@ -39,11 +41,64 @@ class _GameScreenState extends State<GameScreen> {
     displayReviewNotif(retMessage);
   }
 
+  bool _isTextVisible = true;
+
+  void _toggleTextVisibility() {
+    setState(() {
+      _isTextVisible = !_isTextVisible;
+    });
+  }
+
+  /* -----------------------------
+  *  -- Game info container
+    {
+          "id": 250616,
+          "cover": {
+              "id": 331836,
+              "url": "//images.igdb.com/igdb/image/upload/t_thumb/co741o.jpg"
+          },
+          "first_release_date": 1707350400,
+          "involved_companies": [
+              {
+                  "id": 216800,
+                  "company": {
+                      "id": 953,
+                      "name": "Arrowhead Game Studios"
+                  }
+              },
+              {
+                  "id": 219275,
+                  "company": {
+                      "id": 10100,
+                      "name": "Sony Interactive Entertainment"
+                  }
+              }
+          ],
+          "name": "Helldivers 2",
+          "platforms": [
+              {
+                  "id": 6,
+                  "name": "PC (Microsoft Windows)"
+              },
+              {
+                  "id": 167,
+                  "name": "PlayStation 5"
+              }
+          ],
+          "summary": "summary here",
+      }
+  * ----------------------------- */
+
   var game;
+  var reviews;
+  int descLength = 0;
   void _getGameData(String videoGameId) async {
     var data = await ContentData.fetchGameInfo(videoGameId);
+    var gameReviews = await ContentData.fetchGameReviews(data["name"]);
+    descLength = data["summary"].length;
     setState(() {
       game = data;
+      reviews = gameReviews;
       built = true;
     });
   }
@@ -93,33 +148,33 @@ class _GameScreenState extends State<GameScreen> {
             GestureDetector(
               onTap: () {
                 showDialog(
-  context: context,
-  builder: (BuildContext context) {
+                context: context,
+                builder: (BuildContext context) {
 
-    return AlertDialog(
-      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Set the background color
-      title: Text("Choose an action", style: TextStyle(color: Colors.white)), // Set text color to white
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          ListTile(
-            onTap: () {
-              Navigator.pop(context); // Close the original popup
-          showModalBottomSheet(
-  isScrollControlled: true,
-  context: context,
-  builder: (BuildContext context) {
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        return SingleChildScrollView(
-          child: Container(
-            color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 20,
-              right: 20,
-            ),
-            child: Column(
+                    return AlertDialog(
+                      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Set the background color
+                      title: Text("Choose an action", style: TextStyle(color: Colors.white)), // Set text color to white
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            onTap: () {
+                              Navigator.pop(context); // Close the original popup
+            showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (BuildContext context) {
+              return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return SingleChildScrollView(
+                    child: Container(
+                      color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom,
+                        left: 20,
+                        right: 20,
+                      ),
+              child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 SizedBox(height: 20),
@@ -230,14 +285,20 @@ class _GameScreenState extends State<GameScreen> {
               (game != null) ? Container(
                   child:
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                             alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(left: 10),
-                            child: Text(game["name"], style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 24), )
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child:
+                                Text(game["name"], style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 30), )
+                            )
                         ),
 
                         Container(
+                          margin: EdgeInsets.only(left: 5),
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(5),
                                 border: Border.all(width: 0.5, color: text_color)
@@ -249,13 +310,169 @@ class _GameScreenState extends State<GameScreen> {
                               Image.network('https:' + game["cover"]["url"].replaceAll('t_thumb','t_cover_big'), scale: 1.7,),
                             )
                         ),
-
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child:
-                          Text(game["summary"], style: TextStyle(color: text_color, fontSize: 14),),
+                        Text(
+                          'Release date: ${DateFormat('MM/dd/yyyy').format(DateTime.fromMillisecondsSinceEpoch(game['first_release_date'] * 1000))}',
+                          style: TextStyle(color: text_color),
                         ),
-
+                        Row(
+                          children: List.generate(game["involved_companies"].length, (index) {
+                            return Text('${game["involved_companies"][index]["company"]["name"]}, ', style: TextStyle(color: text_color),);
+                          }),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5, top: 30),
+                          alignment: Alignment.centerLeft,
+                          child:
+                            Text(
+                              'DESCRIPTION',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: text_color,
+                                fontWeight: FontWeight.w600
+                              ),
+                            ),
+                        ),
+                        Divider(height: 0, color: Colors.white38,),
+                        // Description text body
+                        (descLength > 300) ? GestureDetector(
+                          onTap: _toggleTextVisibility,
+                            child:
+                            SizedBox(
+                              width: size.width,
+                              child: Stack(
+                                children:[
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                                    child:
+                                    Text(
+                                      game["summary"],
+                                      maxLines: _isTextVisible ? 5 : 100,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: Colors.white, fontSize: 14),
+                                    ),
+                                  ),
+                                  (_isTextVisible) ? Container(
+                                    width: size.width,
+                                    height: 115,
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [Colors.transparent, Colors.black.withOpacity(1)],
+                                      ),
+                                    ),
+                                  ) : const SizedBox(),
+                                  (_isTextVisible) ?
+                                  Container(
+                                      alignment: Alignment.bottomCenter,
+                                      height: 115,
+                                      child: Icon(Icons.arrow_drop_down, size: 40, color: text_color, weight: 100,)
+                                  ) :
+                                  const SizedBox(),
+                                ]
+                              )
+                          ),
+                        ) :
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                          child:
+                          Text(
+                            game["summary"],
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ),
+                        (_isTextVisible && descLength > 300) ? Divider(height: 0, color: Colors.white38,) : SizedBox(),
+                        Container(
+                          padding: EdgeInsets.only(left: 5, top: 40),
+                          alignment: Alignment.centerLeft,
+                          child:
+                          Text(
+                            'REVIEWS',
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: text_color,
+                                fontWeight: FontWeight.w600
+                            ),
+                          ),
+                        ),
+                        Divider(height: 0, color: Colors.white38,),
+                        (reviews != null) ? SizedBox(
+                          height: 300,
+                          child: ListView.builder(
+                          itemCount: reviews.length, // Placeholder for number of reviews
+                          itemBuilder: (context, index) {
+                            var iteratorReview = reviews[index];
+                            DateTime currentTime = DateTime.now();
+                            Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
+                            return Container(
+                              padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                              decoration: BoxDecoration(
+                                border: Border(bottom: BorderSide(color: text_color)),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: List.generate(int.parse(iteratorReview["rating"]), (index) {
+                                            return Icon(
+                                                Icons.star,
+                                                size: 20,
+                                                color: Color.fromRGBO(10, 147, 150, 0.5)
+                                            );
+                                          }),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          iteratorReview["displayName"],
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: text_color,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    iteratorReview["textBody"],
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 3,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  (timeSince.inHours < 1) ? Text(
+                                    'less than an hour ago',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ) : (timeSince.inDays < 1) ?
+                                  Text(
+                                    '${timeSince.inHours} hours ago',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ) : Text(
+                                    '${timeSince.inDays} days ago',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        )) : Container(),
                       ]
                   )
               ) : const Align(
