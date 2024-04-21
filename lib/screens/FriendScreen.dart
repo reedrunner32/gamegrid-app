@@ -7,7 +7,9 @@ import 'package:elegant_notification/resources/arrays.dart';
 import 'package:elegant_notification/resources/stacked_options.dart';
 
 class FriendScreen extends StatefulWidget {
-  const FriendScreen({super.key});
+  const FriendScreen(this.userId, {super.key});
+
+  final String userId;
 
   @override
   State<FriendScreen> createState() => _FriendScreenState();
@@ -37,8 +39,9 @@ class _FriendScreenState extends State<FriendScreen> {
   }
 
   var friends;
-  void _getFriendList() async {
-    var data = await ContentData.fetchFriendList();
+  void _getFriendList(String userId) async {
+    var data = await ContentData.fetchFriendList(userId);
+
     setState(() {
       friends = data;
       built = true;
@@ -75,7 +78,7 @@ class _FriendScreenState extends State<FriendScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(!built) _getFriendList();
+    if(!built) _getFriendList(widget.userId);
     Color background_color = Color.fromRGBO(25, 28, 33, 1);
     Color text_color = Color.fromRGBO(155, 168, 183, 1);
     return Scaffold(
@@ -91,7 +94,7 @@ class _FriendScreenState extends State<FriendScreen> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
         actions: [
-          Container(
+          (widget.userId == GlobalData.userID) ? Container(
           margin: EdgeInsets.only(right: 10),
           child:
           IconButton(
@@ -147,7 +150,7 @@ class _FriendScreenState extends State<FriendScreen> {
               );
             },
           ),
-          )
+          ) : SizedBox()
         ],
       ),
       body: (friends != null) ? Container(
@@ -168,7 +171,7 @@ class _FriendScreenState extends State<FriendScreen> {
                     letterSpacing: 1,
                   ),
                 ),
-                trailing: IconButton(
+                trailing: (widget.userId == GlobalData.userID) ? IconButton(
                   style: IconButton.styleFrom(
                     padding: EdgeInsets.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -178,10 +181,10 @@ class _FriendScreenState extends State<FriendScreen> {
                   onPressed: () {
                     _removeFriend(friends[index]["id"]);
                   }
-                ),
+                ) : SizedBox(),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder:
-                    (context) => ProfileScreen(friends[index]["displayName"])));
+                  (friends[index]["id"] != GlobalData.userID) ? Navigator.push(context, MaterialPageRoute(builder:
+                    (context) => ProfileScreen(friends[index]["displayName"]))) : ();
                 }
               ),
               Divider(color: Colors.black26, height: 0,),

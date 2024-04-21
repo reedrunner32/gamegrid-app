@@ -3,7 +3,9 @@ import '../utils/getAPI.dart';
 import '../screens/GameScreen.dart';
 
 class GameListScreen extends StatefulWidget {
-  const GameListScreen({super.key});
+  const GameListScreen(this.userId, {super.key});
+
+  final String userId;
 
   @override
   State<GameListScreen> createState() => _GameListScreenState();
@@ -13,9 +15,9 @@ class _GameListScreenState extends State<GameListScreen> {
 
   var profileGameIds;
   List<GameCard> userGames = [];
-  void _getUserGames() async {
+  void _getUserGames(String userId) async {
 
-    var userGameIds = await ContentData.fetchUserGames(GlobalData.userID);
+    var userGameIds = await ContentData.fetchUserGames(userId);
     if(userGameIds.runtimeType == String) return; //fetch error
 
     List<GameCard> temp = [];
@@ -35,20 +37,30 @@ class _GameListScreenState extends State<GameListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(!built) _getUserGames();
-
+    if(!built) _getUserGames(widget.userId);
+    Color background_color = Color.fromRGBO(25, 28, 33, 1);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Games"),
+        title: const Text(
+          'Games',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1,
+          ),
+        ),
+        foregroundColor: Colors.white,
         backgroundColor: Colors.black,
       ),
       body: (profileGameIds != null) ? Container(
+        color: background_color,
         child:
           GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
-                mainAxisSpacing: 5,
-                crossAxisSpacing: 5,
+                mainAxisSpacing: 8,
+                crossAxisSpacing: 0,
+                childAspectRatio: 1/1.25,
               ),
               itemCount: userGames.length, // Placeholder for number of reviews
               itemBuilder: (context, index) {
@@ -78,7 +90,8 @@ class _GameListScreenState extends State<GameListScreen> {
                 );
               }
           )
-      ) : const Align(
+      ) : Container(
+          color: background_color,
           alignment: Alignment.center,
           child: CircularProgressIndicator(
             strokeWidth: 6,

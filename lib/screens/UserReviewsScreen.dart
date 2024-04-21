@@ -5,7 +5,9 @@ import 'ProfileScreen.dart';
 import 'ReviewScreen.dart';
 
 class UserReviewsScreen extends StatefulWidget {
-  const UserReviewsScreen({super.key});
+  const UserReviewsScreen(this.displayName, {super.key});
+
+  final String displayName;
 
   @override
   State<UserReviewsScreen> createState() => _UserReviewsScreenState();
@@ -14,9 +16,9 @@ class UserReviewsScreen extends StatefulWidget {
 class _UserReviewsScreenState extends State<UserReviewsScreen> {
 
   var profileReviews;
-  void _getReviews() async {
+  void _getReviews(String displayName) async {
 
-    var userReviews = await ContentData.fetchUserReviews(GlobalData.displayName);
+    var userReviews = await ContentData.fetchUserReviews(displayName);
     if(userReviews.runtimeType == String) return; //fetch error
 
     setState(() {
@@ -29,7 +31,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(!built) _getReviews();
+    if(!built) _getReviews(widget.displayName);
     Color background_color = Color.fromRGBO(25, 28, 33, 1);
     Color text_color = Color.fromRGBO(155, 168, 183, 1);
     Color button_color = Color.fromRGBO(10, 147, 150, 1);
@@ -38,7 +40,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
         title: Text(
-          "Your Reviews",
+          "Activity",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,

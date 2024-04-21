@@ -321,8 +321,8 @@ class ContentData {
   // id = friendList[index]["id"]
   // email = friendList[index]["email"]
   // name = friendList[index]["displayName"]
-  static Future fetchFriendList() async {
-    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/${GlobalData.userID}';
+  static Future fetchFriendList(String userId) async {
+    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/friends/$userId';
 
     final response = await CardsData.getJson(url);
     var decoded = json.decode(response.body);

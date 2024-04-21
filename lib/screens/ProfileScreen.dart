@@ -1,6 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../utils/getAPI.dart';
 import '../screens/GameScreen.dart';
+import 'FriendScreen.dart';
+import 'GameListScreen.dart';
+import 'ReviewScreen.dart';
+import 'UserReviewsScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen(this.friendName, {super.key});
@@ -13,32 +18,14 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
 
-  var profileData;
-  var profileReviews;
-  var profileGameIds;
-  List<GameCard> profileGames = [];
-  void _getProfile(String displayName) async {
-    var userData = await ContentData.searchUsers(displayName);
-    if(userData.runtimeType == String) return; //fetch error
+  var user;
+  void _getUser(String displayName) async {
+    var data = await ContentData.searchUsers(displayName);
 
-    var userReviews = await ContentData.fetchUserReviews(displayName);
-    if(userReviews.runtimeType == String) return; //fetch error
-
-    var userGameIds = await ContentData.fetchUserGames(userData["id"]);
-    if(userGameIds.runtimeType == String) return; //fetch error
-
-    List<GameCard> temp = [];
-    for(int i = 0; i<userGameIds.length; i++) {
-      var gameData = await ContentData.fetchGameInfo(userGameIds[i]);
-      if (gameData == null) continue;
-      temp.add(GameCard('https:${gameData["cover"]["url"].replaceAll('t_thumb','t_cover_big')}', '${gameData["id"]}'));
-    }
+    if(data.runtimeType == String) return; // fetch error
 
     setState(() {
-      profileData = userData;
-      profileReviews = userReviews;
-      profileGameIds = userGameIds;
-      profileGames.addAll(temp);
+      user = data;
       built = true;
     });
   }
@@ -47,75 +34,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(!built) _getProfile(widget.friendName);
-
+    if(!built) _getUser(widget.friendName);
+    Color background_color = Color.fromRGBO(25, 28, 33, 1);
+    Color text_color = Color.fromRGBO(155, 168, 183, 1);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.friendName),
+        title: Text(
+          widget.friendName,
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1,
+          ),
+        ),
+        foregroundColor: Colors.white,
         backgroundColor: Colors.black,
       ),
-      body: (profileGameIds != null) ? Container(
+      body: (user != null) ? Container(
+        color: background_color,
           child: Column(
             children: [
-              Text("Reviews"),
-              Expanded(
-                child:
-              ListView.builder(
-                itemCount: profileReviews.length, // Placeholder for number of reviews
-                itemBuilder: (context, index) {
-                  return ListTile(
-                      title: Text(profileReviews[index]["videoGameId"] + " - " + profileReviews[index]["textBody"]),
-                  );
-                }
+              ListTile(
+                leading: Icon(Icons.people, color: text_color), // Set icon color to white
+                title: Padding(padding: EdgeInsets.only(left: 5), child:
+                Text('Friends', style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),),),
+                onTap: () {
+                  // Display friends list on a new page
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(user["id"])));
+                },
               ),
+              Divider(color: Colors.black26, height: 0,),
+              ListTile(
+                leading: Icon(Icons.rate_review, color: text_color), // Set icon color to white
+                title: Padding(padding: EdgeInsets.only(left: 5), child:
+                Text('Activity', style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),),), // Set text color to white
+                onTap: () {
+                  // Navigate to your activity page
+                  // Updated to display review activity placeholders
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserReviewsScreen(widget.friendName)));
+                },
               ),
-              Text("Games"),
-              Expanded(
-                child:
-              GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                  ),
-                  itemCount: profileGames.length, // Placeholder for number of reviews
-                  itemBuilder: (context, index) {
-                    return TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const GameScreen(),
-                              settings: RouteSettings(
-                                  arguments: profileGames[index].gameId
-                              ),
-                            ),
-                          );
-                        },
-                        style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                          splashFactory: NoSplash.splashFactory,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          padding: EdgeInsets.zero,
-                        ),
-                        child:
-                        ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(profileGames[index].imageURL)
-                        )
-                    );
-                  }
-              )
-              )
+              Divider(color: Colors.black26, height: 0,),
+              ListTile(
+                leading: Icon(Icons.games, color: text_color), // Set icon color to white
+                title: Padding(padding: EdgeInsets.only(left: 5), child:
+                Text('Game List', style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1,
+                ),),), // Set text color to
+                onTap: () {
+                  // Navigate to game list page
+                  // Updated to display a grid view of games
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => GameListScreen(user["id"])));
+                },
+              ),
+              Divider(color: Colors.black26, height: 0,),
             ],
           ),
-      ) : const Align(
-            alignment: Alignment.center,
-            child: CircularProgressIndicator(
-              strokeWidth: 6,
-              color: Color.fromRGBO(10, 147, 150, 0.5),
-            )
-          ),
+      ) : Container(
+          color: background_color,
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(
+            strokeWidth: 6,
+            color: Color.fromRGBO(10, 147, 150, 0.5),
+          )
+      ),
     );
   }
 }

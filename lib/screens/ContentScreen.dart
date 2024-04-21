@@ -729,7 +729,7 @@ Container(
         ),),),
         onTap: () {
           // Display friends list on a new page
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(GlobalData.userID)));
         },
       ),
       Divider(color: Colors.black26, height: 0,),
@@ -745,7 +745,7 @@ Container(
         onTap: () {
           // Navigate to your activity page
           // Updated to display review activity placeholders
-          Navigator.push(context, MaterialPageRoute(builder: (context) => UserReviewsScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UserReviewsScreen(GlobalData.displayName)));
         },
       ),
       Divider(color: Colors.black26, height: 0,),
@@ -761,7 +761,7 @@ Container(
         onTap: () {
           // Navigate to game list page
           // Updated to display a grid view of games
-          Navigator.push(context, MaterialPageRoute(builder: (context) => GameListScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => GameListScreen(GlobalData.userID)));
         },
       ),
       Divider(color: Colors.black26, height: 0,),
