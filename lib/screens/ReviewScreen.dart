@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'ProfileScreen.dart';
+
 class ReviewScreen extends StatelessWidget {
   final String gameName;
   final String textBody;
@@ -52,12 +54,31 @@ class ReviewScreen extends StatelessWidget {
                 ),
                 Align(
                   alignment: Alignment.centerRight,
-                  child: Text(
-                    displayName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: text_color,
-                      fontSize: 20,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ProfileScreen(displayName)),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      shape: RoundedRectangleBorder(),
+                      splashFactory: NoSplash.splashFactory,
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        displayName,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: text_color,
+                          fontSize: 20,
+                        ),
+                      ),
                     ),
                   ),
                 ),

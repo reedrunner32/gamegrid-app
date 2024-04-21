@@ -6,6 +6,7 @@ import 'package:gamegrid/screens/UserReviewsScreen.dart';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
 import 'package:gamegrid/screens/ReviewScreen.dart';
+import 'package:gamegrid/screens/ProfileScreen.dart';
 import 'package:gamegrid/screens/NotificationScreen.dart';
 import 'package:gamegrid/components/Debouncer.dart';
 import 'package:elegant_notification/elegant_notification.dart';
@@ -507,15 +508,31 @@ class _ContentScreenState extends State<ContentScreen> {
                           }),
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Text(
-                          iteratorReview["displayName"],
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: text_color,
-                          fontSize: 16,
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileScreen(iteratorReview["displayName"])),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          shape: RoundedRectangleBorder(),
+                          splashFactory: NoSplash.splashFactory,
                         ),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            iteratorReview["displayName"],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: text_color,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -530,6 +547,7 @@ class _ContentScreenState extends State<ContentScreen> {
                       fontSize: 16,
                     ),
                   ),
+                  SizedBox(height: 6),
                   (timeSince.inHours < 1) ? Text(
                     'less than an hour ago',
                     style: TextStyle(
