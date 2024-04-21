@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamegrid/screens/FriendScreen.dart';
 import 'package:gamegrid/screens/GameListScreen.dart';
@@ -310,6 +311,9 @@ class _ContentScreenState extends State<ContentScreen> {
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         selectedIndex: currentPageIndex,
         indicatorColor: button_color,
+        indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         backgroundColor: Color.fromRGBO(54, 75, 94, 1),
         destinations: <Widget>[
           NavigationDestination(
@@ -333,36 +337,30 @@ class _ContentScreenState extends State<ContentScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-          //const Text('GameGrid',style: TextStyle(fontWeight: FontWeight.w800,color: Colors.white),),
-          SizedBox(width: 8),
-          Container(
-            child: Center(
-            child: Image.asset('assets/images/controllericon.png',scale: 10,),
-            ),
-          ),
-            ],
-          ),
-          //centerTitle: true,
+          title: Image.asset('assets/images/controllericon.png',scale: 10,),
+          centerTitle: true,
           backgroundColor: Colors.black,
           automaticallyImplyLeading: false,
           bottom: const TabBar(
             indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.label,
             splashFactory: NoSplash.splashFactory,
+            indicator: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Color.fromRGBO(10, 147, 150, 1), width: 2.0),
+              ),
+            ),
             tabs: <Widget>[
                Tab(
                 child: Text(
                   'New Releases',
-                  style: TextStyle(color: Colors.white), // Set text color
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1), // Set text color
                 ),
               ),
               Tab(
                 child: Text(
                   'Recent Reviews',
-                  style: TextStyle(color: Colors.white), // Set text color
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1), // Set text color
                 ),
               ),
             ],
@@ -385,10 +383,10 @@ class _ContentScreenState extends State<ContentScreen> {
         itemBuilder: (BuildContext context, int index) {
           GameCardRelease iteratorGame = newReleases[index];
           return Container(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 5),
             decoration: BoxDecoration(
               color: Colors.grey[900],
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(5.0),
             ),
             child: TextButton(
               onPressed: () {
@@ -409,35 +407,38 @@ class _ContentScreenState extends State<ContentScreen> {
                 padding: EdgeInsets.zero,
               ),
               child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 120, // Placeholder height for game cover image
-                  color: Colors.grey[700],
-                  child: Image.network(iteratorGame.imageURL, height: 120, fit: BoxFit.fitWidth,),
+                  height: 150, // Placeholder height for game cover image
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.network(iteratorGame.imageURL,),
+                  )
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 3),
                 Text(
                   iteratorGame.gameName,
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 15,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 4),
                 Text(
                   'Release Date: ',
                   style: TextStyle(
                     color: Colors.grey,
+                    fontSize: 12,
                   ),
                 ),
                 Text(
                   iteratorGame.releaseDate,
                   style: TextStyle(
                     color: Colors.grey,
+                    fontSize: 12,
                   ),
                 ),
               ],
