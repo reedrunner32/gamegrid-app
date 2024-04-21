@@ -25,7 +25,7 @@ class _ContentScreenState extends State<ContentScreen> {
 
   Color background_color = Color.fromRGBO(25, 28, 33, 1);
   Color text_color = Color.fromRGBO(155, 168, 183, 1);
-  Color button_color = Color.fromRGBO(10, 147, 150, 0.5);
+  Color button_color = Color.fromRGBO(10, 147, 150, 1);
 
   final _debouncer = Debouncer(milliseconds: 300);
 
@@ -264,19 +264,6 @@ class _ContentScreenState extends State<ContentScreen> {
     setState(() {
       recentReview = data;
     });
-  }
-
-  Future<void> _sendFriendRequest() async{
-    var userData = await ContentData.searchUsers(addFriendTextField);
-
-    if(userData.runtimeType == String) {
-      displayNotif("User does not exist");
-      return; //fetch error
-    }
-
-    String friendId = userData["id"];
-    String retMessage = await ContentData.sendFriendRequest(friendId); //return message
-    displayNotif(retMessage);
   }
 
   @override
@@ -732,78 +719,52 @@ Container(
         ),
       ),
       ListTile(
-        leading: Icon(Icons.people, color: Colors.white), // Set icon color to white
-        title: Text('Friends', style: TextStyle(color: Colors.white)), // Set text color to white
-        trailing: IconButton(
-           icon: Icon(Icons.add, color: Colors.white), // Set icon color to white
-          onPressed: () {
-            showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    // Variable to hold the entered display name
-    return AlertDialog(
-      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Set background color
-      title: Text('Send Friend Request', style: TextStyle(color: Colors.white)), // Set text color to white
-      content: TextField(
-        onChanged: (value) {
-          addFriendTextField = value; // Update the display name as it's typed
-        },
-        decoration: InputDecoration(
-          hintText: 'Enter display name',
-          hintStyle: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.white), // Set underline color to white
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.white), // Set focused underline color to white
-          ),
-        ),
-        cursorColor: Colors.white, // Set cursor color to white
-        style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color to white
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
-        ),
-        TextButton(
-          onPressed: () {
-            _sendFriendRequest();
-            Navigator.of(context).pop();
-          },
-          child: Text('Send', style: TextStyle(color: Colors.white)), // Set text color to white
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        ),
+        leading: Icon(Icons.people, color: text_color), // Set icon color to white
+        title: Padding(padding: EdgeInsets.only(left: 5), child:
+        Text('Friends', style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
+        ),),),
         onTap: () {
           // Display friends list on a new page
           Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen()));
         },
       ),
+      Divider(color: Colors.black26, height: 0,),
       ListTile(
-        leading: Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
-        title: Text('Your Activity', style: TextStyle(color: Colors.white)), // Set text color to white
+        leading: Icon(Icons.rate_review, color: text_color), // Set icon color to white
+        title: Padding(padding: EdgeInsets.only(left: 5), child:
+        Text('Your Activity', style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
+        ),),), // Set text color to white
         onTap: () {
           // Navigate to your activity page
           // Updated to display review activity placeholders
           Navigator.push(context, MaterialPageRoute(builder: (context) => UserReviewsScreen()));
         },
       ),
+      Divider(color: Colors.black26, height: 0,),
     ListTile(
-         leading: Icon(Icons.games, color: Colors.white), // Set icon color to white
-        title: Text('Game List', style: TextStyle(color: Colors.white)), // Set text color to
+         leading: Icon(Icons.games, color: text_color), // Set icon color to white
+        title: Padding(padding: EdgeInsets.only(left: 5), child:
+        Text('Game List', style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
+        ),),), // Set text color to
         onTap: () {
           // Navigate to game list page
           // Updated to display a grid view of games
           Navigator.push(context, MaterialPageRoute(builder: (context) => GameListScreen()));
         },
       ),
+      Divider(color: Colors.black26, height: 0,),
     ],
       // Add more buttons as needed
         ),
