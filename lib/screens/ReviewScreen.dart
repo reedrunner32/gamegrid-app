@@ -47,7 +47,7 @@ class ReviewScreen extends StatelessWidget {
                       return Icon(
                           Icons.star,
                           size: 40,
-                          color: Color.fromRGBO(10, 147, 150, 0.5)
+                          color: Color.fromRGBO(10, 147, 150, 1)
                       );
                     }),
                   ),
