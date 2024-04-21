@@ -31,43 +31,94 @@ class _NotificationScreenState extends State<NotificationScreen> {
   bool built = false;
 
   Widget notifBody() {
+    Color text_color = Color.fromRGBO(155, 168, 183, 1);
+    Color button_color = Color.fromRGBO(10, 147, 150, 1);
     if (requests != null && requests.runtimeType != String) {
       return ListView.builder(
           itemCount: requests.length, // Placeholder for number of reviews
           itemBuilder: (context, index) {
-            return ListTile(
-                leading: Icon(Icons.person),
-                title: Text(requests[index]["displayName"]),
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder:
-                      (context) =>
-                      ProfileScreen(requests[index]["displayName"])));
-                },
-              trailing: SizedBox(
-                width: 150,
-                child:
-                  Row(
+            return Container(
+              padding: EdgeInsets.only(top: 5),
+              child: Column(
                 children: [
-                  TextButton(
-                      onPressed: () {
-                        _acceptFriendRequest(requests[index]["id"]);
-                        setState(() {
-                          requests.removeAt(index);
-                        });
-                      },
-                      child: Text("Accept")
+                  Text(
+                    "A user has sent you a friend request!",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                   TextButton(
-                      onPressed: () {
-                        _rejectFriendRequest(requests[index]["id"]);
-                        setState(() {
-                          requests.removeAt(index);
-                        });
-                      },
-                      child: Text("Reject")
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder:
+                          (context) =>
+                          ProfileScreen(requests[index]["displayName"])));
+                    },
+                    style: TextButton.styleFrom(
+                      splashFactory: NoSplash.splashFactory,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.person, color: text_color,),
+                        SizedBox(width: 6,),
+                        Text(
+                          requests[index]["displayName"],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton(
+                          onPressed: () {
+                            _acceptFriendRequest(requests[index]["id"]);
+                            setState(() {
+                              requests.removeAt(index);
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                          ),
+                          child: Text(
+                            "Accept",
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          )
+                      ),
+                      SizedBox(width: 2,),
+                      OutlinedButton(
+                          onPressed: () {
+                            _rejectFriendRequest(requests[index]["id"]);
+                            setState(() {
+                              requests.removeAt(index);
+                            });
+                          },
+                          style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                          ),
+                          child: Text(
+                            "Reject",
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          )
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 5,),
+                  Divider(color: Colors.white38, height: 0,)
                 ],
-              ),
               )
             );
           });
@@ -89,9 +140,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
     if(!built) _getReceivedRequest();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: const Text(
+          'Notifications',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1,
+          ),
+        ),
+        foregroundColor: Colors.white,
         backgroundColor: Colors.black,
       ),
+      backgroundColor: Color.fromRGBO(25, 28, 33, 1),
       body: notifBody()
     );
   }
