@@ -103,6 +103,7 @@ class _GameScreenState extends State<GameScreen> {
 
   var game;
   var reviews;
+  var stats;
   int descLength = 0;
   String companies = '';
   String platforms = '';
@@ -140,10 +141,13 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
 
+    var gameStats = await ContentData.fetchGameStats(videoGameId);
+
     setState(() {
       game = data;
       reviews = gameReviews;
       _isGameAdded = flag;
+      stats = gameStats;
       built = true;
     });
   }
@@ -373,7 +377,7 @@ class _GameScreenState extends State<GameScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 40,),
+                                const SizedBox(height: 25,),
                                 RichText(
                                   text: TextSpan(
                                       text: 'Release date: ',
@@ -415,6 +419,25 @@ class _GameScreenState extends State<GameScreen> {
                                       ]
                                   ),
                                 )
+                                ),
+                                const SizedBox(height: 15,),
+                                SizedBox(width: 200, child:
+                                (stats.runtimeType != String) ? RichText(
+                                  text: TextSpan(
+                                      text: 'Rating: ',
+                                      style: TextStyle(color: text_color),
+                                      children: [
+                                        (stats["rating"] != null) ? TextSpan(
+                                          text: '${stats["rating"]} / 5',
+                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                        ) :
+                                        TextSpan(
+                                          text: 'Unrated',
+                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                        ),
+                                      ]
+                                  ),
+                                ) : SizedBox()
                                 ),
                               ],
                             ),
@@ -539,7 +562,7 @@ class _GameScreenState extends State<GameScreen> {
                                             return Icon(
                                                 Icons.star,
                                                 size: 20,
-                                                color: Color.fromRGBO(10, 147, 150, 0.5)
+                                                color: Color.fromRGBO(10, 147, 150, 1)
                                             );
                                           }),
                                         ),

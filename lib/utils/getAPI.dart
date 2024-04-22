@@ -229,6 +229,19 @@ class ContentData {
     return err;
   }
 
+  // Fetches "reviewCount" and "rating" for a specific game
+  static Future fetchGameStats(String videoGameId) async {
+    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/reviews/stats/$videoGameId';
+
+    final response = await CardsData.getJson(url);
+    var decoded = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      return decoded;
+    }
+    String retErr = decoded['error']; //returning error message
+    return retErr;
+  }
 
 /* -----------------------------
   *  Friend related API requests
@@ -459,7 +472,6 @@ class ContentData {
     return receivedList;
 
   }
-
 
 // Fetches most recent reviews (default = 10; set pageSize for different amount)
   static Future fetchRecentReviews(int pageSize) async {
