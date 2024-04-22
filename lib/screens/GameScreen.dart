@@ -459,7 +459,7 @@ class _GameScreenState extends State<GameScreen> {
                                       gradient: LinearGradient(
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
-                                        colors: [Colors.transparent, Colors.black.withOpacity(0.9)],
+                                        colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
                                       ),
                                     ),
                                   ) : const SizedBox(),
