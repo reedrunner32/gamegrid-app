@@ -233,7 +233,38 @@ class _ContentScreenState extends State<ContentScreen> {
                         isScrollControlled: true,
                         context: context,
                         builder: (BuildContext context) {
-                          return Container(height: 100,);
+                          return Container(
+                            height: MediaQuery.of(context).size.height*0.6,
+                            color: background_color,
+                            child: Column(
+                              children: [
+                                AppBar(
+                                  backgroundColor: Colors.transparent,
+                                  leadingWidth: 100,
+                                  leading: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                    ),
+                                    child: Text("Cancel", style: TextStyle(color: text_color, fontSize: 18, fontWeight: FontWeight.w400),),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+
+                                        },
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                        ),
+                                        child: SizedBox(width: 50, child: Text("Save", style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.w800),),)
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
                         });
                     },
                     child: Text(
@@ -269,21 +300,79 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    _deleteAccount(true);
-                    Navigator.pushReplacementNamed(context, '/home');
-                    ElegantNotification.success(
-                      width: 360,
-                      toastDuration: const Duration(milliseconds: 2500),
-                      position: Alignment.topCenter,
-                      animation: AnimationType.fromTop,
-                      description: Text("Account Deleted"),
-                      shadow: BoxShadow(
-                        color: Colors.blue.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 4), // changes position of shadow
-                      ),
-                    ).show(context);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: background_color,
+                        title: Text("Delete Account"),
+                        titleTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                        shape: RoundedRectangleBorder(),
+                        content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5),
+                              child: Text(
+                                "Are you sure you want to delete your account?",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _deleteAccount(true);
+                                    Navigator.pushReplacementNamed(
+                                        context, '/home');
+                                    ElegantNotification.success(
+                                      width: 360,
+                                      toastDuration: const Duration(
+                                          milliseconds: 2500),
+                                      position: Alignment.topCenter,
+                                      animation: AnimationType.fromTop,
+                                      description: Text("Account Deleted"),
+                                      shadow: BoxShadow(
+                                        color: Colors.blue.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 5,
+                                        offset: const Offset(
+                                            0, 4), // changes position of shadow
+                                      ),
+                                    ).show(context);
+                                  },
+                                  child: Text(
+                                    "Delete",
+                                    style: TextStyle(
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                    );
                   },
                   child: Text(
                     'Delete Account',
@@ -538,7 +627,7 @@ class _ContentScreenState extends State<ContentScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ReviewScreen(iteratorReview["videoGameId"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                      builder: (context) => ReviewScreen(iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
                   );
                 },
                 child: Container(
@@ -550,7 +639,7 @@ class _ContentScreenState extends State<ContentScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    iteratorReview["videoGameId"],
+                    iteratorReview["videoGameName"],
                     style: TextStyle(
                       color: text_color,
                       fontSize: 20,

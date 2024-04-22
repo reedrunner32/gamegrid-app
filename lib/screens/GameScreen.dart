@@ -109,7 +109,7 @@ class _GameScreenState extends State<GameScreen> {
   bool _isGameAdded = false;
   void _getGameData(String videoGameId) async {
     var data = await ContentData.fetchGameInfo(videoGameId);
-    var gameReviews = await ContentData.fetchGameReviews(data["name"]);
+    var gameReviews = await ContentData.fetchGameReviews('${data["id"]}');
 
     //Check if game is added to library yet
     bool flag = false;
@@ -150,7 +150,7 @@ class _GameScreenState extends State<GameScreen> {
 
   int selectedRating = 0; // Initialize selectedRating to 0
   String reviewText = '';
-  void _submitReview(String videoGameId) async {
+  void _submitReview(String videoGameId, String videoGameName) async {
     if(selectedRating == 0) {
       displayReviewNotif("Please select a rating");
       return;
@@ -159,7 +159,7 @@ class _GameScreenState extends State<GameScreen> {
       displayReviewNotif("Please write a review");
       return;
     }
-    var data = await ContentData.addReview(reviewText, '$selectedRating', videoGameId, GlobalData.displayName);
+    var data = await ContentData.addReview(reviewText, '$selectedRating', videoGameId, GlobalData.displayName, videoGameName);
     displayReviewNotif(data);
 
     setState(() {
@@ -275,7 +275,7 @@ class _GameScreenState extends State<GameScreen> {
                                   SizedBox(height: 20),
                                   ElevatedButton(
                                     onPressed: () {
-                                      _submitReview(game["name"]);
+                                      _submitReview(game["id"], game["name"]);
                                       Navigator.pop(context);
                                     },
                                     style: ButtonStyle(
