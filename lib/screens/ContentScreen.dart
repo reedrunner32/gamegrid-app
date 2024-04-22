@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:gamegrid/screens/FriendScreen.dart';
 import 'package:gamegrid/screens/GameListScreen.dart';
 import 'package:gamegrid/screens/UserReviewsScreen.dart';
@@ -58,6 +59,27 @@ class _ContentScreenState extends State<ContentScreen> {
     ).show(context);
   }
 
+    void displayError(String message) {
+      ElegantNotification.error(
+        width: 360,
+        toastDuration: const Duration(milliseconds: 2500),
+        stackedOptions: StackedOptions(
+          key: 'top',
+          type: StackedType.same,
+          itemOffset: const Offset(-5, -5),
+        ),
+        position: Alignment.topCenter,
+        animation: AnimationType.fromTop,
+        description: Text(message),
+        shadow: BoxShadow(
+          color: Colors.blue.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 4), // changes position of shadow
+        ),
+      ).show(context);
+    }
+
   // FOR TESTING PURPOSES
   void printDebug(String str) {
     showDialog(
@@ -81,13 +103,16 @@ class _ContentScreenState extends State<ContentScreen> {
       });
   }
 
-  // Settings page variables
-  String changeDisplayName = '';
-  String changeEmail = '';
-  String changePassword = '';
+  void _changePassword(String newPassword) async {
+    String message = await ContentData.changeUserPassword(newPassword);
+    displayNotif("Password changed");
+  }
 
   Widget SettingsPage() {
     Size size = MediaQuery.of(context).size;
+    String currentPassword = '';
+    String newPassword = '';
+    String confirmPassword = '';
     return Container(
         height: size.height*0.95,
         decoration: BoxDecoration(
@@ -103,24 +128,15 @@ class _ContentScreenState extends State<ContentScreen> {
                 title: Text("Settings", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18),),
                 automaticallyImplyLeading: false,
                 leadingWidth: 100,
-                leading: TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                  ),
-                  child: Text("Cancel", style: TextStyle(color: text_color, fontSize: 18, fontWeight: FontWeight.w400),),
-                ),
                 actions: [
-                  TextButton(
+                  IconButton(
+                    icon: Icon(Icons.close_outlined, color: Colors.white70, size: 30,),
                       onPressed: () {
-
+                        Navigator.of(context).pop();
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.transparent,
                       ),
-                      child: SizedBox(width: 50, child: Text("Save", style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.w800),),)
                   ),
                 ],
               ),
@@ -194,6 +210,47 @@ class _ContentScreenState extends State<ContentScreen> {
                               padding: EdgeInsets.zero,
                               color: Color.fromRGBO(54, 75, 94, 1),
                               child: Text(
+                                "Username",
+                                style: TextStyle(
+                                  color: text_color,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            )
+                        ),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              padding: EdgeInsets.zero,
+                              color: Color.fromRGBO(54, 75, 94, 1),
+                              child: Text(
+                                GlobalData.displayName,
+                                style: TextStyle(
+                                  color: text_color,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            )
+                        ),
+                      ]
+                  )
+              ),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                  ),
+                  height: 50,
+                  child: Stack(
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.zero,
+                              color: Color.fromRGBO(54, 75, 94, 1),
+                              child: Text(
                                 "Email",
                                 style: TextStyle(
                                   color: text_color,
@@ -231,11 +288,15 @@ class _ContentScreenState extends State<ContentScreen> {
                     onPressed: () {
                       showModalBottomSheet(
                         isScrollControlled: true,
+                        backgroundColor: background_color,
                         context: context,
                         builder: (BuildContext context) {
                           return Container(
-                            height: MediaQuery.of(context).size.height*0.6,
-                            color: background_color,
+                            height: MediaQuery.of(context).size.height*0.85,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Color.fromRGBO(54, 75, 94, 1),
+                            ),
                             child: Column(
                               children: [
                                 AppBar(
@@ -253,7 +314,31 @@ class _ContentScreenState extends State<ContentScreen> {
                                   actions: [
                                     TextButton(
                                         onPressed: () {
-
+                                          if(currentPassword != GlobalData.password) {
+                                            displayError("Current password is wrong!");
+                                            return;
+                                          }
+                                          if(newPassword.length < 8 && !newPassword.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                                            displayError('Password must be at least 8 characters long and contain a special character');
+                                            return;
+                                          }
+                                          if (newPassword.length < 8) {
+                                            displayError('Password must be at least 8 characters long');
+                                            return;
+                                          }
+                                          if (!newPassword.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                                            displayError('Password must contain at least one special character');
+                                            return;
+                                          }
+                                          if(newPassword != confirmPassword) {
+                                            displayError("Passwords do not match!");
+                                            return;
+                                          }
+                                          if(newPassword == GlobalData.password) {
+                                            displayError("New password cannot be the current password!");
+                                            return;
+                                          }
+                                          _changePassword(newPassword);
                                         },
                                         style: TextButton.styleFrom(
                                           backgroundColor: Colors.transparent,
@@ -261,6 +346,124 @@ class _ContentScreenState extends State<ContentScreen> {
                                         child: SizedBox(width: 50, child: Text("Save", style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.w800),),)
                                     ),
                                   ],
+                                ),
+                                Container(
+                                  alignment: Alignment.centerLeft,
+                                  padding: EdgeInsets.only(left: 10, top: 10, bottom: 2),
+                                  child: Text(
+                                    'CHANGE PASSWORD',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(left: 10),
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                      border: Border(bottom: BorderSide(color: Colors.black, width: 0.5), top: BorderSide(color: Colors.black, width: 0.5))
+                                  ),
+                                  child:
+                                    TextField(
+                                  onChanged: (text) {
+                                    currentPassword = text;
+                                  },
+                                      obscureText: true,
+                                  style: TextStyle(
+                                    color: Colors.white
+                                  ),
+                                  decoration: InputDecoration(
+                                    floatingLabelBehavior: FloatingLabelBehavior.never,
+                                    border: InputBorder.none,
+                                    labelText: 'Current Password',
+                                    labelStyle: TextStyle(
+                                      color: text_color,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  cursorColor: Colors.white,
+                                ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(left: 10),
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                      border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                                  ),
+                                  child:
+                                  TextField(
+                                    onChanged: (text) {
+                                      newPassword = text;
+                                    },
+                                    obscureText: true,
+                                    style: TextStyle(
+                                        color: Colors.white
+                                    ),
+                                    decoration: InputDecoration(
+                                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                                      border: InputBorder.none,
+                                      labelText: 'New Password',
+                                      labelStyle: TextStyle(
+                                        color: text_color,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    cursorColor: Colors.white,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(left: 10),
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                      border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                                  ),
+                                  child:
+                                  TextField(
+                                    onChanged: (text) {
+                                      confirmPassword = text;
+                                    },
+                                    obscureText: true,
+                                    style: TextStyle(
+                                        color: Colors.white
+                                    ),
+                                    decoration: InputDecoration(
+                                      floatingLabelBehavior: FloatingLabelBehavior.never,
+                                      border: InputBorder.none,
+                                      labelText: 'Confirm Password',
+                                      labelStyle: TextStyle(
+                                        color: text_color,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    cursorColor: Colors.white,
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(left: 10, top: 20),
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    "Password must meet these requirements: ",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+
+                                ListTile(
+                                  leading: Icon(Icons.circle, size: 10, color: text_color,), // You can use any icon here
+                                  title: Text('At least 8 characters in length', style: TextStyle(
+                                    color: text_color,
+                                    fontSize: 16,
+                                  ),),
+                                ),
+                                ListTile(
+                                  leading: Icon(Icons.circle, size: 10, color: text_color,), // You can use any icon here
+                                  title: Text('At least 1 special character', style: TextStyle(
+                                    color: text_color,
+                                    fontSize: 16,
+                                  ),),
                                 ),
                               ],
                             ),

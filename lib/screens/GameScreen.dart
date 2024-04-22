@@ -103,6 +103,7 @@ class _GameScreenState extends State<GameScreen> {
 
   var game;
   var reviews;
+  var stats;
   int descLength = 0;
   String companies = '';
   String platforms = '';
@@ -142,11 +143,13 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
 
+    var gameStats = await ContentData.fetchGameStats(videoGameId);
 
     setState(() {
       game = data;
       reviews = gameReviews;
       _isGameAdded = flag;
+      stats = gameStats;
       companies = tempCompanies;
       platforms = tempPlatforms;
       built = true;
@@ -279,7 +282,7 @@ class _GameScreenState extends State<GameScreen> {
                                   SizedBox(height: 20),
                                   ElevatedButton(
                                     onPressed: () {
-                                      _submitReview(game["id"], game["name"]);
+                                      _submitReview('${game["id"]}', game["name"]);
                                       Navigator.pop(context);
                                     },
                                     style: ButtonStyle(
@@ -381,7 +384,7 @@ class _GameScreenState extends State<GameScreen> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const SizedBox(height: 40,),
+                                const SizedBox(height: 25,),
                                 RichText(
                                   text: TextSpan(
                                       text: 'Release date: ',
@@ -423,6 +426,25 @@ class _GameScreenState extends State<GameScreen> {
                                       ]
                                   ),
                                 )
+                                ),
+                                const SizedBox(height: 15,),
+                                SizedBox(width: 200, child:
+                                (stats.runtimeType != String) ? RichText(
+                                  text: TextSpan(
+                                      text: 'Rating: ',
+                                      style: TextStyle(color: text_color),
+                                      children: [
+                                        (stats["rating"] != null) ? TextSpan(
+                                          text: '${stats["rating"]} / 5',
+                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                        ) :
+                                        TextSpan(
+                                          text: 'Unrated',
+                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                        ),
+                                      ]
+                                  ),
+                                ) : SizedBox()
                                 ),
                               ],
                             ),
@@ -507,7 +529,7 @@ class _GameScreenState extends State<GameScreen> {
                         Divider(height: 0, color: Colors.white38,),
                         (reviews != null) ? SizedBox(
                           height: 300,
-                          child: ListView.builder(
+                          child: (reviews.length != 0) ? ListView.builder(
                           itemCount: reviews.length, // Placeholder for number of reviews
                           itemBuilder: (context, index) {
                             var iteratorReview = reviews[index];
@@ -547,7 +569,7 @@ class _GameScreenState extends State<GameScreen> {
                                             return Icon(
                                                 Icons.star,
                                                 size: 20,
-                                                color: Color.fromRGBO(10, 147, 150, 0.5)
+                                                color: Color.fromRGBO(10, 147, 150, 1)
                                             );
                                           }),
                                         ),
@@ -597,7 +619,17 @@ class _GameScreenState extends State<GameScreen> {
                             )
                             );
                           },
-                        )) : Container(),
+                        ) : Container(
+                            alignment: Alignment.topCenter,
+                            padding: EdgeInsets.only(top: 25),
+                            child: Text(
+                              "No Reviews yet...",
+                              style: TextStyle(
+                                color: text_color,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          )) : Container(),
                       ]
                   )
               ) : const Align(

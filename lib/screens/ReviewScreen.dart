@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-
+import 'package:gamegrid/utils/getAPI.dart';
 import 'ProfileScreen.dart';
 
-class ReviewScreen extends StatelessWidget {
+class ReviewScreen extends StatefulWidget {
   final String gameName;
   final String textBody;
   final String displayName;
   final int rating;
   final Duration timeSince;
 
-  const ReviewScreen(this.gameName, this.textBody, this.displayName, this.rating, this.timeSince, {super.key});
+  const ReviewScreen(this.gameName, this.textBody, this.displayName,
+      this.rating, this.timeSince, {super.key});
+
+  @override
+  State<ReviewScreen> createState() => _ReviewScreenState();
+}
+
+class _ReviewScreenState extends State<ReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +26,22 @@ class ReviewScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.black,
         foregroundColor: Colors.white,
+        actions: [
+          (widget.displayName == GlobalData.displayName) ? IconButton(
+            onPressed: () {
+
+            },
+            style: IconButton.styleFrom(
+              minimumSize: Size.zero,
+              padding: EdgeInsets.all(2)
+            ),
+            icon: Icon(
+              Icons.more_horiz_outlined,
+              size: 35,
+              color: Colors.white,
+            ),
+          ) : SizedBox()
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -29,8 +52,8 @@ class ReviewScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (gameName != '') ? Text(
-              gameName,
+            (widget.gameName != '') ? Text(
+              widget.gameName,
               style: TextStyle(
                 color: text_color,
                 fontSize: 30,
@@ -44,7 +67,7 @@ class ReviewScreen extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(rating, (index) {
+                    children: List.generate(widget.rating, (index) {
                       return Icon(
                           Icons.star,
                           size: 40,
@@ -60,7 +83,7 @@ class ReviewScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ProfileScreen(displayName)),
+                            builder: (context) => ProfileScreen(widget.displayName)),
                       );
                     },
                     style: TextButton.styleFrom(
@@ -73,7 +96,7 @@ class ReviewScreen extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        displayName,
+                        widget.displayName,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: text_color,
@@ -87,26 +110,26 @@ class ReviewScreen extends StatelessWidget {
             ),
             SizedBox(height: 8),
             Text(
-              textBody,
+              widget.textBody,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 17,
               ),
             ),
             SizedBox(height: 10,),
-            (timeSince.inHours < 1) ? Align(alignment: Alignment.centerRight, child: Text(
+            (widget.timeSince.inHours < 1) ? Align(alignment: Alignment.centerRight, child: Text(
               'less than an hour ago',
               style: TextStyle(
                 color: Colors.grey,
               )),
-            ) : (timeSince.inDays < 1) ?
+            ) : (widget.timeSince.inDays < 1) ?
             Align(alignment: Alignment.centerRight, child: Text(
-              '${timeSince.inHours} hours ago',
+              '${widget.timeSince.inHours} hours ago',
               style: TextStyle(
                 color: Colors.grey,
               )),
             ) : Align(alignment: Alignment.centerRight, child: Text(
-              '${timeSince.inDays} days ago',
+              '${widget.timeSince.inDays} days ago',
               style: TextStyle(
                 color: Colors.grey,
               ),
