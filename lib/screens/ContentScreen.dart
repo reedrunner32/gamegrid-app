@@ -1,12 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gamegrid/screens/FriendScreen.dart';
-import 'dart:convert';
+import 'package:gamegrid/screens/GameListScreen.dart';
+import 'package:gamegrid/screens/UserReviewsScreen.dart';
 import 'package:gamegrid/utils/getAPI.dart';
 import 'package:gamegrid/screens/GameScreen.dart';
+import 'package:gamegrid/screens/ReviewScreen.dart';
+import 'package:gamegrid/screens/ProfileScreen.dart';
+import 'package:gamegrid/screens/NotificationScreen.dart';
 import 'package:gamegrid/components/Debouncer.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
-import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
+import 'package:elegant_notification/resources/stacked_options.dart';
 
 
 class ContentScreen extends StatefulWidget {
@@ -20,18 +25,38 @@ class _ContentScreenState extends State<ContentScreen> {
 
   Color background_color = Color.fromRGBO(25, 28, 33, 1);
   Color text_color = Color.fromRGBO(155, 168, 183, 1);
-  Color button_color = Color.fromRGBO(10, 147, 150, 0.5);
+  Color button_color = Color.fromRGBO(10, 147, 150, 1);
 
-  SlidingUpPanelController panelController = SlidingUpPanelController();
-  final _debouncer = Debouncer(milliseconds: 200);
+  final _debouncer = Debouncer(milliseconds: 300);
 
   int currentPageIndex = 0;
 
   final _scrollController = ScrollController();
   String search = '';
   
-  String displayName = '';
+  String addFriendTextField = '';
   List<GameCard> games = [];
+
+  void displayNotif(String message) {
+    ElegantNotification.info(
+      width: 360,
+      toastDuration: const Duration(milliseconds: 2500),
+      stackedOptions: StackedOptions(
+        key: 'top',
+        type: StackedType.same,
+        itemOffset: const Offset(-5, -5),
+      ),
+      position: Alignment.topCenter,
+      animation: AnimationType.fromTop,
+      description: Text(message),
+      shadow: BoxShadow(
+        color: Colors.blue.withOpacity(0.2),
+        spreadRadius: 2,
+        blurRadius: 5,
+        offset: const Offset(0, 4), // changes position of shadow
+      ),
+    ).show(context);
+  }
 
   // FOR TESTING PURPOSES
   void printDebug(String str) {
@@ -127,7 +152,7 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, '/home');
+                    Navigator.pushReplacementNamed(context, '/home');
                   },
                   child: Text(
                     'Sign out',
@@ -155,51 +180,218 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                width: size.width,
-                height: 50,
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.zero,
-                        color: Color.fromRGBO(54, 75, 94, 1),
-                        child: Text(
-                          "Username",
-                          style: TextStyle(
-                            color: text_color,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                  ),
+                  height: 50,
+                  child: Stack(
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.zero,
+                              color: Color.fromRGBO(54, 75, 94, 1),
+                              child: Text(
+                                "Email",
+                                style: TextStyle(
+                                  color: text_color,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            )
                         ),
-                      )
-                    ),
-                    TextField(
-                      onChanged: (text) {
-                        changeDisplayName = text;
-                      },
-                      textAlign: TextAlign.right,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(color: text_color, decoration: TextDecoration.none, fontSize: 18),
-                      cursorColor: text_color,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: text_color),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 0.5),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              padding: EdgeInsets.zero,
+                              color: Color.fromRGBO(54, 75, 94, 1),
+                              child: Text(
+                                GlobalData.email,
+                                style: TextStyle(
+                                  color: text_color,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            )
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 0.5),
-                        ),
+                      ]
+                  )
+              ),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(
+                            height: MediaQuery.of(context).size.height*0.6,
+                            color: background_color,
+                            child: Column(
+                              children: [
+                                AppBar(
+                                  backgroundColor: Colors.transparent,
+                                  leadingWidth: 100,
+                                  leading: TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.transparent,
+                                    ),
+                                    child: Text("Cancel", style: TextStyle(color: text_color, fontSize: 18, fontWeight: FontWeight.w400),),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                        onPressed: () {
+
+                                        },
+                                        style: TextButton.styleFrom(
+                                          backgroundColor: Colors.transparent,
+                                        ),
+                                        child: SizedBox(width: 50, child: Text("Save", style: TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.w800),),)
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          );
+                        });
+                    },
+                    child: Text(
+                      'Change Password',
+                      style: TextStyle(
+                        color: text_color,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ]
-                )
+                  )
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 10, top: 45),
+                height: 70,
+                decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                ),
+                child: Text(
+                  'OTHER',
+                  style: TextStyle(
+                    color: text_color,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                height: 50,
+                decoration: BoxDecoration(
+                    border: Border.symmetric(horizontal: BorderSide(color: Colors.black, width: 0.5))
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                      return AlertDialog(
+                        backgroundColor: background_color,
+                        title: Text("Delete Account"),
+                        titleTextStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                        shape: RoundedRectangleBorder(),
+                        content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 5),
+                              child: Text(
+                                "Are you sure you want to delete your account?",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(
+                                    "Cancel",
+                                    style: TextStyle(
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _deleteAccount(true);
+                                    Navigator.pushReplacementNamed(
+                                        context, '/home');
+                                    ElegantNotification.success(
+                                      width: 360,
+                                      toastDuration: const Duration(
+                                          milliseconds: 2500),
+                                      position: Alignment.topCenter,
+                                      animation: AnimationType.fromTop,
+                                      description: Text("Account Deleted"),
+                                      shadow: BoxShadow(
+                                        color: Colors.blue.withOpacity(0.2),
+                                        spreadRadius: 2,
+                                        blurRadius: 5,
+                                        offset: const Offset(
+                                            0, 4), // changes position of shadow
+                                      ),
+                                    ).show(context);
+                                  },
+                                  child: Text(
+                                    "Delete",
+                                    style: TextStyle(
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    }
+                    );
+                  },
+                  child: Text(
+                    'Delete Account',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 0, 0, 1),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
         )
     );
+  }
+
+  void _deleteAccount(bool confirm) async {
+    var message = await ContentData.deleteUser(confirm);
   }
 
   void _loadMore() {
@@ -212,19 +404,33 @@ class _ContentScreenState extends State<ContentScreen> {
   int curOffset = 0;
   String curSearch = '';
   List<GameCard> curGameList = [];
+  bool searchLoaded = false;
 
-  void _fetchData() async {
+  Future<void> _fetchData() async {
     List<GameCard> gameList = await ContentData.fetchGameCards(curLimit, curOffset, curSearch);
     setState(() {
       curGameList.addAll(gameList);
       curOffset += curLimit;
+      searchLoaded = true;
     });
   }
 
-  void _friendRequest() async{
-    var userData = await ContentData.searchUsers(displayName);
-    String friendId = userData["id"];
-    String retMessage = await ContentData.sendFriendRequest(friendId); //return message
+  List<GameCardRelease> newReleases = [];
+  Future<void> _getNewReleases() async {
+    List<GameCardRelease> temp = await ContentData.fetchNewReleaseGameCards(15, 0);
+    setState(() {
+      newReleases.addAll(temp);
+    });
+  }
+
+  var recentReview;
+  Future<void> _getRecentReviews() async {
+    Future.delayed(const Duration(seconds: 2));
+    var data = await ContentData.fetchRecentReviews(10);
+    if(data == null) return;
+    setState(() {
+      recentReview = data;
+    });
   }
 
   @override
@@ -238,12 +444,17 @@ class _ContentScreenState extends State<ContentScreen> {
     super.initState();
     _scrollController.addListener(_loadMore);
     _fetchData();
+    _getRecentReviews();
+    _getNewReleases();
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
+    return PopScope(
+        canPop: false,
+        child:
+      Scaffold(
       backgroundColor: background_color,
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -254,7 +465,10 @@ class _ContentScreenState extends State<ContentScreen> {
         height: 70,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
         selectedIndex: currentPageIndex,
-        indicatorColor: button_color,
+        indicatorColor: Color.fromRGBO(10, 147, 150, 0.5),
+        indicatorShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         backgroundColor: Color.fromRGBO(54, 75, 94, 1),
         destinations: <Widget>[
           NavigationDestination(
@@ -263,11 +477,11 @@ class _ContentScreenState extends State<ContentScreen> {
           ),
           NavigationDestination(
             icon: Icon(Icons.search, color: text_color, size: 30,),
-            label: 'Notifications',
+            label: 'Search',
           ),
           NavigationDestination(
             icon: Icon(Icons.person, color: text_color, size: 30,),
-            label: 'Search',
+            label: 'Profile',
           ),
         ],
       ),
@@ -278,36 +492,30 @@ class _ContentScreenState extends State<ContentScreen> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-          //const Text('GameGrid',style: TextStyle(fontWeight: FontWeight.w800,color: Colors.white),),
-          SizedBox(width: 8),
-          Container(
-            child: Center(
-            child: Image.asset('assets/images/controllericon.png',scale: 10,),
-            ),
-          ),
-            ],
-          ),
-          //centerTitle: true,
+          title: Image.asset('assets/images/controllericon.png',scale: 10,),
+          centerTitle: true,
           backgroundColor: Colors.black,
           automaticallyImplyLeading: false,
           bottom: const TabBar(
             indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.label,
             splashFactory: NoSplash.splashFactory,
+            indicator: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Color.fromRGBO(10, 147, 150, 1), width: 2.0),
+              ),
+            ),
             tabs: <Widget>[
                Tab(
                 child: Text(
                   'New Releases',
-                  style: TextStyle(color: Colors.white), // Set text color
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1), // Set text color
                 ),
               ),
               Tab(
                 child: Text(
                   'Recent Reviews',
-                  style: TextStyle(color: Colors.white), // Set text color
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, letterSpacing: 1), // Set text color
                 ),
               ),
             ],
@@ -317,94 +525,214 @@ class _ContentScreenState extends State<ContentScreen> {
      body: TabBarView(
   children: <Widget>[
     // New content for new releases page
-    Container(
+      Container(
       color: Color.fromRGBO(25, 28, 33, 1),
       child: GridView.builder(
-        itemCount: 15, // Placeholder for number of new release games
+        itemCount: newReleases.length, // Placeholder for number of new release games
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
           mainAxisSpacing: 5,
           crossAxisSpacing: 5,
-          childAspectRatio: 2 / 3, // Aspect ratio for each game placeholder
+          childAspectRatio: 1.6 / 3, // Aspect ratio for each game placeholder
         ),
         itemBuilder: (BuildContext context, int index) {
+          GameCardRelease iteratorGame = newReleases[index];
           return Container(
-            padding: EdgeInsets.all(8.0),
+            padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 5),
             decoration: BoxDecoration(
               color: Colors.grey[900],
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(5.0),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GameScreen(),
+                    settings: RouteSettings(
+                        arguments: iteratorGame.gameId
+                    ),
+                  ),
+                );
+              },
+              style: TextButton.styleFrom(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                splashFactory: NoSplash.splashFactory,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                padding: EdgeInsets.zero,
+              ),
+              child: Column(
               children: [
                 Container(
-                  height: 120, // Placeholder height for game cover image
-                  color: Colors.grey[700],
+                  height: 150, // Placeholder height for game cover image
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.network(iteratorGame.imageURL,),
+                  )
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: 3),
                 Text(
-                  'Game Title $index', // Placeholder game title
+                  iteratorGame.gameName,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
+                    fontSize: 15,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 4),
                 Text(
-                  'Release Date', // Placeholder release date
+                  'Release Date: ',
                   style: TextStyle(
                     color: Colors.grey,
+                    fontSize: 12,
+                  ),
+                ),
+                Text(
+                  iteratorGame.releaseDate,
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 12,
                   ),
                 ),
               ],
             ),
+          )
           );
         },
       ),
     ),
     // Previous content for recent reviews page
-    Container(
-      color: Color.fromRGBO(25, 28, 33, 1),
-      child: ListView.builder(
-        itemCount: 5, // Placeholder for number of reviews
-        itemBuilder: (context, index) {
-          return Container(
-            padding: EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Colors.grey)),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'User $index', // Placeholder username
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+    RefreshIndicator(
+      onRefresh: _getRecentReviews,
+      child:
+      Container(
+        color: Color.fromRGBO(25, 28, 33, 1),
+        child: (recentReview != null) ? ListView.builder(
+          itemCount: recentReview.length, // Placeholder for number of reviews
+          itemBuilder: (context, index) {
+            var iteratorReview = recentReview[index];
+            DateTime currentTime = DateTime.now();
+            Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                padding: EdgeInsets.zero,
+                shadowColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
+                splashFactory: NoSplash.splashFactory,
+              ),
+                onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ReviewScreen(iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                  );
+                },
+                child: Container(
+              padding: EdgeInsets.all(16.0),
+              decoration: BoxDecoration(
+                border: Border(bottom: BorderSide(color: text_color)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    iteratorReview["videoGameName"],
+                    style: TextStyle(
+                      color: text_color,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  '2 hours ago', // Placeholder timestamp
-                  style: TextStyle(
-                    color: Colors.grey,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(iteratorReview["rating"], (index) {
+                            return Icon(
+                                Icons.star,
+                                size: 20,
+                                color: button_color
+                              );
+                          }),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ProfileScreen(iteratorReview["displayName"])),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          shape: RoundedRectangleBorder(),
+                          splashFactory: NoSplash.splashFactory,
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            iteratorReview["displayName"],
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: text_color,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'This is a placeholder review text.', // Placeholder review text
-                  style: TextStyle(
-                    fontSize: 16,
+                  SizedBox(height: 4),
+                  Text(
+                    iteratorReview["textBody"],
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                // Add more elements for additional info like ratings, likes, etc.
-              ],
-            ),
-          );
-        },
+                  SizedBox(height: 6),
+                  (timeSince.inHours < 1) ? Text(
+                    'less than an hour ago',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ) : (timeSince.inDays < 1) ?
+                  Text(
+                    '${timeSince.inHours} hours ago',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  ) : Text(
+                    '${timeSince.inDays} days ago',
+                    style: TextStyle(
+                      color: Colors.grey,
+                    ),
+                  )
+                ],
+              ),
+            )
+            );
+          },
+        ) : const Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(
+              strokeWidth: 6,
+              color: Color.fromRGBO(10, 147, 150, 0.5),
+            )
+        ),
       ),
-    ),
+    )
   ],
 ),
       ),
@@ -421,14 +749,13 @@ class _ContentScreenState extends State<ContentScreen> {
                 backgroundColor: Colors.black,
                 title:
                 Column(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text('Search', style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
-                      SizedBox(
+                      Container(
                         height: 35,
                         child:
                         TextField(
-                          style: TextStyle(fontSize: 16, color: text_color, decoration: TextDecoration.none),
+                          style: TextStyle(fontSize: 16, color: Colors.black87, decoration: TextDecoration.none),
                           cursorColor: Colors.black,
                           decoration: InputDecoration(
                             filled: true,
@@ -437,6 +764,10 @@ class _ContentScreenState extends State<ContentScreen> {
                                 borderRadius: BorderRadius.circular(10),
                             ),
                             focusColor: Colors.black,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: Colors.transparent, )
+                            ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide(color: Colors.transparent, )
@@ -447,6 +778,9 @@ class _ContentScreenState extends State<ContentScreen> {
                           ),
                           onChanged: (text) {
                             _debouncer.run(() {
+                              setState(() {
+                                searchLoaded = false;
+                              });
                               curSearch = text;
                               curOffset = 0;
                               curGameList.clear();
@@ -458,7 +792,7 @@ class _ContentScreenState extends State<ContentScreen> {
                     ]
                 ),
               ),
-              Expanded(
+              (searchLoaded) ? Expanded(
                 child:
                 GridView.builder(
                   controller: _scrollController,
@@ -493,6 +827,13 @@ class _ContentScreenState extends State<ContentScreen> {
 
                   },
                 ),
+              ) : Container(
+                height: 100,
+                  alignment: Alignment.center,
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 6,
+                    color: Color.fromRGBO(10, 147, 150, 0.5),
+                  )
               ),
             ],
           ),
@@ -536,24 +877,7 @@ Container(
             // Navigate to the notification page
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => Scaffold(
-                appBar: AppBar(
-                  leading: IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () {
-                      Navigator.pop(context); // Navigate back to the previous page
-                    },
-                  ),
-                  title: Text('Notifications'),
-                  backgroundColor: Colors.black,
-                ),
-                body: Center(
-                  child: Text(
-                    'Notification Page Content',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              )),
+              MaterialPageRoute(builder: (context) => NotificationScreen()),
             );
           },
           child: Icon(Icons.notifications, color: text_color, size: 30,),
@@ -565,122 +889,58 @@ Container(
         ),
       ),
       ListTile(
-        leading: Icon(Icons.people, color: Colors.white), // Set icon color to white
-        title: Text('Friends', style: TextStyle(color: Colors.white)), // Set text color to white
-        trailing: IconButton(
-           icon: Icon(Icons.add, color: Colors.white), // Set icon color to white
-          onPressed: () {
-            showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    // Variable to hold the entered display name
-    return AlertDialog(
-      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Set background color
-      title: Text('Send Friend Request', style: TextStyle(color: Colors.white)), // Set text color to white
-      content: TextField(
-        onChanged: (value) {
-          displayName = value; // Update the display name as it's typed
-        },
-        decoration: InputDecoration(
-          hintText: 'Enter display name',
-          hintStyle: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.white), // Set underline color to white
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: Colors.white), // Set focused underline color to white
-          ),
-        ),
-        cursorColor: Colors.white, // Set cursor color to white
-        style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color to white
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            // Close the dialog
-            Navigator.of(context).pop();
-          },
-          child: Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
-        ),
-        TextButton(
-          onPressed: () {
-            _friendRequest();
-            Navigator.of(context).pop();
-          },
-          child: Text('Send', style: TextStyle(color: Colors.white)), // Set text color to white
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-        ),
+        leading: Icon(Icons.people, color: text_color), // Set icon color to white
+        title: Padding(padding: EdgeInsets.only(left: 5), child:
+        Text('Friends', style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
+        ),),),
         onTap: () {
           // Display friends list on a new page
-          Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(GlobalData.userID)));
         },
       ),
+      Divider(color: Colors.black26, height: 0,),
       ListTile(
-        leading: Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
-        title: Text('Your Activity', style: TextStyle(color: Colors.white)), // Set text color to white
+        leading: Icon(Icons.rate_review, color: text_color), // Set icon color to white
+        title: Padding(padding: EdgeInsets.only(left: 5), child:
+        Text('Your Activity', style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
+        ),),), // Set text color to white
         onTap: () {
           // Navigate to your activity page
           // Updated to display review activity placeholders
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text('Your Review Activity'),
-              backgroundColor: Colors.black,
-            ),
-            body: ListView(
-              children: [
-                ListTile(
-                  title: Text('Review 1'),
-                  subtitle: Text('Details of review 1'),
-                ),
-                Divider(height: 0), // Adding a border
-                ListTile(
-                  title: Text('Review 2'),
-                  subtitle: Text('Details of review 2'),
-                ),
-                Divider(height: 0), // Adding a border
-                // Add more review placeholders as needed
-              ],
-            ),
-          )));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => UserReviewsScreen(GlobalData.displayName)));
         },
       ),
+      Divider(color: Colors.black26, height: 0,),
     ListTile(
-         leading: Icon(Icons.games, color: Colors.white), // Set icon color to white
-        title: Text('Game List', style: TextStyle(color: Colors.white)), // Set text color to
+         leading: Icon(Icons.games, color: text_color), // Set icon color to white
+        title: Padding(padding: EdgeInsets.only(left: 5), child:
+        Text('Game List', style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+          letterSpacing: 1,
+        ),),), // Set text color to
         onTap: () {
           // Navigate to game list page
           // Updated to display a grid view of games
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Scaffold(
-            appBar: AppBar(
-              title: Text('Game List'),
-              backgroundColor: Colors.black,
-            ),
-            body: GridView.count(
-              crossAxisCount: 3, // Number of columns in the grid
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(), // Disable scrolling
-              children: [
-                Image.network(
-                  'https://images.igdb.com/igdb/image/upload/t_cover_big/co741o.jpg', // URL of the image
-                  fit: BoxFit.cover, // Adjust the image to cover the whole space
-                ),
-                // Add more images for additional games
-              ],
-            ),
-          ))); 
+          Navigator.push(context, MaterialPageRoute(builder: (context) => GameListScreen(GlobalData.userID)));
         },
       ),
+      Divider(color: Colors.black26, height: 0,),
     ],
       // Add more buttons as needed
         ),
 ),
       ][currentPageIndex],
-    );
+    ));
   }
 }
 
