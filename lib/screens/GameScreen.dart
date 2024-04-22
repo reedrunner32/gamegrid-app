@@ -122,28 +122,33 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     descLength = data["summary"].length;
+    String tempCompanies = '';
     var gameCompanies = data["involved_companies"];
     for(int i = 0; i<gameCompanies.length; i++) {
       if(i != gameCompanies.length - 1) {
-        companies += '${data["involved_companies"][i]["company"]["name"]}, ';
+        tempCompanies += '${data["involved_companies"][i]["company"]["name"]}, ';
       } else {
-        companies += '${data["involved_companies"][i]["company"]["name"]}';
+        tempCompanies += '${data["involved_companies"][i]["company"]["name"]}';
       }
     }
 
     var gamePlatforms = data["platforms"];
+    String tempPlatforms = '';
     for(int i = 0; i<gamePlatforms.length; i++) {
       if(i != gamePlatforms.length - 1) {
-        platforms += '${data["platforms"][i]["name"]}, ';
+        tempPlatforms += '${data["platforms"][i]["name"]}, ';
       } else {
-        platforms += '${data["platforms"][i]["name"]}';
+        tempPlatforms += '${data["platforms"][i]["name"]}';
       }
     }
+
 
     setState(() {
       game = data;
       reviews = gameReviews;
       _isGameAdded = flag;
+      companies = tempCompanies;
+      platforms = tempPlatforms;
       built = true;
     });
   }
@@ -176,62 +181,61 @@ class _GameScreenState extends State<GameScreen> {
     if(!built) _getGameData(videoGameId);
     Color text_color = const Color.fromRGBO(155, 168, 183, 1);
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Container(
-              margin: EdgeInsets.all(10),
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                  color: Colors.black38,
-                  borderRadius: BorderRadius.circular(20)
-              ),
-              child: Icon(Icons.arrow_left, size: 35, color: Colors.white,),
-            ),
-          ),
-          actions: [
-            GestureDetector(
-              onTap: () {
-                showDialog(
-                context: context,
-                builder: (BuildContext context) {
-
-                    return AlertDialog(
-                      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Set the background color
-                      title: Text("Choose an action", style: TextStyle(color: Colors.white)), // Set text color to white
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          ListTile(
-                            onTap: () {
-                              Navigator.pop(context); // Close the original popup
-                              showModalBottomSheet(
-                              isScrollControlled: true,
-                              context: context,
-                              builder: (BuildContext context) {
-                                return StatefulBuilder(
-                                  builder: (BuildContext context, StateSetter setState) {
-                                    return SingleChildScrollView(
-                                      child: Container(
-                                        color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
-                                        padding: EdgeInsets.only(
-                                          bottom: MediaQuery.of(context).viewInsets.bottom,
-                                          left: 20,
-                                          right: 20,
+   return Scaffold(
+  appBar: AppBar(
+    backgroundColor: Colors.transparent,
+    leading: GestureDetector(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+        margin: EdgeInsets.all(10),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.black38,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Icon(Icons.arrow_left, size: 35, color: Colors.white,),
+      ),
+    ),
+    actions: [
+      GestureDetector(
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (BuildContext context) {
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                color: Color.fromRGBO(54, 75, 94, 1),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    ListTile(
+                      onTap: () {
+                        Navigator.pop(context); // Close the modal bottom sheet
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (BuildContext context) {
+                            return StatefulBuilder(
+                              builder: (BuildContext context, StateSetter setState) {
+                                return SingleChildScrollView(
+                                  child: Container(
+                                    color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
+                                    padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                                      left: 20,
+                                      right: 20,
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        SizedBox(height: 20),
+                                        Text(
+                                          "Add a Review",
+                                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
                                         ),
-                                child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  SizedBox(height: 20),
-                                  Text(
-                                    "Add a Review",
-                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
-                                  ),
-                                  SizedBox(height: 20),
+                                       SizedBox(height: 20),
                                   TextField(
                                     // Add your logic here to handle review text
                                     cursorColor: Colors.white, // Set cursor color to white
@@ -267,7 +271,7 @@ class _GameScreenState extends State<GameScreen> {
                                         child: Icon(
                                           index < selectedRating ? Icons.star : Icons.star_border,
                                           size: 40,
-                                          color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 0.5) : Colors.white, // Set star color
+                                          color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 1) : Colors.white, // Set star color
                                         ),
                                       );
                                     }),
@@ -279,7 +283,7 @@ class _GameScreenState extends State<GameScreen> {
                                       Navigator.pop(context);
                                     },
                                     style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(54, 75, 94, 1)), // Set background color
+                                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(10, 147, 150, 1)), // Set background color
                                     ),
                                     child: Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
                                                 ),
@@ -316,6 +320,10 @@ class _GameScreenState extends State<GameScreen> {
                     },
                 );
               },
+
+          
+
+
 
               child: Container(
                 margin: EdgeInsets.all(10),
