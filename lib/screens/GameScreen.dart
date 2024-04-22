@@ -123,21 +123,23 @@ class _GameScreenState extends State<GameScreen> {
     }
 
     descLength = data["summary"].length;
+    String tempCompanies = '';
     var gameCompanies = data["involved_companies"];
     for(int i = 0; i<gameCompanies.length; i++) {
       if(i != gameCompanies.length - 1) {
-        companies += '${data["involved_companies"][i]["company"]["name"]}, ';
+        tempCompanies += '${data["involved_companies"][i]["company"]["name"]}, ';
       } else {
-        companies += '${data["involved_companies"][i]["company"]["name"]}';
+        tempCompanies += '${data["involved_companies"][i]["company"]["name"]}';
       }
     }
 
     var gamePlatforms = data["platforms"];
+    String tempPlatforms = '';
     for(int i = 0; i<gamePlatforms.length; i++) {
       if(i != gamePlatforms.length - 1) {
-        platforms += '${data["platforms"][i]["name"]}, ';
+        tempPlatforms += '${data["platforms"][i]["name"]}, ';
       } else {
-        platforms += '${data["platforms"][i]["name"]}';
+        tempPlatforms += '${data["platforms"][i]["name"]}';
       }
     }
 
@@ -148,6 +150,8 @@ class _GameScreenState extends State<GameScreen> {
       reviews = gameReviews;
       _isGameAdded = flag;
       stats = gameStats;
+      companies = tempCompanies;
+      platforms = tempPlatforms;
       built = true;
     });
   }
