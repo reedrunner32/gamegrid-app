@@ -107,47 +107,100 @@ class _FriendScreenState extends State<FriendScreen> {
             icon: Icon(Icons.add, color: Colors.white, size: 30,), // Set icon color to white
             onPressed: () {
               showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  // Variable to hold the entered display name
-                  return AlertDialog(
-                    backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Set background color
-                    title: Text('Send Friend Request', style: TextStyle(color: Colors.white)), // Set text color to white
-                    content: TextField(
-                      onChanged: (value) {
-                        addFriendTextField = value; // Update the display name as it's typed
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Enter display name',
-                        hintStyle: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white), // Set underline color to white
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white), // Set focused underline color to white
-                        ),
+  context: context,
+  builder: (BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 10.0,
+      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Original background color
+      child: Container(
+        padding: EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(54, 75, 94, 1), // Match the background color
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Send Friend Request',
+              style: TextStyle(
+                color: Colors.white, // White text color
+                fontWeight: FontWeight.bold,
+                fontSize: 20.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 20.0),
+            TextField(
+  onChanged: (value) {
+    addFriendTextField = value;
+  },
+  decoration: InputDecoration(
+    hintText: 'Enter display name',
+    hintStyle: TextStyle(color: Colors.grey[400]),
+    focusedBorder: UnderlineInputBorder(
+      borderSide: BorderSide(color: Colors.white), // White underline color
+    ),
+    border: UnderlineInputBorder(
+      borderSide: BorderSide.none, // Remove the border
+    ),
+  ),
+  cursorColor: Colors.white, // White cursor color
+  style: TextStyle(color: Colors.white), // White text color
+),
+            SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // Grey button color
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      cursorColor: Colors.white, // Set cursor color to white
-                      style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color to white
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Cancel', style: TextStyle(color: Colors.white)), // Set text color to white
+                  ),
+                  child: Text(
+                    'Cancel',
+                    style: TextStyle(color: Colors.white), // White text color
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _sendFriendRequest();
+                    Navigator.of(context).pop();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(10, 147, 150, 1)), // Specified button color
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          _sendFriendRequest();
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Send', style: TextStyle(color: Colors.white)), // Set text color to white
-                      ),
-                    ],
-                  );
-                },
-              );
+                    ),
+                  ),
+                  child: Text(
+                    'Send',
+                    style: TextStyle(color: Colors.white), // White text color
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+);
+
+
             },
           ),
           ) : SizedBox()
