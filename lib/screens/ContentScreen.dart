@@ -180,51 +180,129 @@ class _ContentScreenState extends State<ContentScreen> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                width: size.width,
-                height: 50,
-                child: Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.zero,
-                        color: Color.fromRGBO(54, 75, 94, 1),
-                        child: Text(
-                          "Username",
-                          style: TextStyle(
-                            color: text_color,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                          ),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                  ),
+                  height: 50,
+                  child: Stack(
+                      children: [
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: EdgeInsets.zero,
+                              color: Color.fromRGBO(54, 75, 94, 1),
+                              child: Text(
+                                "Email",
+                                style: TextStyle(
+                                  color: text_color,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            )
                         ),
-                      )
-                    ),
-                    TextField(
-                      onChanged: (text) {
-                        changeDisplayName = text;
-                      },
-                      textAlign: TextAlign.right,
-                      textDirection: TextDirection.rtl,
-                      style: TextStyle(color: text_color, decoration: TextDecoration.none, fontSize: 18),
-                      cursorColor: text_color,
-                      decoration: InputDecoration(
-                        labelStyle: TextStyle(color: text_color),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 0.5),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              padding: EdgeInsets.zero,
+                              color: Color.fromRGBO(54, 75, 94, 1),
+                              child: Text(
+                                GlobalData.email,
+                                style: TextStyle(
+                                  color: text_color,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            )
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black, width: 0.5),
-                        ),
+                      ]
+                  )
+              ),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                  ),
+                  child: TextButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Container(height: 100,);
+                        });
+                    },
+                    child: Text(
+                      'Change Password',
+                      style: TextStyle(
+                        color: text_color,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
                       ),
                     ),
-                  ]
-                )
+                  )
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: EdgeInsets.only(left: 10, top: 45),
+                height: 70,
+                decoration: BoxDecoration(
+                    border: Border(bottom: BorderSide(color: Colors.black, width: 0.5))
+                ),
+                child: Text(
+                  'OTHER',
+                  style: TextStyle(
+                    color: text_color,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                height: 50,
+                decoration: BoxDecoration(
+                    border: Border.symmetric(horizontal: BorderSide(color: Colors.black, width: 0.5))
+                ),
+                child: TextButton(
+                  onPressed: () {
+                    _deleteAccount(true);
+                    Navigator.pushReplacementNamed(context, '/home');
+                    ElegantNotification.success(
+                      width: 360,
+                      toastDuration: const Duration(milliseconds: 2500),
+                      position: Alignment.topCenter,
+                      animation: AnimationType.fromTop,
+                      description: Text("Account Deleted"),
+                      shadow: BoxShadow(
+                        color: Colors.blue.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 4), // changes position of shadow
+                      ),
+                    ).show(context);
+                  },
+                  child: Text(
+                    'Delete Account',
+                    style: TextStyle(
+                      color: Color.fromRGBO(255, 0, 0, 1),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
               ),
             ],
           ),
         )
     );
+  }
+
+  void _deleteAccount(bool confirm) async {
+    var message = await ContentData.deleteUser(confirm);
   }
 
   void _loadMore() {
@@ -582,14 +660,13 @@ class _ContentScreenState extends State<ContentScreen> {
                 backgroundColor: Colors.black,
                 title:
                 Column(
-                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text('Search', style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
-                      SizedBox(
+                      Container(
                         height: 35,
                         child:
                         TextField(
-                          style: TextStyle(fontSize: 16, color: text_color, decoration: TextDecoration.none),
+                          style: TextStyle(fontSize: 16, color: Colors.black87, decoration: TextDecoration.none),
                           cursorColor: Colors.black,
                           decoration: InputDecoration(
                             filled: true,
@@ -598,6 +675,10 @@ class _ContentScreenState extends State<ContentScreen> {
                                 borderRadius: BorderRadius.circular(10),
                             ),
                             focusColor: Colors.black,
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide(color: Colors.transparent, )
+                            ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide(color: Colors.transparent, )
