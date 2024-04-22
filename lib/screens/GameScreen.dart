@@ -522,7 +522,7 @@ class _GameScreenState extends State<GameScreen> {
                         Divider(height: 0, color: Colors.white38,),
                         (reviews != null) ? SizedBox(
                           height: 300,
-                          child: ListView.builder(
+                          child: (reviews.length != 0) ? ListView.builder(
                           itemCount: reviews.length, // Placeholder for number of reviews
                           itemBuilder: (context, index) {
                             var iteratorReview = reviews[index];
@@ -612,7 +612,17 @@ class _GameScreenState extends State<GameScreen> {
                             )
                             );
                           },
-                        )) : Container(),
+                        ) : Container(
+                            alignment: Alignment.topCenter,
+                            padding: EdgeInsets.only(top: 25),
+                            child: Text(
+                              "No Reviews yet...",
+                              style: TextStyle(
+                                color: text_color,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          )) : Container(),
                       ]
                   )
               ) : const Align(
