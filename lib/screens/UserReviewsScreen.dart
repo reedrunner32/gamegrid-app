@@ -70,7 +70,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ReviewScreen(iteratorReview["videoGameId"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                            builder: (context) => ReviewScreen(iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
                       );
                     },
                     child: Container(
@@ -82,7 +82,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            iteratorReview["videoGameId"],
+                            iteratorReview["videoGameName"],
                             style: TextStyle(
                               color: text_color,
                               fontSize: 20,

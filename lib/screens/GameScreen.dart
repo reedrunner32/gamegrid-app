@@ -275,7 +275,7 @@ class _GameScreenState extends State<GameScreen> {
                                   SizedBox(height: 20),
                                   ElevatedButton(
                                     onPressed: () {
-                                      _submitReview(game["id"], game["name"]);
+                                      _submitReview('${game["id"]}', game["name"]);
                                       Navigator.pop(context);
                                     },
                                     style: ButtonStyle(

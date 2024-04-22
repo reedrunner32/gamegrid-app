@@ -339,9 +339,9 @@ class ContentData {
   * ----------------------------- */
 
 // Update user display name, or email, or password
-  static Future<String> updateUserInfo(String password, String displayName, String email) async {
+  static Future<String> changeUserPassword(String password) async {
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/updateuser';
-    String payload = '{"email":"${GlobalData.email}","newEmail":"$email","newPassword":"$password","newDisplayName":"$displayName"}';
+    String payload = '{"email":"${GlobalData.email}","newEmail":"","newPassword":"$password","newDisplayName":""}';
 
     final response = await CardsData.postJson(url, payload);
     var decoded = json.decode(response.body);
