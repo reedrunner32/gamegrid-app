@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gamegrid/utils/getAPI.dart';
+import 'GameScreen.dart';
 import 'ProfileScreen.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
@@ -12,9 +13,10 @@ class ReviewScreen extends StatefulWidget {
   final String displayName;
   final int rating;
   final Duration timeSince;
+  final String videoGameId;
 
   const ReviewScreen(this.reviewId, this.gameName, this.textBody, this.displayName,
-      this.rating, this.timeSince, {super.key});
+      this.rating, this.timeSince, this.videoGameId, {super.key});
 
   @override
   State<ReviewScreen> createState() => _ReviewScreenState();
@@ -219,13 +221,33 @@ class _ReviewScreenState extends State<ReviewScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (widget.gameName != '') ? Text(
-              widget.gameName,
-              style: TextStyle(
-                color: text_color,
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
+            (widget.gameName != '') ? TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const GameScreen(),
+                    settings: RouteSettings(
+                        arguments: widget.videoGameId
+                    ),
+                  ),
+                );
+              },
+              style: TextButton.styleFrom(
+                padding: EdgeInsets.zero,
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: RoundedRectangleBorder(),
+                splashFactory: NoSplash.splashFactory,
               ),
+              child: Text(
+                widget.gameName,
+                style: TextStyle(
+                  color: text_color,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                ),
+              )
             ) : SizedBox(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

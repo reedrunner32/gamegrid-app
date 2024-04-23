@@ -581,7 +581,7 @@ class _GameScreenState extends State<GameScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ReviewScreen(iteratorReview["_id"],'', iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                                    builder: (context) => ReviewScreen(iteratorReview["_id"],'', iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince, iteratorReview["videoGameId"])),
                                   ).then((refresh) {
                                     if(refresh) {
                                       setState(() {

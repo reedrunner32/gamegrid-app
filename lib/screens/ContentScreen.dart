@@ -830,7 +830,7 @@ class _ContentScreenState extends State<ContentScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ReviewScreen(iteratorReview["_id"], iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                      builder: (context) => ReviewScreen(iteratorReview["_id"], iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince, iteratorReview["videoGameId"])),
                   ).then((refresh) {
                     if(refresh) {
                       setState(() {
@@ -848,12 +848,32 @@ class _ContentScreenState extends State<ContentScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    iteratorReview["videoGameName"],
-                    style: TextStyle(
-                      color: text_color,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const GameScreen(),
+                          settings: RouteSettings(
+                              arguments: iteratorReview["videoGameId"]
+                          ),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      shape: RoundedRectangleBorder(),
+                      splashFactory: NoSplash.splashFactory,
+                    ),
+                    child: Text(
+                      iteratorReview["videoGameName"],
+                      style: TextStyle(
+                        color: text_color,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   Row(
