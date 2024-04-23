@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../utils/getAPI.dart';
-import '../screens/GameScreen.dart';
 import 'FriendScreen.dart';
 import 'GameListScreen.dart';
-import 'ReviewScreen.dart';
 import 'UserReviewsScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
