@@ -70,8 +70,15 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ReviewScreen(iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
-                      );
+                            builder: (context) => ReviewScreen(iteratorReview["_id"], iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                      ).then((refresh) {
+                        if(refresh) {
+                          setState(() {
+                            profileReviews = null;
+                            built = false;
+                          });
+                        }
+                      });;
                     },
                     child: Container(
                       padding: EdgeInsets.all(16.0),

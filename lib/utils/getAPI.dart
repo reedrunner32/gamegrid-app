@@ -35,6 +35,30 @@ class CardsData {
     return ret;
   }
 
+  static Future putJson(String url, String outgoing) async
+  {
+    var ret;
+    try
+    {
+      var response = await http.put(Uri.parse(url),
+          headers:
+          {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+          },
+          body: utf8.encode(outgoing),
+          encoding: Encoding.getByName("utf-8")
+      );
+      ret = response;
+    }
+    catch (e)
+    {
+      String err = e.toString();
+      return err;
+    }
+    return ret;
+  }
+
   static Future getJson(String url) async
   {
     var ret;
@@ -433,6 +457,37 @@ class ContentData {
     String payload = '{"textBody":"$textBody","rating":$rating,"videoGameId":"$videoGameId","displayName":"$displayName","videoGameName":"$videoGameName"}';
 
     final response = await CardsData.postJson(url, payload);
+    var decoded = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      String mess = decoded['message'];
+      return mess;
+    }
+    String retErr = decoded['error']; //returning error message
+    return retErr;
+  }
+
+  // Sends updated review
+  static Future<String> editReview(String textBody, int rating, String reviewId) async {
+    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/reviews/edit/$reviewId';
+    String payload = '{"textBody":"$textBody","rating":$rating}';
+
+    final response = await CardsData.putJson(url, payload);
+    var decoded = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      String mess = decoded['message'];
+      return mess;
+    }
+    String retErr = decoded['error']; //returning error message
+    return retErr;
+  }
+
+  // Delete a review
+  static Future<String> deleteReview(String reviewId) async {
+    String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/reviews/delete/$reviewId';
+
+    final response = await CardsData.delJson(url);
     var decoded = json.decode(response.body);
 
     if (response.statusCode == 200) {

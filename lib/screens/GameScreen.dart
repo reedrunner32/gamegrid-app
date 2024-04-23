@@ -168,10 +168,16 @@ class _GameScreenState extends State<GameScreen> {
       return;
     }
     var data = await ContentData.addReview(reviewText, '$selectedRating', videoGameId, GlobalData.displayName, videoGameName);
-    displayReviewNotif(data);
 
     setState(() {
+      game = null;
+      reviews = null;
+      stats = null;
+      descLength = 0;
+      companies = '';
+      platforms = '';
       _isGameAdded = true;
+      built = false;
     });
 
   }
@@ -239,56 +245,55 @@ class _GameScreenState extends State<GameScreen> {
                                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
                                         ),
                                        SizedBox(height: 20),
-                                  TextField(
-                                    // Add your logic here to handle review text
-                                    cursorColor: Colors.white, // Set cursor color to white
-                                    onChanged: (text) {
-                                      reviewText = text;
-                                    },
-                                    decoration: InputDecoration(
-                                      hintText: "Write your review here",
-                                      hintStyle: TextStyle(color:Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
-                                      enabledBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white), // Set underline color to white
-                                      ),
-                                      focusedBorder: UnderlineInputBorder(
-                                        borderSide: BorderSide(color: Colors.white), // Set underline color to white
-                                      ),
-                                    ),
-                                    style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color inside the text field
-                                  ),
-                                  SizedBox(height: 20),
-                                  Text(
-                                    "Rate:",
-                                    style: TextStyle(fontSize: 16, color: Colors.white), // Set text color to white
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: List.generate(5, (index) {
-                                      return GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            selectedRating = index + 1;
-                                          });
-                                        },
-                                        child: Icon(
-                                          index < selectedRating ? Icons.star : Icons.star_border,
-                                          size: 40,
-                                          color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 1) : Colors.white, // Set star color
+                                        TextField(
+                                          cursorColor: Colors.white,
+                                          onChanged: (text) {
+                                            reviewText = text;
+                                          },
+                                        decoration: InputDecoration(
+                                          hintText: "Write your review here",
+                                          hintStyle: TextStyle(color:Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.white), // Set underline color to white
+                                          ),
+                                          focusedBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.white), // Set underline color to white
+                                          ),
                                         ),
-                                      );
-                                    }),
-                                  ),
-                                  SizedBox(height: 20),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      _submitReview('${game["id"]}', game["name"]);
-                                      Navigator.pop(context);
-                                    },
-                                    style: ButtonStyle(
-                                      backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(10, 147, 150, 1)), // Set background color
-                                    ),
-                                    child: Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
+                                        style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color inside the text field
+                                      ),
+                                      SizedBox(height: 20),
+                                      Text(
+                                        "Rate:",
+                                        style: TextStyle(fontSize: 16, color: Colors.white), // Set text color to white
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: List.generate(5, (index) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                selectedRating = index + 1;
+                                              });
+                                            },
+                                            child: Icon(
+                                              index < selectedRating ? Icons.star : Icons.star_border,
+                                              size: 40,
+                                              color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 1) : Colors.white, // Set star color
+                                            ),
+                                          );
+                                        }),
+                                      ),
+                                      SizedBox(height: 20),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _submitReview('${game["id"]}', game["name"]);
+                                          Navigator.pop(context);
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(10, 147, 150, 1)), // Set background color
+                                        ),
+                                        child: Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
                                                 ),
                                               ],
                                             ),
@@ -532,7 +537,8 @@ class _GameScreenState extends State<GameScreen> {
                           child: (reviews.length != 0) ? ListView.builder(
                           itemCount: reviews.length, // Placeholder for number of reviews
                           itemBuilder: (context, index) {
-                            var iteratorReview = reviews[index];
+                            int reverseIndex = reviews.length - index - 1;
+                            var iteratorReview = reviews[reverseIndex];
                             DateTime currentTime = DateTime.now();
                             Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
                             return ElevatedButton(
@@ -547,8 +553,20 @@ class _GameScreenState extends State<GameScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ReviewScreen('', iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
-                                  );
+                                    builder: (context) => ReviewScreen(iteratorReview["_id"],'', iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                                  ).then((refresh) {
+                                    if(refresh) {
+                                      setState(() {
+                                        game = null;
+                                        reviews = null;
+                                        stats = null;
+                                        descLength = 0;
+                                        companies = '';
+                                        platforms = '';
+                                        built = false;
+                                      });
+                                    }
+                                });
                                 },
                             child: Container(
                               padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),

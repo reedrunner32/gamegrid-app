@@ -830,8 +830,15 @@ class _ContentScreenState extends State<ContentScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ReviewScreen(iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
-                  );
+                      builder: (context) => ReviewScreen(iteratorReview["_id"], iteratorReview["videoGameName"], iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince)),
+                  ).then((refresh) {
+                    if(refresh) {
+                      setState(() {
+                        recentReview = null;
+                        _getRecentReviews();
+                      });
+                    }
+                  });
                 },
                 child: Container(
               padding: EdgeInsets.all(16.0),

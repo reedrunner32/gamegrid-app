@@ -146,7 +146,7 @@ class _FriendScreenState extends State<FriendScreen> {
       borderSide: BorderSide(color: Colors.white), // White underline color
     ),
     border: UnderlineInputBorder(
-      borderSide: BorderSide.none, // Remove the border
+      borderSide: BorderSide(color: Colors.white), // Remove the border
     ),
   ),
   cursorColor: Colors.white, // White cursor color
