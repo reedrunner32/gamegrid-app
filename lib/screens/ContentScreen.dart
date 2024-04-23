@@ -1099,17 +1099,18 @@ Scaffold(
   ),
   body: ListView(
     children: [
-      SizedBox(height: 20), // Add space between app bar and icon
+      SizedBox(height: 15),
       Center(
         child: Icon(
           Icons.person_outline,
           size: 100,
-          color: Colors.grey[300], // Adjust color as needed
+          color: Colors.grey[300],
         ),
       ),
+      SizedBox(height: 5),
       Divider(color: Colors.black26, height: 0,),
       ListTile(
-        leading: Icon(Icons.people, color: Colors.white), // Set icon color to white
+        leading: Icon(Icons.people, color: Colors.white),
         title: Padding(padding: EdgeInsets.only(left: 5), child:
         Text('Friends', style: TextStyle(
           color: Colors.white,
@@ -1155,11 +1156,30 @@ Scaffold(
         },
       ),
       Divider(color: Colors.black26, height: 0,),
-      SizedBox(height: 20), // Add space between app bar and icon
-      SizedBox(
-        child: Image.asset('assets/images/Capture21.PNG', height: 210),
-          // Adjust color as needed
+      SizedBox(height: 35), // Add space between app bar and icon
+      TextButton(
+        onPressed: () async {
+
+        },
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minimumSize: Size.zero,
+          splashFactory: NoSplash.splashFactory,
         ),
+        child: Image.asset('assets/images/Capture21ad.PNG', height: 190),
+      ),
+      Container(
+        padding: EdgeInsets.only(top: 3),
+        alignment: Alignment.center,
+        child: Text(
+          'Advertisment',
+          style: TextStyle(
+            color: text_color,
+            fontSize: 12,
+          ),
+        ),
+      )
     ],
     // Add more buttons as needed
   ),

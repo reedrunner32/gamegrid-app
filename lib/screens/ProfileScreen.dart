@@ -54,6 +54,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: background_color,
           child: Column(
             children: [
+              SizedBox(height: 15),
+              Center(
+                child: Icon(
+                  Icons.person_outline,
+                  size: 100,
+                  color: Colors.grey[300],
+                ),
+              ),
+              SizedBox(height: 5),
+              Divider(color: Colors.black26, height: 0,),
               ListTile(
                 leading: Icon(Icons.people, color: text_color), // Set icon color to white
                 title: Padding(padding: EdgeInsets.only(left: 5), child:
