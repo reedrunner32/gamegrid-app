@@ -286,13 +286,14 @@ class _ContentScreenState extends State<ContentScreen> {
                   ),
                   child: TextButton(
                     onPressed: () {
+                      Navigator.pop(context);
                       showModalBottomSheet(
                         isScrollControlled: true,
                         backgroundColor: background_color,
                         context: context,
                         builder: (BuildContext context) {
                           return Container(
-                            height: MediaQuery.of(context).size.height*0.85,
+                            height: MediaQuery.of(context).size.height*0.95,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               color: Color.fromRGBO(54, 75, 94, 1),
@@ -626,6 +627,16 @@ class _ContentScreenState extends State<ContentScreen> {
     });
   }
 
+  bool haveNotifs = false;
+  _haveNotifications() async {
+    var data = await ContentData.fetchFriendRequest();
+    if(data.length > 0) {
+      setState(() {
+        haveNotifs = true;
+      });
+    }
+  }
+
   var recentReview;
   Future<void> _getRecentReviews() async {
     Future.delayed(const Duration(seconds: 2));
@@ -649,6 +660,7 @@ class _ContentScreenState extends State<ContentScreen> {
     _fetchData();
     _getRecentReviews();
     _getNewReleases();
+    _haveNotifications();
   }
 
   @override
@@ -1107,9 +1119,35 @@ Scaffold(
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NotificationScreen()),
-        );
+        ).then((flag) {
+          if(flag) {
+            setState(() {
+              haveNotifs = false;
+            });
+          }
+          else {
+            setState(() {
+              haveNotifs = true;
+            });
+          }
+        });
       },
-      child: Icon(Icons.notifications, color: Colors.white, size: 30,),
+      child: Stack(
+        children: [
+          Center(child: Icon(Icons.notifications, color: Colors.white, size: 30,),),
+          (haveNotifs) ? Positioned(
+            top: 22,
+            right: 13,
+            child: Container(
+              padding: EdgeInsets.all(6),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ) : SizedBox(),
+        ],
+      )
     ),
     title: Column(
       children: [

@@ -150,6 +150,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
         ),
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context, (requests.length == 0));
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
       ),
       backgroundColor: Color.fromRGBO(25, 28, 33, 1),
       body: notifBody()
