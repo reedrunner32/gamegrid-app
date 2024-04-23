@@ -74,6 +74,8 @@ class _FriendScreenState extends State<FriendScreen> {
     });
   }
 
+  String confirmDeleteName = '';
+
   bool built = false;
 
   @override
@@ -224,16 +226,65 @@ class _FriendScreenState extends State<FriendScreen> {
                     letterSpacing: 1,
                   ),
                 ),
-                trailing: (widget.userId == GlobalData.userID) ? IconButton(
-                  style: IconButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    splashFactory: NoSplash.splashFactory,
-                  ),
-                  icon: Icon(Icons.delete,),
-                  onPressed: () {
-                    _removeFriend(friends[index]["id"]);
-                  }
+                trailing: (confirmDeleteName == friends[index]["displayName"]) ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    OutlinedButton(
+                        onPressed: () {
+                          _removeFriend(friends[index]["id"]);
+                        },
+                        style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(color: text_color)
+                            )
+                        ),
+                        child: Text(
+                          'CONFIRM',
+                          style: TextStyle(
+                              color: text_color,
+                              fontSize: 12
+                          ),
+                        )
+                    ),
+                    SizedBox(width: 5,),
+                    OutlinedButton(
+                        onPressed: () {
+                          setState(() {
+                            confirmDeleteName = '';
+                          });
+                        },
+                        style: OutlinedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(color: text_color)
+                            )
+                        ),
+                        child: Text(
+                          'NO',
+                          style: TextStyle(
+                              color: text_color,
+                              fontSize: 12
+                          ),
+                        )
+                    )
+                  ],
+                ) : (widget.userId == GlobalData.userID) ? IconButton(
+                    style: IconButton.styleFrom(
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      splashFactory: NoSplash.splashFactory,
+                    ),
+                    icon: Icon(Icons.delete,),
+                    onPressed: () {
+                      setState(() {
+                        confirmDeleteName = friends[index]["displayName"];
+                      });
+                    }
                 ) : SizedBox(),
                 onTap: () {
                   (friends[index]["id"] != GlobalData.userID) ? Navigator.push(context, MaterialPageRoute(builder:
