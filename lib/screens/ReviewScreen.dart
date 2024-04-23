@@ -69,9 +69,9 @@ class _ReviewScreenState extends State<ReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _textEditingController = TextEditingController(text: (_reviewChanged) ? newReview : widget.textBody);
+    final TextEditingController textEditingController = TextEditingController(text: (_reviewChanged) ? newReview : widget.textBody);
     int selectedRating = (_reviewChanged) ? newRating : widget.rating;
-    Color text_color = Color.fromRGBO(155, 168, 183, 1);
+    Color text_color = const Color.fromRGBO(155, 168, 183, 1);
     return Scaffold(
       backgroundColor: const Color.fromRGBO(25, 28, 33, 1),
       appBar: AppBar(
@@ -81,7 +81,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
           onPressed: () {
             Navigator.pop(context, _reviewChanged);
             },
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
         ),
         actions: [
           (widget.displayName == GlobalData.displayName) ? IconButton(
@@ -91,8 +91,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 builder: (BuildContext context) {
                   String reviewText = (_reviewChanged) ? newReview : widget.textBody;
                   return Container(
-                    padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                    color: Color.fromRGBO(54, 75, 94, 1),
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                    color: const Color.fromRGBO(54, 75, 94, 1),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -107,7 +107,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                   builder: (BuildContext context, StateSetter setState) {
                                     return SingleChildScrollView(
                                       child: Container(
-                                        color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
+                                        color: const Color.fromRGBO(54, 75, 94, 1), // Set the background color
                                         padding: EdgeInsets.only(
                                           bottom: MediaQuery.of(context).viewInsets.bottom,
                                           left: 20,
@@ -116,19 +116,19 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                         child: Column(
                                           mainAxisSize: MainAxisSize.min,
                                           children: <Widget>[
-                                            SizedBox(height: 20),
-                                            Text(
+                                            const SizedBox(height: 20),
+                                            const Text(
                                               "Edit review",
                                               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
                                             ),
-                                            SizedBox(height: 20),
+                                            const SizedBox(height: 20),
                                             TextField(
-                                              controller: _textEditingController,
+                                              controller: textEditingController,
                                               cursorColor: Colors.white,
                                               onChanged: (text) {
                                                 reviewText = text;
                                               },
-                                              decoration: InputDecoration(
+                                              decoration: const InputDecoration(
                                                 hintText: "Write your review here",
                                                 hintStyle: TextStyle(color:Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
                                                 enabledBorder: UnderlineInputBorder(
@@ -138,10 +138,10 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                                   borderSide: BorderSide(color: Colors.white), // Set underline color to white
                                                 ),
                                               ),
-                                              style: TextStyle(color: Colors.white), // Set text color inside the text field
+                                              style: const TextStyle(color: Colors.white), // Set text color inside the text field
                                             ),
-                                            SizedBox(height: 20),
-                                            Text(
+                                            const SizedBox(height: 20),
+                                            const Text(
                                               "Rate:",
                                               style: TextStyle(fontSize: 16, color: Colors.white), // Set text color to white
                                             ),
@@ -157,21 +157,21 @@ class _ReviewScreenState extends State<ReviewScreen> {
                                                   child: Icon(
                                                     index < selectedRating ? Icons.star : Icons.star_border,
                                                     size: 40,
-                                                    color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 1) : Colors.white, // Set star color
+                                                    color: index < selectedRating ? const Color.fromRGBO(10, 147, 150, 1) : Colors.white, // Set star color
                                                   ),
                                                 );
                                               }),
                                             ),
-                                            SizedBox(height: 20),
+                                            const SizedBox(height: 20),
                                             ElevatedButton(
                                               onPressed: () {
                                                 _submitEditedReview(reviewText, selectedRating, widget.reviewId);
                                                 Navigator.pop(context);
                                               },
                                               style: ButtonStyle(
-                                                backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(10, 147, 150, 1)), // Set background color
+                                                backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(10, 147, 150, 1)), // Set background color
                                               ),
-                                              child: Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
+                                              child: const Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
                                             ),
                                           ],
                                         ),
@@ -182,8 +182,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
                               },
                             );
                           },
-                          title: Text("Edit review", style: TextStyle(color: Colors.white)), // Set text color to white
-                          leading: Icon(Icons.edit_note, color: Colors.white), // Set icon color to white
+                          title: const Text("Edit review", style: TextStyle(color: Colors.white)), // Set text color to white
+                          leading: const Icon(Icons.edit_note, color: Colors.white), // Set icon color to white
                         ),
                         ListTile(
                           onTap: () {
@@ -191,8 +191,8 @@ class _ReviewScreenState extends State<ReviewScreen> {
                             Navigator.pop(context);
                             Navigator.pop(context, true);
                           },
-                          title: Text("Delete review", style: TextStyle(color: Colors.white)), // Set text color to white
-                          leading: Icon(Icons.delete, color: Colors.white), // Set icon color to white
+                          title: const Text("Delete review", style: TextStyle(color: Colors.white)), // Set text color to white
+                          leading: const Icon(Icons.delete, color: Colors.white), // Set icon color to white
                         ),
                       ],
                     ),
@@ -202,19 +202,19 @@ class _ReviewScreenState extends State<ReviewScreen> {
             },
             style: IconButton.styleFrom(
               minimumSize: Size.zero,
-              padding: EdgeInsets.all(2)
+              padding: const EdgeInsets.all(2)
             ),
-            icon: Icon(
+            icon: const Icon(
               Icons.more_horiz_outlined,
               size: 35,
               color: Colors.white,
             ),
-          ) : SizedBox()
+          ) : const SizedBox()
         ],
       ),
       body: SingleChildScrollView(
         child: Container(
-        padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
         decoration: BoxDecoration(
           border: Border(bottom: BorderSide(color: text_color)),
         ),
@@ -237,7 +237,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 padding: EdgeInsets.zero,
                 minimumSize: Size.zero,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                shape: RoundedRectangleBorder(),
+                shape: const RoundedRectangleBorder(),
                 splashFactory: NoSplash.splashFactory,
               ),
               child: Text(
@@ -248,7 +248,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   fontWeight: FontWeight.w600,
                 ),
               )
-            ) : SizedBox(),
+            ) : const SizedBox(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -257,7 +257,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate((_reviewChanged) ? newRating : widget.rating, (index) {
-                      return Icon(
+                      return const Icon(
                           Icons.star,
                           size: 40,
                           color: Color.fromRGBO(10, 147, 150, 1)
@@ -279,7 +279,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                       padding: EdgeInsets.zero,
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      shape: RoundedRectangleBorder(),
+                      shape: const RoundedRectangleBorder(),
                       splashFactory: NoSplash.splashFactory,
                     ),
                     child: Align(
@@ -297,16 +297,16 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 ),
               ],
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
               (_reviewChanged) ? newReview : widget.textBody,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 17,
               ),
             ),
-            SizedBox(height: 10,),
-            (widget.timeSince.inHours < 1) ? Align(alignment: Alignment.centerRight, child: Text(
+            const SizedBox(height: 10,),
+            (widget.timeSince.inHours < 1) ? const Align(alignment: Alignment.centerRight, child: Text(
               'less than an hour ago',
               style: TextStyle(
                 color: Colors.grey,
@@ -314,12 +314,12 @@ class _ReviewScreenState extends State<ReviewScreen> {
             ) : (widget.timeSince.inDays < 1) ?
             Align(alignment: Alignment.centerRight, child: Text(
               '${widget.timeSince.inHours} hours ago',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.grey,
               )),
             ) : Align(alignment: Alignment.centerRight, child: Text(
               '${widget.timeSince.inDays} days ago',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.grey,
               ),
             ))

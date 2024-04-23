@@ -5,7 +5,6 @@ import 'package:gamegrid/utils/getAPI.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:elegant_notification/resources/stacked_options.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,8 +20,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(25, 28, 33, 1),
+    return const Scaffold(
+      backgroundColor: Color.fromRGBO(25, 28, 33, 1),
       body: MainPage(),
     );
   }

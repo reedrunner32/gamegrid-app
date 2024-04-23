@@ -7,8 +7,8 @@ class Routes {
   static const String CONTENTSCREEN = '/content';
 // routes of pages in the app
   static Map<String, Widget Function(BuildContext)> get getroutes => {
-    '/': (context) => HomeScreen(),
-    HOMESCREEN: (context) => HomeScreen(),
-    CONTENTSCREEN: (context) => ContentScreen(),
+    '/': (context) => const HomeScreen(),
+    HOMESCREEN: (context) => const HomeScreen(),
+    CONTENTSCREEN: (context) => const ContentScreen(),
   };
 }

@@ -31,17 +31,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
   bool built = false;
 
   Widget notifBody() {
-    Color text_color = Color.fromRGBO(155, 168, 183, 1);
-    Color button_color = Color.fromRGBO(10, 147, 150, 1);
+    Color text_color = const Color.fromRGBO(155, 168, 183, 1);
     if (requests != null && requests.runtimeType != String) {
       return ListView.builder(
           itemCount: requests.length, // Placeholder for number of reviews
           itemBuilder: (context, index) {
             return Container(
-              padding: EdgeInsets.only(top: 5),
+              padding: const EdgeInsets.only(top: 5),
               child: Column(
                 children: [
-                  Text(
+                  const Text(
                     "A user has sent you a friend request!",
                     style: TextStyle(
                       color: Colors.white,
@@ -61,10 +60,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Icon(Icons.person, color: text_color,),
-                        SizedBox(width: 6,),
+                        const SizedBox(width: 6,),
                         Text(
                           requests[index]["displayName"],
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1,
@@ -85,9 +84,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             });
                           },
                           style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
                           ),
-                          child: Text(
+                          child: const Text(
                             "Accept",
                             style: TextStyle(
                               color: Colors.green,
@@ -95,7 +94,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ),
                           )
                       ),
-                      SizedBox(width: 2,),
+                      const SizedBox(width: 2,),
                       OutlinedButton(
                           onPressed: () {
                             _rejectFriendRequest(requests[index]["id"]);
@@ -104,9 +103,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             });
                           },
                           style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
                           ),
-                          child: Text(
+                          child: const Text(
                             "Reject",
                             style: TextStyle(
                               color: Colors.red,
@@ -116,8 +115,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 5,),
-                  Divider(color: Colors.white38, height: 0,)
+                  const SizedBox(height: 5,),
+                  const Divider(color: Colors.white38, height: 0,)
                 ],
               )
             );
@@ -154,10 +153,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           onPressed: () {
             Navigator.pop(context, (requests.length == 0));
           },
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
         ),
       ),
-      backgroundColor: Color.fromRGBO(25, 28, 33, 1),
+      backgroundColor: const Color.fromRGBO(25, 28, 33, 1),
       body: notifBody()
     );
   }

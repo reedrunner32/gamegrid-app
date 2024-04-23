@@ -35,13 +35,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     if(!built) _getUser(widget.friendName);
-    Color background_color = Color.fromRGBO(25, 28, 33, 1);
-    Color text_color = Color.fromRGBO(155, 168, 183, 1);
+    Color background_color = const Color.fromRGBO(25, 28, 33, 1);
+    Color text_color = const Color.fromRGBO(155, 168, 183, 1);
     return Scaffold(
       appBar: AppBar(
         title: Text(
           widget.friendName,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
             letterSpacing: 1,
@@ -54,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: background_color,
           child: Column(
             children: [
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
               Center(
                 child: Icon(
                   Icons.person_outline,
@@ -62,11 +62,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   color: Colors.grey[300],
                 ),
               ),
-              SizedBox(height: 5),
-              Divider(color: Colors.black26, height: 0,),
+              const SizedBox(height: 5),
+              const Divider(color: Colors.black26, height: 0,),
               ListTile(
                 leading: Icon(Icons.people, color: text_color), // Set icon color to white
-                title: Padding(padding: EdgeInsets.only(left: 5), child:
+                title: const Padding(padding: EdgeInsets.only(left: 5), child:
                 Text('Friends', style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -78,10 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => FriendScreen(user["id"])));
                 },
               ),
-              Divider(color: Colors.black26, height: 0,),
+              const Divider(color: Colors.black26, height: 0,),
               ListTile(
                 leading: Icon(Icons.rate_review, color: text_color), // Set icon color to white
-                title: Padding(padding: EdgeInsets.only(left: 5), child:
+                title: const Padding(padding: EdgeInsets.only(left: 5), child:
                 Text('Activity', style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -94,10 +94,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => UserReviewsScreen(widget.friendName)));
                 },
               ),
-              Divider(color: Colors.black26, height: 0,),
+              const Divider(color: Colors.black26, height: 0,),
               ListTile(
                 leading: Icon(Icons.games, color: text_color), // Set icon color to white
-                title: Padding(padding: EdgeInsets.only(left: 5), child:
+                title: const Padding(padding: EdgeInsets.only(left: 5), child:
                 Text('Game List', style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -110,13 +110,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => GameListScreen(user["id"])));
                 },
               ),
-              Divider(color: Colors.black26, height: 0,),
+              const Divider(color: Colors.black26, height: 0,),
             ],
           ),
       ) : Container(
           color: background_color,
           alignment: Alignment.center,
-          child: CircularProgressIndicator(
+          child: const CircularProgressIndicator(
             strokeWidth: 6,
             color: Color.fromRGBO(10, 147, 150, 0.5),
           )

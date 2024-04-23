@@ -38,7 +38,7 @@ class _GameListScreenState extends State<GameListScreen> {
   @override
   Widget build(BuildContext context) {
     if(!built) _getUserGames(widget.userId);
-    Color background_color = Color.fromRGBO(25, 28, 33, 1);
+    Color background_color = const Color.fromRGBO(25, 28, 33, 1);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -56,7 +56,7 @@ class _GameListScreenState extends State<GameListScreen> {
         color: background_color,
         child:
           GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 8,
                 crossAxisSpacing: 0,
@@ -93,7 +93,7 @@ class _GameListScreenState extends State<GameListScreen> {
       ) : Container(
           color: background_color,
           alignment: Alignment.center,
-          child: CircularProgressIndicator(
+          child: const CircularProgressIndicator(
             strokeWidth: 6,
             color: Color.fromRGBO(10, 147, 150, 0.5),
           )

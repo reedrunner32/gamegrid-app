@@ -32,14 +32,14 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
   @override
   Widget build(BuildContext context) {
     if(!built) _getReviews(widget.displayName);
-    Color background_color = Color.fromRGBO(25, 28, 33, 1);
-    Color text_color = Color.fromRGBO(155, 168, 183, 1);
-    Color button_color = Color.fromRGBO(10, 147, 150, 1);
+    Color background_color = const Color.fromRGBO(25, 28, 33, 1);
+    Color text_color = const Color.fromRGBO(155, 168, 183, 1);
+    Color button_color = const Color.fromRGBO(10, 147, 150, 1);
     return Scaffold(
       appBar: AppBar(
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
-        title: Text(
+        title: const Text(
           "Activity",
           style: TextStyle(
             color: Colors.white,
@@ -81,7 +81,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                       });;
                     },
                     child: Container(
-                      padding: EdgeInsets.all(16.0),
+                      padding: const EdgeInsets.all(16.0),
                       decoration: BoxDecoration(
                         border: Border(bottom: BorderSide(color: text_color)),
                       ),
@@ -104,7 +104,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                               padding: EdgeInsets.zero,
                               minimumSize: Size.zero,
                               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              shape: RoundedRectangleBorder(),
+                              shape: const RoundedRectangleBorder(),
                               splashFactory: NoSplash.splashFactory,
                             ),
                             child: Text(
@@ -144,7 +144,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                                   padding: EdgeInsets.zero,
                                   minimumSize: Size.zero,
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  shape: RoundedRectangleBorder(),
+                                  shape: const RoundedRectangleBorder(),
                                   splashFactory: NoSplash.splashFactory,
                                 ),
                                 child: Align(
@@ -161,20 +161,20 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 4),
+                          const SizedBox(height: 4),
                           Text(
                             iteratorReview["textBody"],
                             overflow: TextOverflow.ellipsis,
                             maxLines: 3,
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                             ),
                           ),
-                          SizedBox(height: 6),
+                          const SizedBox(height: 6),
                           Row(
                             children: [
-                              (timeSince.inHours < 1) ? Text(
+                              (timeSince.inHours < 1) ? const Text(
                                 'less than an hour ago',
                                 style: TextStyle(
                                   color: Colors.grey,
@@ -182,22 +182,22 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                               ) : (timeSince.inDays < 1) ?
                               Text(
                                 '${timeSince.inHours} hours ago',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.grey,
                                 ),
                               ) : Text(
                                 '${timeSince.inDays} days ago',
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.grey,
                                 ),
                               ),
-                              (iteratorReview["updatedAt"] != null) ? Text(
+                              (iteratorReview["updatedAt"] != null) ? const Text(
                                 ' (edited)',
                                 style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 12
                                 ),
-                              ) : SizedBox(),
+                              ) : const SizedBox(),
                             ],
                           ),
                         ],
@@ -207,7 +207,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
               }
           ) : Container(
           alignment: Alignment.topCenter,
-          padding: EdgeInsets.only(top: 25),
+          padding: const EdgeInsets.only(top: 25),
           child: Text(
             "No Reviews yet...",
             style: TextStyle(
@@ -219,7 +219,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
           ) : Container(
           color: background_color,
           alignment: Alignment.center,
-          child: CircularProgressIndicator(
+          child: const CircularProgressIndicator(
             strokeWidth: 6,
             color: Color.fromRGBO(10, 147, 150, 0.5),
           )

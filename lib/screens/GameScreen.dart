@@ -215,13 +215,13 @@ class _GameScreenState extends State<GameScreen> {
         Navigator.pop(context);
       },
       child: Container(
-        margin: EdgeInsets.all(10),
+        margin: const EdgeInsets.all(10),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: Colors.black38,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Icon(Icons.arrow_left, size: 35, color: Colors.white,),
+        child: const Icon(Icons.arrow_left, size: 35, color: Colors.white,),
       ),
     ),
     actions: [
@@ -231,8 +231,8 @@ class _GameScreenState extends State<GameScreen> {
             context: context,
             builder: (BuildContext context) {
               return Container(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
-                color: Color.fromRGBO(54, 75, 94, 1),
+                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                color: const Color.fromRGBO(54, 75, 94, 1),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
@@ -247,7 +247,7 @@ class _GameScreenState extends State<GameScreen> {
                               builder: (BuildContext context, StateSetter setState) {
                                 return SingleChildScrollView(
                                   child: Container(
-                                    color: Color.fromRGBO(54, 75, 94, 1), // Set the background color
+                                    color: const Color.fromRGBO(54, 75, 94, 1), // Set the background color
                                     padding: EdgeInsets.only(
                                       bottom: MediaQuery.of(context).viewInsets.bottom,
                                       left: 20,
@@ -256,18 +256,18 @@ class _GameScreenState extends State<GameScreen> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: <Widget>[
-                                        SizedBox(height: 20),
-                                        Text(
+                                        const SizedBox(height: 20),
+                                        const Text(
                                           "Add a Review",
                                           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Set text color to white
                                         ),
-                                       SizedBox(height: 20),
+                                        const SizedBox(height: 20),
                                         TextField(
                                           cursorColor: Colors.white,
                                           onChanged: (text) {
                                             reviewText = text;
                                           },
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           hintText: "Write your review here",
                                           hintStyle: TextStyle(color:Color.fromRGBO(155, 168, 183, 1)), // Set hint text color to white
                                           enabledBorder: UnderlineInputBorder(
@@ -277,10 +277,10 @@ class _GameScreenState extends State<GameScreen> {
                                             borderSide: BorderSide(color: Colors.white), // Set underline color to white
                                           ),
                                         ),
-                                        style: TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color inside the text field
+                                        style: const TextStyle(color: Color.fromRGBO(155, 168, 183, 1)), // Set text color inside the text field
                                       ),
-                                      SizedBox(height: 20),
-                                      Text(
+                                        const SizedBox(height: 20),
+                                        const Text(
                                         "Rate:",
                                         style: TextStyle(fontSize: 16, color: Colors.white), // Set text color to white
                                       ),
@@ -296,21 +296,21 @@ class _GameScreenState extends State<GameScreen> {
                                             child: Icon(
                                               index < selectedRating ? Icons.star : Icons.star_border,
                                               size: 40,
-                                              color: index < selectedRating ? Color.fromRGBO(10, 147, 150, 1) : Colors.white, // Set star color
+                                              color: index < selectedRating ? const Color.fromRGBO(10, 147, 150, 1) : Colors.white, // Set star color
                                             ),
                                           );
                                         }),
                                       ),
-                                      SizedBox(height: 20),
+                                        const SizedBox(height: 20),
                                       ElevatedButton(
                                         onPressed: () {
                                           _submitReview('${game["id"]}', game["name"]);
                                           Navigator.pop(context);
                                         },
                                         style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(10, 147, 150, 1)), // Set background color
+                                          backgroundColor: MaterialStateProperty.all<Color>(const Color.fromRGBO(10, 147, 150, 1)), // Set background color
                                         ),
-                                        child: Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
+                                        child: const Text("Submit", style: TextStyle(color: Colors.white)), // Set text color to white
                                                 ),
                                               ],
                                             ),
@@ -321,23 +321,23 @@ class _GameScreenState extends State<GameScreen> {
                                   },
                                 );
                               },
-                              title: Text("Add a review", style: TextStyle(color: Colors.white)), // Set text color to white
-                              leading: Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
+                              title: const Text("Add a review", style: TextStyle(color: Colors.white)), // Set text color to white
+                              leading: const Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
                             ),
                           (!_isGameAdded) ? ListTile(
                               onTap: () {
                                 _addGametoList(videoGameId);
                                 Navigator.pop(context); // Close the original popup
                               },
-                              title: Text("Add to list", style: TextStyle(color: Colors.white)), // Set text color to white
-                              leading: Icon(Icons.playlist_add, color: Colors.white), // Set icon color to white
+                              title: const Text("Add to list", style: TextStyle(color: Colors.white)), // Set text color to white
+                              leading: const Icon(Icons.playlist_add, color: Colors.white), // Set icon color to white
                            ) : ListTile(
                             onTap: () {
                               _removeGameFromList(game["id"]);
                               Navigator.pop(context); // Close the original popup
                             },
-                            title: Text("Remove from list", style: TextStyle(color: Colors.white)), // Set text color to white
-                            leading: Icon(Icons.playlist_remove, color: Colors.white), // Set icon color to white
+                            title: const Text("Remove from list", style: TextStyle(color: Colors.white)), // Set text color to white
+                            leading: const Icon(Icons.playlist_remove, color: Colors.white), // Set icon color to white
                           ),
                           ],
                         ),
@@ -351,13 +351,13 @@ class _GameScreenState extends State<GameScreen> {
 
 
               child: Container(
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   color: Colors.black38,
                   borderRadius: BorderRadius.circular(20),
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.more_horiz_outlined,
                   size: 35,
                   color: Colors.white,
@@ -366,329 +366,329 @@ class _GameScreenState extends State<GameScreen> {
             ),
           ],
         ),
-        backgroundColor: Color.fromRGBO(25, 28, 33, 1),
+        backgroundColor: const Color.fromRGBO(25, 28, 33, 1),
         body: SingleChildScrollView(
           child:
           Stack(
             children: [
-              (game != null) ? Container(
-                  child:
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              (game != null) ? Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                        alignment: Alignment.centerLeft,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        margin: const EdgeInsets.only(bottom: 7),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child:
+                            Text(game["name"], style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 30), )
+                        )
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            margin: EdgeInsets.only(bottom: 7),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
+                            margin: const EdgeInsets.only(left: 10),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(width: 0.5, color: text_color)
+                            ),
+                            child:
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
                               child:
-                                Text(game["name"], style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 30), )
+                              Image.network('https:${
+                                            game["cover"]["url"].replaceAll(
+                                                't_thumb', 't_cover_big')
+                                          }', scale: 1.7,),
                             )
                         ),
-                        Row(
+                        const SizedBox(width: 15,),
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                                margin: EdgeInsets.only(left: 10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(width: 0.5, color: text_color)
-                                ),
-                                child:
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child:
-                                  Image.network('https:' + game["cover"]["url"].replaceAll('t_thumb','t_cover_big'), scale: 1.7,),
-                                )
-                            ),
-                            const SizedBox(width: 15,),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 25,),
-                                RichText(
-                                  text: TextSpan(
-                                      text: 'Release date: ',
-                                      style: TextStyle(color: text_color),
-                                      children: [
-                                        TextSpan(
-                                          text: DateFormat('MM/dd/yyyy').format(DateTime.fromMillisecondsSinceEpoch(game['first_release_date'] * 1000)),
-                                          style: TextStyle(fontWeight: FontWeight.w700),
-                                        ),
-                                      ]
-                                  ),
-                                ),
-                                const SizedBox(height: 15,),
-                                SizedBox(width: 200, child:
-                                RichText(
-                                  text: TextSpan(
-                                      text: 'Related companies: ',
-                                      style: TextStyle(color: text_color),
-                                      children: [
-                                        TextSpan(
-                                          text: companies,
-                                          style: TextStyle(fontWeight: FontWeight.w700),
-                                        ),
-                                      ]
-                                  ),
-                                )
-                                ),
-                                const SizedBox(height: 15,),
-                                SizedBox(width: 200, child:
-                                RichText(
-                                  text: TextSpan(
-                                      text: 'Platforms: ',
-                                      style: TextStyle(color: text_color),
-                                      children: [
-                                        TextSpan(
-                                          text: platforms,
-                                          style: TextStyle(fontWeight: FontWeight.w700),
-                                        ),
-                                      ]
-                                  ),
-                                )
-                                ),
-                                const SizedBox(
-                                height: 15,
+                            const SizedBox(height: 25,),
+                            RichText(
+                              text: TextSpan(
+                                  text: 'Release date: ',
+                                  style: TextStyle(color: text_color),
+                                  children: [
+                                    TextSpan(
+                                      text: DateFormat('MM/dd/yyyy').format(DateTime.fromMillisecondsSinceEpoch(game['first_release_date'] * 1000)),
+                                      style: const TextStyle(fontWeight: FontWeight.w700),
+                                    ),
+                                  ]
                               ),
-                              SizedBox(
-                                width: 200,
-                                child: (stats.runtimeType != String)
-                                    ? RichText(
-                                        text: TextSpan(
-                                          text: 'Rating: ',
-                                          style: TextStyle(color: text_color),
-                                          children: [
-                                            (stats["rating"] != null)
-                                                ? TextSpan(
-                                                    text: '${_formatRating(stats["rating"])} / 5',
-                                                    style: TextStyle(fontWeight: FontWeight.w700),
-                                                  )
-                                                : TextSpan(
-                                                    text: 'Unrated',
-                                                    style: TextStyle(fontWeight: FontWeight.w700),
-                                                  ),
-                                          ],
-                                        ),
-                                      )
-                                    : SizedBox(),
-                              ),
-                              ],
                             ),
+                            const SizedBox(height: 15,),
+                            SizedBox(width: 200, child:
+                            RichText(
+                              text: TextSpan(
+                                  text: 'Related companies: ',
+                                  style: TextStyle(color: text_color),
+                                  children: [
+                                    TextSpan(
+                                      text: companies,
+                                      style: const TextStyle(fontWeight: FontWeight.w700),
+                                    ),
+                                  ]
+                              ),
+                            )
+                            ),
+                            const SizedBox(height: 15,),
+                            SizedBox(width: 200, child:
+                            RichText(
+                              text: TextSpan(
+                                  text: 'Platforms: ',
+                                  style: TextStyle(color: text_color),
+                                  children: [
+                                    TextSpan(
+                                      text: platforms,
+                                      style: const TextStyle(fontWeight: FontWeight.w700),
+                                    ),
+                                  ]
+                              ),
+                            )
+                            ),
+                            const SizedBox(
+                            height: 15,
+                          ),
+                          SizedBox(
+                            width: 200,
+                            child: (stats.runtimeType != String)
+                                ? RichText(
+                                    text: TextSpan(
+                                      text: 'Rating: ',
+                                      style: TextStyle(color: text_color),
+                                      children: [
+                                        (stats["rating"] != null)
+                                            ? TextSpan(
+                                                text: '${_formatRating(stats["rating"])} / 5',
+                                                style: const TextStyle(fontWeight: FontWeight.w700),
+                                              )
+                                            : const TextSpan(
+                                                text: 'Unrated',
+                                                style: TextStyle(fontWeight: FontWeight.w700),
+                                              ),
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox(),
+                          ),
                           ],
                         ),
+                      ],
+                    ),
 
 
 
 
 
-                        Container(
-                          padding: EdgeInsets.only(left: 5, top: 30),
-                          alignment: Alignment.centerLeft,
-                          child:
-                            Text(
-                              'DESCRIPTION',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: text_color,
-                                fontWeight: FontWeight.w600
-                              ),
-                            ),
-                        ),
-                        Divider(height: 0, color: Colors.white38,),
-                        // Description text body
-                        (descLength > 300) ? GestureDetector(
-                          onTap: _toggleTextVisibility,
-                            child:
-                            SizedBox(
-                              width: size.width,
-                              child: Stack(
-                                children:[
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-                                    child:
-                                    Text(
-                                      game["summary"],
-                                      maxLines: _isTextVisible ? 5 : 100,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(color: Colors.white, fontSize: 14),
-                                    ),
-                                  ),
-                                  (_isTextVisible) ? Container(
-                                    width: size.width,
-                                    height: 115,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                        colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
-                                      ),
-                                    ),
-                                  ) : const SizedBox(),
-                                  (_isTextVisible) ?
-                                  Container(
-                                      alignment: Alignment.bottomCenter,
-                                      height: 115,
-                                      child: Icon(Icons.arrow_drop_down, size: 40, color: text_color, weight: 100,)
-                                  ) :
-                                  const SizedBox(),
-                                ]
-                              )
-                          ),
-                        ) :
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 8),
-                          child:
-                          Text(
-                            game["summary"],
-                            style: TextStyle(color: Colors.white, fontSize: 14),
+                    Container(
+                      padding: const EdgeInsets.only(left: 5, top: 30),
+                      alignment: Alignment.centerLeft,
+                      child:
+                        Text(
+                          'DESCRIPTION',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: text_color,
+                            fontWeight: FontWeight.w600
                           ),
                         ),
-                        (_isTextVisible && descLength > 300) ? Divider(height: 0, color: Colors.white38,) : SizedBox(),
-                        Container(
-                          padding: EdgeInsets.only(left: 5, top: 40),
-                          alignment: Alignment.centerLeft,
-                          child:
-                          Text(
-                            'REVIEWS',
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: text_color,
-                                fontWeight: FontWeight.w600
-                            ),
-                          ),
-                        ),
-                        Divider(height: 0, color: Colors.white38,),
-                        (reviews != null) ? SizedBox(
-                          height: 300,
-                          child: (reviews.length != 0) ? ListView.builder(
-                          itemCount: reviews.length, // Placeholder for number of reviews
-                          itemBuilder: (context, index) {
-                            int reverseIndex = reviews.length - index - 1;
-                            var iteratorReview = reviews[reverseIndex];
-                            DateTime currentTime = DateTime.now();
-                            Duration timeSince = (iteratorReview["updatedAt"] == null) ? currentTime.difference(DateTime.parse(iteratorReview["dateWritten"])) : currentTime.difference(DateTime.parse(iteratorReview["updatedAt"]));
-                            return ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                padding: EdgeInsets.zero,
-                                shadowColor: Colors.transparent,
-                                surfaceTintColor: Colors.transparent,
-                                splashFactory: NoSplash.splashFactory,
+                    ),
+                    const Divider(height: 0, color: Colors.white38,),
+                    // Description text body
+                    (descLength > 300) ? GestureDetector(
+                      onTap: _toggleTextVisibility,
+                        child:
+                        SizedBox(
+                          width: size.width,
+                          child: Stack(
+                            children:[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                                child:
+                                Text(
+                                  game["summary"],
+                                  maxLines: _isTextVisible ? 5 : 100,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(color: Colors.white, fontSize: 14),
                                 ),
-                                onPressed: (){
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ReviewScreen(iteratorReview["_id"],'', iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince, iteratorReview["videoGameId"])),
-                                  ).then((refresh) {
-                                    if(refresh) {
-                                      setState(() {
-                                        game = null;
-                                        reviews = null;
-                                        stats = null;
-                                        descLength = 0;
-                                        companies = '';
-                                        platforms = '';
-                                        built = false;
-                                      });
-                                    }
-                                });
-                                },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
-                              decoration: BoxDecoration(
-                                border: Border(bottom: BorderSide(color: Colors.white38)),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: List.generate(iteratorReview["rating"], (index) {
-                                            return Icon(
-                                                Icons.star,
-                                                size: 20,
-                                                color: Color.fromRGBO(10, 147, 150, 1)
-                                            );
-                                          }),
-                                        ),
-                                      ),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Text(
-                                          iteratorReview["displayName"],
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: text_color,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                              (_isTextVisible) ? Container(
+                                width: size.width,
+                                height: 115,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    iteratorReview["textBody"],
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 3,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
+                                ),
+                              ) : const SizedBox(),
+                              (_isTextVisible) ?
+                              Container(
+                                  alignment: Alignment.bottomCenter,
+                                  height: 115,
+                                  child: Icon(Icons.arrow_drop_down, size: 40, color: text_color, weight: 100,)
+                              ) :
+                              const SizedBox(),
+                            ]
+                          )
+                      ),
+                    ) :
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 8),
+                      child:
+                      Text(
+                        game["summary"],
+                        style: const TextStyle(color: Colors.white, fontSize: 14),
+                      ),
+                    ),
+                    (_isTextVisible && descLength > 300) ? const Divider(height: 0, color: Colors.white38,) : const SizedBox(),
+                    Container(
+                      padding: const EdgeInsets.only(left: 5, top: 40),
+                      alignment: Alignment.centerLeft,
+                      child:
+                      Text(
+                        'REVIEWS',
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: text_color,
+                            fontWeight: FontWeight.w600
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 0, color: Colors.white38,),
+                    (reviews != null) ? SizedBox(
+                      height: 300,
+                      child: (reviews.length != 0) ? ListView.builder(
+                      itemCount: reviews.length, // Placeholder for number of reviews
+                      itemBuilder: (context, index) {
+                        int reverseIndex = reviews.length - index - 1;
+                        var iteratorReview = reviews[reverseIndex];
+                        DateTime currentTime = DateTime.now();
+                        Duration timeSince = (iteratorReview["updatedAt"] == null) ? currentTime.difference(DateTime.parse(iteratorReview["dateWritten"])) : currentTime.difference(DateTime.parse(iteratorReview["updatedAt"]));
+                        return ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            padding: EdgeInsets.zero,
+                            shadowColor: Colors.transparent,
+                            surfaceTintColor: Colors.transparent,
+                            splashFactory: NoSplash.splashFactory,
+                            ),
+                            onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReviewScreen(iteratorReview["_id"],'', iteratorReview["textBody"], iteratorReview["displayName"], iteratorReview["rating"], timeSince, iteratorReview["videoGameId"])),
+                              ).then((refresh) {
+                                if(refresh) {
+                                  setState(() {
+                                    game = null;
+                                    reviews = null;
+                                    stats = null;
+                                    descLength = 0;
+                                    companies = '';
+                                    platforms = '';
+                                    built = false;
+                                  });
+                                }
+                            });
+                            },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 10),
+                          decoration: const BoxDecoration(
+                            border: Border(bottom: BorderSide(color: Colors.white38)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: List.generate(iteratorReview["rating"], (index) {
+                                        return const Icon(
+                                            Icons.star,
+                                            size: 20,
+                                            color: Color.fromRGBO(10, 147, 150, 1)
+                                        );
+                                      }),
                                     ),
                                   ),
-                                  Row(
-                                    children: [
-                                      (timeSince.inHours < 1) ? Text(
-                                        'less than an hour ago',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ) : (timeSince.inDays < 1) ?
-                                      Text(
-                                        '${timeSince.inHours} hours ago',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
-                                      ) : Text(
-                                        '${timeSince.inDays} days ago',
-                                        style: TextStyle(
-                                          color: Colors.grey,
-                                        ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Text(
+                                      iteratorReview["displayName"],
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: text_color,
+                                        fontSize: 16,
                                       ),
-                                      (iteratorReview["updatedAt"] != null) ? Text(
-                                        ' (edited)',
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 12
-                                        ),
-                                      ) : SizedBox(),
-                                    ],
+                                    ),
                                   ),
                                 ],
                               ),
-                            )
-                            );
-                          },
-                        ) : Container(
-                            alignment: Alignment.topCenter,
-                            padding: EdgeInsets.only(top: 25),
-                            child: Text(
-                              "No Reviews yet...",
-                              style: TextStyle(
-                                color: text_color,
-                                fontWeight: FontWeight.w600,
+                              const SizedBox(height: 4),
+                              Text(
+                                iteratorReview["textBody"],
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 3,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
                               ),
-                            ),
-                          )) : Container(),
-                      ]
-                  )
+                              Row(
+                                children: [
+                                  (timeSince.inHours < 1) ? const Text(
+                                    'less than an hour ago',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ) : (timeSince.inDays < 1) ?
+                                  Text(
+                                    '${timeSince.inHours} hours ago',
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ) : Text(
+                                    '${timeSince.inDays} days ago',
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  (iteratorReview["updatedAt"] != null) ? const Text(
+                                    ' (edited)',
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12
+                                    ),
+                                  ) : const SizedBox(),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                        );
+                      },
+                    ) : Container(
+                        alignment: Alignment.topCenter,
+                        padding: const EdgeInsets.only(top: 25),
+                        child: Text(
+                          "No Reviews yet...",
+                          style: TextStyle(
+                            color: text_color,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      )) : Container(),
+                  ]
               ) : const Align(
                   alignment: Alignment.center,
                   child: CircularProgressIndicator(

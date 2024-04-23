@@ -83,8 +83,8 @@ class _FriendScreenState extends State<FriendScreen> {
   @override
   Widget build(BuildContext context) {
     if (!built) _getFriendList(widget.userId);
-    Color background_color = Color.fromRGBO(25, 28, 33, 1);
-    Color text_color = Color.fromRGBO(155, 168, 183, 1);
+    Color background_color = const Color.fromRGBO(25, 28, 33, 1);
+    Color text_color = const Color.fromRGBO(155, 168, 183, 1);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -100,16 +100,16 @@ class _FriendScreenState extends State<FriendScreen> {
         actions: [
           (widget.userId == GlobalData.userID)
               ? Container(
-                  margin: EdgeInsets.only(right: 10),
+                  margin: const EdgeInsets.only(right: 10),
                   child: IconButton(
                     style: IconButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(10, 147, 150, 0.5),
-                        padding: EdgeInsets.all(3),
+                        backgroundColor: const Color.fromRGBO(10, 147, 150, 0.5),
+                        padding: const EdgeInsets.all(3),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         minimumSize: Size.zero,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.search,
                       color: Colors.white,
                       size: 30,
@@ -123,12 +123,12 @@ class _FriendScreenState extends State<FriendScreen> {
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                             elevation: 10.0,
-                            backgroundColor: Color.fromRGBO(
+                            backgroundColor: const Color.fromRGBO(
                                 54, 75, 94, 1), // Original background color
                             child: Container(
-                              padding: EdgeInsets.all(20.0),
+                              padding: const EdgeInsets.all(20.0),
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(54, 75, 94,
+                                color: const Color.fromRGBO(54, 75, 94,
                                     1), // Match the background color
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
@@ -136,7 +136,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Search User',
                                     style: TextStyle(
                                       color: Colors.white, // White text color
@@ -145,7 +145,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  SizedBox(height: 10.0),
+                                  const SizedBox(height: 10.0),
                                   TextField(
                                     onChanged: (value) {
                                       searchUserTextField = value;
@@ -154,12 +154,12 @@ class _FriendScreenState extends State<FriendScreen> {
                                       hintText: 'Enter display name',
                                       hintStyle:
                                           TextStyle(color: Colors.grey[400]),
-                                      focusedBorder: UnderlineInputBorder(
+                                      focusedBorder: const UnderlineInputBorder(
                                         borderSide: BorderSide(
                                             color: Colors
                                                 .white), // White underline color
                                       ),
-                                      border: UnderlineInputBorder(
+                                      border: const UnderlineInputBorder(
                                         borderSide: BorderSide(
                                             color: Colors
                                                 .white), // Remove the border
@@ -167,11 +167,11 @@ class _FriendScreenState extends State<FriendScreen> {
                                     ),
                                     cursorColor:
                                         Colors.white, // White cursor color
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color:
                                             Colors.white), // White text color
                                   ),
-                                  SizedBox(height: 20.0),
+                                  const SizedBox(height: 20.0),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -193,7 +193,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                             ),
                                           ),
                                         ),
-                                        child: Text(
+                                        child: const Text(
                                           'Cancel',
                                           style: TextStyle(
                                               color: Colors
@@ -220,7 +220,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                         },
                                         style: ButtonStyle(
                                           backgroundColor: MaterialStateProperty
-                                              .all<Color>(Color.fromRGBO(
+                                              .all<Color>(const Color.fromRGBO(
                                                   10,
                                                   147,
                                                   150,
@@ -233,7 +233,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                             ),
                                           ),
                                         ),
-                                        child: Text(
+                                        child: const Text(
                                           'Search',
                                           style: TextStyle(
                                               color: Colors
@@ -251,18 +251,18 @@ class _FriendScreenState extends State<FriendScreen> {
                     },
                   ),
                 )
-              : SizedBox(),
+              : const SizedBox(),
           (widget.userId == GlobalData.userID)
               ? Container(
-                  margin: EdgeInsets.only(right: 10),
+                  margin: const EdgeInsets.only(right: 10),
                   child: IconButton(
                     style: IconButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(10, 147, 150, 0.5),
-                        padding: EdgeInsets.all(3),
+                        backgroundColor: const Color.fromRGBO(10, 147, 150, 0.5),
+                        padding: const EdgeInsets.all(3),
                         minimumSize: Size.zero,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.add,
                       color: Colors.white,
                       size: 30,
@@ -276,12 +276,12 @@ class _FriendScreenState extends State<FriendScreen> {
                               borderRadius: BorderRadius.circular(15.0),
                             ),
                             elevation: 10.0,
-                            backgroundColor: Color.fromRGBO(
+                            backgroundColor: const Color.fromRGBO(
                                 54, 75, 94, 1), // Original background color
                             child: Container(
-                              padding: EdgeInsets.all(20.0),
+                              padding: const EdgeInsets.all(20.0),
                               decoration: BoxDecoration(
-                                color: Color.fromRGBO(54, 75, 94,
+                                color: const Color.fromRGBO(54, 75, 94,
                                     1), // Match the background color
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
@@ -289,7 +289,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                 mainAxisSize: MainAxisSize.min,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Send Friend Request',
                                     style: TextStyle(
                                       color: Colors.white, // White text color
@@ -298,7 +298,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                     ),
                                     textAlign: TextAlign.center,
                                   ),
-                                  SizedBox(height: 10.0),
+                                  const SizedBox(height: 10.0),
                                   TextField(
                                     onChanged: (value) {
                                       addFriendTextField = value;
@@ -307,12 +307,12 @@ class _FriendScreenState extends State<FriendScreen> {
                                       hintText: 'Enter display name',
                                       hintStyle:
                                           TextStyle(color: Colors.grey[400]),
-                                      focusedBorder: UnderlineInputBorder(
+                                      focusedBorder: const UnderlineInputBorder(
                                         borderSide: BorderSide(
                                             color: Colors
                                                 .white), // White underline color
                                       ),
-                                      border: UnderlineInputBorder(
+                                      border: const UnderlineInputBorder(
                                         borderSide: BorderSide(
                                             color: Colors
                                                 .white), // Remove the border
@@ -320,11 +320,11 @@ class _FriendScreenState extends State<FriendScreen> {
                                     ),
                                     cursorColor:
                                         Colors.white, // White cursor color
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color:
                                             Colors.white), // White text color
                                   ),
-                                  SizedBox(height: 20.0),
+                                  const SizedBox(height: 20.0),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceEvenly,
@@ -346,7 +346,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                             ),
                                           ),
                                         ),
-                                        child: Text(
+                                        child: const Text(
                                           'Cancel',
                                           style: TextStyle(
                                               color: Colors
@@ -360,7 +360,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                         },
                                         style: ButtonStyle(
                                           backgroundColor: MaterialStateProperty
-                                              .all<Color>(Color.fromRGBO(
+                                              .all<Color>(const Color.fromRGBO(
                                                   10,
                                                   147,
                                                   150,
@@ -373,7 +373,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                             ),
                                           ),
                                         ),
-                                        child: Text(
+                                        child: const Text(
                                           'Send',
                                           style: TextStyle(
                                               color: Colors
@@ -391,7 +391,7 @@ class _FriendScreenState extends State<FriendScreen> {
                     },
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
       body: (friends != null)
@@ -411,7 +411,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                 ),
                                 title: Text(
                                   friends[index]["displayName"],
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w600,
                                     letterSpacing: 1,
@@ -428,7 +428,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                                     friends[index]["id"]);
                                               },
                                               style: OutlinedButton.styleFrom(
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                       horizontal: 7,
                                                       vertical: 5),
                                                   minimumSize: Size.zero,
@@ -444,7 +444,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                                     color: text_color,
                                                     fontSize: 12),
                                               )),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 5,
                                           ),
                                           OutlinedButton(
@@ -454,7 +454,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                                 });
                                               },
                                               style: OutlinedButton.styleFrom(
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets.symmetric(
                                                       horizontal: 7,
                                                       vertical: 5),
                                                   minimumSize: Size.zero,
@@ -482,7 +482,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                               splashFactory:
                                                   NoSplash.splashFactory,
                                             ),
-                                            icon: Icon(
+                                            icon: const Icon(
                                               Icons.delete,
                                             ),
                                             onPressed: () {
@@ -492,7 +492,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                                         ["displayName"];
                                               });
                                             })
-                                        : SizedBox(),
+                                        : const SizedBox(),
                                 onTap: () {
                                   (friends[index]["id"] != GlobalData.userID)
                                       ? Navigator.push(
@@ -503,7 +503,7 @@ class _FriendScreenState extends State<FriendScreen> {
                                                       ["displayName"])))
                                       : ();
                                 }),
-                            Divider(
+                            const Divider(
                               color: Colors.black26,
                               height: 0,
                             ),
@@ -512,7 +512,7 @@ class _FriendScreenState extends State<FriendScreen> {
                       })
                   : Container(
                       alignment: Alignment.topCenter,
-                      padding: EdgeInsets.only(top: 25),
+                      padding: const EdgeInsets.only(top: 25),
                       child: Text(
                         "No Friends yet :(",
                         style: TextStyle(
@@ -524,7 +524,7 @@ class _FriendScreenState extends State<FriendScreen> {
           : Container(
               color: background_color,
               alignment: Alignment.center,
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 strokeWidth: 6,
                 color: Color.fromRGBO(10, 147, 150, 0.5),
               )),
