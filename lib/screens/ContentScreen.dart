@@ -1050,56 +1050,66 @@ class _ContentScreenState extends State<ContentScreen> {
         ),
 
         /// Profile page
-Container(
-  child: Column(
-    children: [
-      AppBar(
-        toolbarHeight: 70,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        backgroundColor: Colors.black,
-        actions: [
-          TextButton(
-            onPressed: () {
-              showModalBottomSheet(
-                isScrollControlled: true,
-                context: context,
-                builder: (BuildContext context) {
-                  return StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                      // API integration for settings page
-                      return SettingsPage();
-                    },
-                  );
+Scaffold(
+  backgroundColor: Color.fromRGBO(25, 28, 33, 1),
+  appBar: AppBar(
+    toolbarHeight: 70,
+    automaticallyImplyLeading: false,
+    centerTitle: true,
+    backgroundColor: Colors.black,
+    actions: [
+      TextButton(
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (BuildContext context) {
+              return StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  // API integration for settings page
+                  return SettingsPage();
                 },
               );
             },
-            style: TextButton.styleFrom(
-              backgroundColor: Colors.transparent,
-              splashFactory: NoSplash.splashFactory,
-            ),
-            child: Icon(Icons.settings, color: text_color, size: 30,)
-          )
-        ],
-        leading: GestureDetector(
-          onTap: () {
-            // Add your notifications icon onPressed functionality here
-            // Navigate to the notification page
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationScreen()),
-            );
-          },
-          child: Icon(Icons.notifications, color: text_color, size: 30,),
+          );
+        },
+        style: TextButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          splashFactory: NoSplash.splashFactory,
         ),
-        title: Column(
-          children: [
-            Text(GlobalData.displayName, style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
-          ]
+        child: Icon(Icons.settings, color: Colors.white, size: 30,)
+      )
+    ],
+    leading: GestureDetector(
+      onTap: () {
+        // Add your notifications icon onPressed functionality here
+        // Navigate to the notification page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => NotificationScreen()),
+        );
+      },
+      child: Icon(Icons.notifications, color: Colors.white, size: 30,),
+    ),
+    title: Column(
+      children: [
+        Text(GlobalData.displayName, style: TextStyle(fontWeight: FontWeight.w800, color: Colors.white),),
+      ]
+    ),
+  ),
+  body: ListView(
+    children: [
+      SizedBox(height: 20), // Add space between app bar and icon
+      Center(
+        child: Icon(
+          Icons.person_outline,
+          size: 100,
+          color: Colors.grey[300], // Adjust color as needed
         ),
       ),
+      Divider(color: Colors.black26, height: 0,),
       ListTile(
-        leading: Icon(Icons.people, color: text_color), // Set icon color to white
+        leading: Icon(Icons.people, color: Colors.white), // Set icon color to white
         title: Padding(padding: EdgeInsets.only(left: 5), child:
         Text('Friends', style: TextStyle(
           color: Colors.white,
@@ -1114,7 +1124,7 @@ Container(
       ),
       Divider(color: Colors.black26, height: 0,),
       ListTile(
-        leading: Icon(Icons.rate_review, color: text_color), // Set icon color to white
+        leading: Icon(Icons.rate_review, color: Colors.white), // Set icon color to white
         title: Padding(padding: EdgeInsets.only(left: 5), child:
         Text('Your Activity', style: TextStyle(
           color: Colors.white,
@@ -1129,8 +1139,8 @@ Container(
         },
       ),
       Divider(color: Colors.black26, height: 0,),
-    ListTile(
-         leading: Icon(Icons.games, color: text_color), // Set icon color to white
+      ListTile(
+        leading: Icon(Icons.games, color: Colors.white), // Set icon color to white
         title: Padding(padding: EdgeInsets.only(left: 5), child:
         Text('Game List', style: TextStyle(
           color: Colors.white,
@@ -1145,10 +1155,16 @@ Container(
         },
       ),
       Divider(color: Colors.black26, height: 0,),
-    ],
-      // Add more buttons as needed
+      SizedBox(height: 20), // Add space between app bar and icon
+      SizedBox(
+        child: Image.asset('assets/images/Capture21.PNG', height: 210),
+          // Adjust color as needed
         ),
+    ],
+    // Add more buttons as needed
+  ),
 ),
+
       ][currentPageIndex],
     ));
   }

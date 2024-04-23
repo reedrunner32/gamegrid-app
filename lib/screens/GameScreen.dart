@@ -182,6 +182,23 @@ class _GameScreenState extends State<GameScreen> {
 
   }
 
+
+  String _formatRating(dynamic rating) {
+  if (rating is double) {
+    return rating.toStringAsFixed(2);
+  } else if (rating is int) {
+    return rating.toString(); // or format as needed
+  } else {
+    throw ArgumentError('Rating must be an int or a double.');
+  }
+}
+
+
+
+
+
+
+
   bool built = false;
 
   @override
@@ -432,29 +449,40 @@ class _GameScreenState extends State<GameScreen> {
                                   ),
                                 )
                                 ),
-                                const SizedBox(height: 15,),
-                                SizedBox(width: 200, child:
-                                (stats.runtimeType != String) ? RichText(
-                                  text: TextSpan(
-                                      text: 'Rating: ',
-                                      style: TextStyle(color: text_color),
-                                      children: [
-                                        (stats["rating"] != null) ? TextSpan(
-                                          text: '${stats["rating"]} / 5',
-                                          style: TextStyle(fontWeight: FontWeight.w700),
-                                        ) :
-                                        TextSpan(
-                                          text: 'Unrated',
-                                          style: TextStyle(fontWeight: FontWeight.w700),
+                                const SizedBox(
+                                height: 15,
+                              ),
+                              SizedBox(
+                                width: 200,
+                                child: (stats.runtimeType != String)
+                                    ? RichText(
+                                        text: TextSpan(
+                                          text: 'Rating: ',
+                                          style: TextStyle(color: text_color),
+                                          children: [
+                                            (stats["rating"] != null)
+                                                ? TextSpan(
+                                                    text: '${_formatRating(stats["rating"])} / 5',
+                                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                                  )
+                                                : TextSpan(
+                                                    text: 'Unrated',
+                                                    style: TextStyle(fontWeight: FontWeight.w700),
+                                                  ),
+                                          ],
                                         ),
-                                      ]
-                                  ),
-                                ) : SizedBox()
-                                ),
+                                      )
+                                    : SizedBox(),
+                              ),
                               ],
                             ),
                           ],
                         ),
+
+
+
+
+
                         Container(
                           padding: EdgeInsets.only(left: 5, top: 30),
                           alignment: Alignment.centerLeft,
