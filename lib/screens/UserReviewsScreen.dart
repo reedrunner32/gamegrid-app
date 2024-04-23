@@ -172,23 +172,34 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                             ),
                           ),
                           SizedBox(height: 6),
-                          (timeSince.inHours < 1) ? Text(
-                            'less than an hour ago',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ) : (timeSince.inDays < 1) ?
-                          Text(
-                            '${timeSince.inHours} hours ago',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ) : Text(
-                            '${timeSince.inDays} days ago',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          )
+                          Row(
+                            children: [
+                              (timeSince.inHours < 1) ? Text(
+                                'less than an hour ago',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ) : (timeSince.inDays < 1) ?
+                              Text(
+                                '${timeSince.inHours} hours ago',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ) : Text(
+                                '${timeSince.inDays} days ago',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              (iteratorReview["updatedAt"] != null) ? Text(
+                                ' (edited)',
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12
+                                ),
+                              ) : SizedBox(),
+                            ],
+                          ),
                         ],
                       ),
                     )

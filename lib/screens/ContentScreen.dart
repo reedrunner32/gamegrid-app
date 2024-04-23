@@ -829,7 +829,7 @@ class _ContentScreenState extends State<ContentScreen> {
           itemBuilder: (context, index) {
             var iteratorReview = recentReview[index];
             DateTime currentTime = DateTime.now();
-            Duration timeSince = currentTime.difference(DateTime.parse(iteratorReview["dateWritten"]));
+            Duration timeSince = (iteratorReview["updatedAt"] == null) ? currentTime.difference(DateTime.parse(iteratorReview["dateWritten"])) : currentTime.difference(DateTime.parse(iteratorReview["updatedAt"]));
             return ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.transparent,
@@ -944,23 +944,35 @@ class _ContentScreenState extends State<ContentScreen> {
                     ),
                   ),
                   SizedBox(height: 6),
-                  (timeSince.inHours < 1) ? Text(
-                    'less than an hour ago',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ) : (timeSince.inDays < 1) ?
-                  Text(
-                    '${timeSince.inHours} hours ago',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ) : Text(
-                    '${timeSince.inDays} days ago',
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),
-                  )
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      (timeSince.inHours < 1) ? Text(
+                        'less than an hour ago',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ) : (timeSince.inDays < 1) ?
+                      Text(
+                        '${timeSince.inHours} hours ago',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ) : Text(
+                        '${timeSince.inDays} days ago',
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                      (iteratorReview["updatedAt"] != null) ? Text(
+                        ' (edited)',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12
+                        ),
+                      ) : SizedBox(),
+                    ],
+                  ),
                 ],
               ),
             )
