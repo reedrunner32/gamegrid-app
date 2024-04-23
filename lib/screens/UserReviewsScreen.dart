@@ -50,7 +50,7 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
       ),
       body: (profileReviews != null) ? Container(
         color: background_color,
-        child:
+        child: (profileReviews.length != 0) ?
         ListView.builder(
               itemCount: profileReviews.length, // Placeholder for number of reviews
               itemBuilder: (context, index) {
@@ -194,7 +194,17 @@ class _UserReviewsScreenState extends State<UserReviewsScreen> {
                     )
                 );
               }
+          ) : Container(
+          alignment: Alignment.topCenter,
+          padding: EdgeInsets.only(top: 25),
+          child: Text(
+            "No Reviews yet...",
+            style: TextStyle(
+              color: text_color,
+              fontWeight: FontWeight.w600,
+            ),
           ),
+        ),
           ) : Container(
           color: background_color,
           alignment: Alignment.center,

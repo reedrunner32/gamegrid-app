@@ -16,7 +16,6 @@ class FriendScreen extends StatefulWidget {
 }
 
 class _FriendScreenState extends State<FriendScreen> {
-
   void displayNotif(String message) {
     ElegantNotification.info(
       width: 360,
@@ -50,15 +49,17 @@ class _FriendScreenState extends State<FriendScreen> {
 
   String addFriendTextField = '';
   Future<void> _sendFriendRequest() async {
+    if(addFriendTextField == GlobalData.displayName || addFriendTextField == '') return;
     var userData = await ContentData.searchUsers(addFriendTextField);
 
-    if(userData.runtimeType == String) {
+    if (userData.runtimeType == String) {
       displayNotif("User does not exist");
       return; //fetch error
     }
 
     String friendId = userData["id"];
-    String retMessage = await ContentData.sendFriendRequest(friendId); //return message
+    String retMessage =
+        await ContentData.sendFriendRequest(friendId); //return message
     displayNotif(retMessage);
   }
 
@@ -66,21 +67,22 @@ class _FriendScreenState extends State<FriendScreen> {
     var message = await ContentData.removeFriend(friendId);
 
     int i;
-    for(i = 0; i<friends.length; i++) {
-      if(friends[i]["id"] == friendId) break;
+    for (i = 0; i < friends.length; i++) {
+      if (friends[i]["id"] == friendId) break;
     }
     setState(() {
       friends.removeAt(i);
     });
   }
 
+  String searchUserTextField = '';
   String confirmDeleteName = '';
 
   bool built = false;
 
   @override
   Widget build(BuildContext context) {
-    if(!built) _getFriendList(widget.userId);
+    if (!built) _getFriendList(widget.userId);
     Color background_color = Color.fromRGBO(25, 28, 33, 1);
     Color text_color = Color.fromRGBO(155, 168, 183, 1);
     return Scaffold(
@@ -96,213 +98,436 @@ class _FriendScreenState extends State<FriendScreen> {
         foregroundColor: Colors.white,
         backgroundColor: Colors.black,
         actions: [
-          (widget.userId == GlobalData.userID) ? Container(
-          margin: EdgeInsets.only(right: 10),
-          child:
-          IconButton(
-            style: IconButton.styleFrom(
-              backgroundColor: Color.fromRGBO(10, 147, 150, 0.5),
-              padding: EdgeInsets.all(3),
-              minimumSize: Size.zero,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
-            ),
-            icon: Icon(Icons.add, color: Colors.white, size: 30,), // Set icon color to white
-            onPressed: () {
-              showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      elevation: 10.0,
-      backgroundColor: Color.fromRGBO(54, 75, 94, 1), // Original background color
-      child: Container(
-        padding: EdgeInsets.all(20.0),
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(54, 75, 94, 1), // Match the background color
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Send Friend Request',
-              style: TextStyle(
-                color: Colors.white, // White text color
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 20.0),
-            TextField(
-  onChanged: (value) {
-    addFriendTextField = value;
-  },
-  decoration: InputDecoration(
-    hintText: 'Enter display name',
-    hintStyle: TextStyle(color: Colors.grey[400]),
-    focusedBorder: UnderlineInputBorder(
-      borderSide: BorderSide(color: Colors.white), // White underline color
-    ),
-    border: UnderlineInputBorder(
-      borderSide: BorderSide(color: Colors.white), // Remove the border
-    ),
-  ),
-  cursorColor: Colors.white, // White cursor color
-  style: TextStyle(color: Colors.white), // White text color
-),
-            SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.grey), // Grey button color
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
+          (widget.userId == GlobalData.userID)
+              ? Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: IconButton(
+                    style: IconButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(10, 147, 150, 0.5),
+                        padding: EdgeInsets.all(3),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        minimumSize: Size.zero,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    icon: Icon(
+                      Icons.search,
+                      color: Colors.white,
+                      size: 30,
+                    ), // Set icon color to white
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            elevation: 10.0,
+                            backgroundColor: Color.fromRGBO(
+                                54, 75, 94, 1), // Original background color
+                            child: Container(
+                              padding: EdgeInsets.all(20.0),
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(54, 75, 94,
+                                    1), // Match the background color
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    'Search User',
+                                    style: TextStyle(
+                                      color: Colors.white, // White text color
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  TextField(
+                                    onChanged: (value) {
+                                      searchUserTextField = value;
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter display name',
+                                      hintStyle:
+                                          TextStyle(color: Colors.grey[400]),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors
+                                                .white), // White underline color
+                                      ),
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors
+                                                .white), // Remove the border
+                                      ),
+                                    ),
+                                    cursorColor:
+                                        Colors.white, // White cursor color
+                                    style: TextStyle(
+                                        color:
+                                            Colors.white), // White text color
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          searchUserTextField = '';
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty
+                                              .all<Color>(Colors
+                                                  .grey), // Grey button color
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .white), // White text color
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          if(searchUserTextField == GlobalData.displayName || searchUserTextField == '') {
+                                            Navigator.pop(context);
+                                            return;
+                                          }
+                                          var data = await ContentData.searchUsers(searchUserTextField);
+                                          if(data.runtimeType == String) {
+                                            displayNotif("User does not exist");
+                                          }
+                                          else {
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ProfileScreen(data["displayName"]))
+                                            );
+                                          }
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty
+                                              .all<Color>(Color.fromRGBO(
+                                                  10,
+                                                  147,
+                                                  150,
+                                                  1)), // Specified button color
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Search',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .white), // White text color
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
-                  child: Text(
-                    'Cancel',
-                    style: TextStyle(color: Colors.white), // White text color
+                )
+              : SizedBox(),
+          (widget.userId == GlobalData.userID)
+              ? Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: IconButton(
+                    style: IconButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(10, 147, 150, 0.5),
+                        padding: EdgeInsets.all(3),
+                        minimumSize: Size.zero,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    icon: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                      size: 30,
+                    ), // Set icon color to white
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            elevation: 10.0,
+                            backgroundColor: Color.fromRGBO(
+                                54, 75, 94, 1), // Original background color
+                            child: Container(
+                              padding: EdgeInsets.all(20.0),
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(54, 75, 94,
+                                    1), // Match the background color
+                                borderRadius: BorderRadius.circular(15.0),
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text(
+                                    'Send Friend Request',
+                                    style: TextStyle(
+                                      color: Colors.white, // White text color
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20.0,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: 10.0),
+                                  TextField(
+                                    onChanged: (value) {
+                                      addFriendTextField = value;
+                                    },
+                                    decoration: InputDecoration(
+                                      hintText: 'Enter display name',
+                                      hintStyle:
+                                          TextStyle(color: Colors.grey[400]),
+                                      focusedBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors
+                                                .white), // White underline color
+                                      ),
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors
+                                                .white), // Remove the border
+                                      ),
+                                    ),
+                                    cursorColor:
+                                        Colors.white, // White cursor color
+                                    style: TextStyle(
+                                        color:
+                                            Colors.white), // White text color
+                                  ),
+                                  SizedBox(height: 20.0),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          addFriendTextField = '';
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty
+                                              .all<Color>(Colors
+                                                  .grey), // Grey button color
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Cancel',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .white), // White text color
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          _sendFriendRequest();
+                                          Navigator.of(context).pop();
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty
+                                              .all<Color>(Color.fromRGBO(
+                                                  10,
+                                                  147,
+                                                  150,
+                                                  1)), // Specified button color
+                                          shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8.0),
+                                            ),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          'Send',
+                                          style: TextStyle(
+                                              color: Colors
+                                                  .white), // White text color
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _sendFriendRequest();
-                    Navigator.of(context).pop();
-                  },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Color.fromRGBO(10, 147, 150, 1)), // Specified button color
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
-                  child: Text(
-                    'Send',
-                    style: TextStyle(color: Colors.white), // White text color
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  },
-);
-
-
-            },
-          ),
-          ) : SizedBox()
+                )
+              : SizedBox()
         ],
       ),
-      body: (friends != null) ? Container(
-        color: background_color,
-      child:
-      ListView.builder(
-        itemCount: friends.length, // Placeholder for number of reviews
-        itemBuilder: (context, index) {
-          return Column(
-            children: [
-              ListTile(
-                leading: Icon(Icons.person, color: text_color,),
-                title: Text(
-                  friends[index]["displayName"],
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1,
-                  ),
-                ),
-                trailing: (confirmDeleteName == friends[index]["displayName"]) ? Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    OutlinedButton(
-                        onPressed: () {
-                          _removeFriend(friends[index]["id"]);
-                        },
-                        style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(color: text_color)
-                            )
+      body: (friends != null)
+          ? Container(
+              color: background_color,
+              child: (friends.length != 0)
+                  ? ListView.builder(
+                      itemCount:
+                          friends.length, // Placeholder for number of reviews
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            ListTile(
+                                leading: Icon(
+                                  Icons.person,
+                                  color: text_color,
+                                ),
+                                title: Text(
+                                  friends[index]["displayName"],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1,
+                                  ),
+                                ),
+                                trailing: (confirmDeleteName ==
+                                        friends[index]["displayName"])
+                                    ? Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          OutlinedButton(
+                                              onPressed: () {
+                                                _removeFriend(
+                                                    friends[index]["id"]);
+                                              },
+                                              style: OutlinedButton.styleFrom(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 7,
+                                                      vertical: 5),
+                                                  minimumSize: Size.zero,
+                                                  tapTargetSize:
+                                                      MaterialTapTargetSize
+                                                          .shrinkWrap,
+                                                  shape: RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                          color: text_color))),
+                                              child: Text(
+                                                'CONFIRM',
+                                                style: TextStyle(
+                                                    color: text_color,
+                                                    fontSize: 12),
+                                              )),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          OutlinedButton(
+                                              onPressed: () {
+                                                setState(() {
+                                                  confirmDeleteName = '';
+                                                });
+                                              },
+                                              style: OutlinedButton.styleFrom(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 7,
+                                                      vertical: 5),
+                                                  minimumSize: Size.zero,
+                                                  tapTargetSize:
+                                                      MaterialTapTargetSize
+                                                          .shrinkWrap,
+                                                  shape: RoundedRectangleBorder(
+                                                      side: BorderSide(
+                                                          color: text_color))),
+                                              child: Text(
+                                                'NO',
+                                                style: TextStyle(
+                                                    color: text_color,
+                                                    fontSize: 12),
+                                              ))
+                                        ],
+                                      )
+                                    : (widget.userId == GlobalData.userID)
+                                        ? IconButton(
+                                            style: IconButton.styleFrom(
+                                              padding: EdgeInsets.zero,
+                                              tapTargetSize:
+                                                  MaterialTapTargetSize
+                                                      .shrinkWrap,
+                                              splashFactory:
+                                                  NoSplash.splashFactory,
+                                            ),
+                                            icon: Icon(
+                                              Icons.delete,
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                confirmDeleteName =
+                                                    friends[index]
+                                                        ["displayName"];
+                                              });
+                                            })
+                                        : SizedBox(),
+                                onTap: () {
+                                  (friends[index]["id"] != GlobalData.userID)
+                                      ? Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProfileScreen(friends[index]
+                                                      ["displayName"])))
+                                      : ();
+                                }),
+                            Divider(
+                              color: Colors.black26,
+                              height: 0,
+                            ),
+                          ],
+                        );
+                      })
+                  : Container(
+                      alignment: Alignment.topCenter,
+                      padding: EdgeInsets.only(top: 25),
+                      child: Text(
+                        "No Friends yet :(",
+                        style: TextStyle(
+                          color: text_color,
+                          fontWeight: FontWeight.w600,
                         ),
-                        child: Text(
-                          'CONFIRM',
-                          style: TextStyle(
-                              color: text_color,
-                              fontSize: 12
-                          ),
-                        )
-                    ),
-                    SizedBox(width: 5,),
-                    OutlinedButton(
-                        onPressed: () {
-                          setState(() {
-                            confirmDeleteName = '';
-                          });
-                        },
-                        style: OutlinedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 7, vertical: 5),
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            shape: RoundedRectangleBorder(
-                                side: BorderSide(color: text_color)
-                            )
-                        ),
-                        child: Text(
-                          'NO',
-                          style: TextStyle(
-                              color: text_color,
-                              fontSize: 12
-                          ),
-                        )
-                    )
-                  ],
-                ) : (widget.userId == GlobalData.userID) ? IconButton(
-                    style: IconButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      splashFactory: NoSplash.splashFactory,
-                    ),
-                    icon: Icon(Icons.delete,),
-                    onPressed: () {
-                      setState(() {
-                        confirmDeleteName = friends[index]["displayName"];
-                      });
-                    }
-                ) : SizedBox(),
-                onTap: () {
-                  (friends[index]["id"] != GlobalData.userID) ? Navigator.push(context, MaterialPageRoute(builder:
-                    (context) => ProfileScreen(friends[index]["displayName"]))) : ();
-                }
-              ),
-              Divider(color: Colors.black26, height: 0,),
-            ],
-          );
-        }
-      )) : Container(
-          color: background_color,
-          alignment: Alignment.center,
-          child: CircularProgressIndicator(
-            strokeWidth: 6,
-            color: Color.fromRGBO(10, 147, 150, 0.5),
-          )
-      ),
+                      ),
+                    ))
+          : Container(
+              color: background_color,
+              alignment: Alignment.center,
+              child: CircularProgressIndicator(
+                strokeWidth: 6,
+                color: Color.fromRGBO(10, 147, 150, 0.5),
+              )),
     );
   }
 }
