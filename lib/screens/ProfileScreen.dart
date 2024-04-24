@@ -19,8 +19,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _getUser(String displayName) async {
     var data = await ContentData.searchUsers(displayName);
 
-    if(data.runtimeType == String) return; // fetch error
-
     setState(() {
       user = data;
       built = true;
@@ -34,6 +32,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if(!built) _getUser(widget.friendName);
     Color background_color = const Color.fromRGBO(25, 28, 33, 1);
     Color text_color = const Color.fromRGBO(155, 168, 183, 1);
+
+    if(user.runtimeType == String) Navigator.pop(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(

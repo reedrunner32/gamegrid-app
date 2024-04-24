@@ -14,6 +14,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   var requests;
   void _getReceivedRequest() async {
     var data = await ContentData.fetchFriendRequest();
+
     setState(() {
       requests = data;
       built = true;

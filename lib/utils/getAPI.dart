@@ -281,6 +281,12 @@ class ContentData {
     var decoded = json.decode(response.body);
 
     var receivedList = decoded["receivedRequests"];
+
+    // null catcher
+    for(int i = 0; i<receivedList.length; i++) {
+      if(receivedList[i] == null) receivedList.removeAt(i);
+    }
+
     if (response.statusCode == 200) {
       return receivedList;
     }
@@ -365,6 +371,12 @@ class ContentData {
     var decoded = json.decode(response.body);
 
     var receivedList = decoded["friends"];
+
+    // null catcher
+    for(int i = 0; i<receivedList.length; i++) {
+      if(receivedList[i] == null) receivedList.removeAt(i);
+    }
+
     if (response.statusCode == 200) {
       return receivedList;
     }
