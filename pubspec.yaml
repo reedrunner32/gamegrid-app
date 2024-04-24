@@ -67,10 +67,8 @@ flutter:
     - assets/images/
     - assets/images/helldivers.jpg
     - assets/images/apex.jpg
-    - assets/images/testwallpaper.jpg
     - assets/images/mw2.jpg
-    - assets/images/helldivers-rescaled.jpg
-    - assets/images/Capture21.PNG
+    - assets/images/Capture21ad.PNG
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
