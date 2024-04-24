@@ -128,7 +128,7 @@ class ContentData {
   }
 
   static Future<List<GameCardRelease>> fetchNewReleaseGameCards(int limit, int offset) async {
-    String payload = '{"limit":"$limit","offset":"$offset","genre":"","search":""}';
+    String payload = '{"limit":"$limit","offset":"$offset","genre":"","search":"","newReleases":true}';
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/games';
 
     final response = await CardsData.postJson(url, payload);
