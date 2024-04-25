@@ -125,21 +125,27 @@ class _GameScreenState extends State<GameScreen> {
     descLength = data["summary"].length;
     String tempCompanies = '';
     var gameCompanies = data["involved_companies"];
-    for(int i = 0; i<gameCompanies.length; i++) {
-      if(i != gameCompanies.length - 1) {
-        tempCompanies += '${data["involved_companies"][i]["company"]["name"]}, ';
-      } else {
-        tempCompanies += '${data["involved_companies"][i]["company"]["name"]}';
+    if(gameCompanies != null) {
+      for (int i = 0; i < gameCompanies.length; i++) {
+        if (i != gameCompanies.length - 1) {
+          tempCompanies +=
+          '${data["involved_companies"][i]["company"]["name"]}, ';
+        } else {
+          tempCompanies +=
+          '${data["involved_companies"][i]["company"]["name"]}';
+        }
       }
     }
 
     var gamePlatforms = data["platforms"];
     String tempPlatforms = '';
-    for(int i = 0; i<gamePlatforms.length; i++) {
-      if(i != gamePlatforms.length - 1) {
-        tempPlatforms += '${data["platforms"][i]["name"]}, ';
-      } else {
-        tempPlatforms += '${data["platforms"][i]["name"]}';
+    if(gamePlatforms != null) {
+      for (int i = 0; i < gamePlatforms.length; i++) {
+        if (i != gamePlatforms.length - 1) {
+          tempPlatforms += '${data["platforms"][i]["name"]}, ';
+        } else {
+          tempPlatforms += '${data["platforms"][i]["name"]}';
+        }
       }
     }
 
@@ -461,7 +467,7 @@ class _GameScreenState extends State<GameScreen> {
                                       text: 'Rating: ',
                                       style: TextStyle(color: text_color),
                                       children: [
-                                        (stats["rating"] != null)
+                                        (stats["rating"] != null && stats["rating"] != 0)
                                             ? TextSpan(
                                                 text: '${_formatRating(stats["rating"])} / 5',
                                                 style: const TextStyle(fontWeight: FontWeight.w700),

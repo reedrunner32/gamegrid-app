@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_sliding_up_panel/flutter_sliding_up_panel.dart';
 import 'dart:convert';
@@ -34,7 +36,7 @@ class MainPage extends StatefulWidget {
   _MainPageState createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin{
+class _MainPageState extends State<MainPage> with TickerProviderStateMixin{
 
   ///The controller of sliding up panel
   SlidingUpPanelController panelController = SlidingUpPanelController();
@@ -51,6 +53,10 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
   String emailR = '';
   String usernameR = '';
   String passwordR = '';
+
+  final TextEditingController _emailRController = TextEditingController();
+  final TextEditingController _userRController = TextEditingController();
+  final TextEditingController _passRController = TextEditingController();
 
   void displayResetPassword() {
     ElegantNotification.info(
@@ -173,6 +179,9 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     }
     if( error == '' )
     {
+      _emailRController.clear();
+      _userRController.clear();
+      _passRController.clear();
       ElegantNotification.success(
         width: 360,
         stackedOptions: StackedOptions(
@@ -197,9 +206,54 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
     }
   }
 
+  late AnimationController _controller;
+  late Animation<double> _fadeInAnimation;
+  late Animation<double> _fadeOutAnimation;
+  int _currentImageIndex = 0;
+  final List<String> _imagePaths = ['assets/images/helldivers.jpg',
+    'assets/images/Risk-of-Rain-2.png',
+    'assets/images/cyberpunk.jpg',
+    'assets/images/spiderman2.jpg',
+    'assets/images/supersmashult.jpg',
+    'assets/images/Falllout4.png',
+    'assets/images/balatro.png'
+  ]; // Paths to your images
+  late Timer _timer;
+
+  bool start = false;
+
+  void _startAnimation() {
+    setState(() {
+      _currentImageIndex = (start) ? (_currentImageIndex + 1) % _imagePaths.length : 0;
+      start = true;
+    });
+    _controller.reset();
+    _controller.forward();
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    _fadeOutAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(_controller);
+    _fadeInAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(_controller);
+
+    // Start the timer to switch images every 5 seconds
+    _timer = Timer.periodic(const Duration(seconds: 6), (timer) {
+      _startAnimation();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _timer.cancel(); // Cancel the timer to avoid memory leaks
+    super.dispose();
   }
 
   @override
@@ -221,9 +275,17 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                 SizedBox(
                   height: size.height/2.1,
                   child:
-                  Image.asset(
-                    'assets/images/helldivers.jpg',
-                    fit: BoxFit.fitHeight,
+                  FadeTransition(
+                    opacity: _fadeOutAnimation,
+                    child: Image.asset(_imagePaths[_currentImageIndex], fit: BoxFit.fitHeight,), // Current image
+                  ),
+                ),
+                SizedBox(
+                  height: size.height/2.1,
+                  child:
+                  FadeTransition(
+                    opacity: _fadeInAnimation,
+                    child: Image.asset(_imagePaths[(_currentImageIndex + 1) % _imagePaths.length], fit: BoxFit.fitHeight,), // Next image
                   ),
                 ),
                 Container(
@@ -683,6 +745,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         height: 45,
                                         child:
                                         TextField (
+                                          controller: _emailRController,
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: background_color,
@@ -713,6 +776,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         height: 45,
                                         child:
                                         TextField (
+                                          controller: _userRController,
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: background_color,
@@ -743,6 +807,7 @@ class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin
                                         height: 45,
                                         child:
                                         TextField (
+                                          controller: _passRController,
                                           decoration: InputDecoration(
                                             filled: true,
                                             fillColor: background_color,
