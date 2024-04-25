@@ -109,7 +109,7 @@ class GameCardRelease {
 class ContentData {
 
   static Future<List<GameCard>> fetchGameCards(int limit, int offset, String search) async {
-    String payload = '{"limit":"$limit","offset":"$offset","genre":"","search":"$search"}';
+    String payload = '{"limit":$limit,"offset":$offset,"genre":"","search":"$search"}';
     String url = 'https://g26-big-project-6a388f7e71aa.herokuapp.com/api/games';
 
     final response = await CardsData.postJson(url, payload);
@@ -119,6 +119,7 @@ class ContentData {
     List<GameCard> gameList = [];
 
     for(int i = 0; i<decoded.length; i++){
+      if(decoded[i]['cover'] == null) continue;
       String formattedUrl = 'https:${decoded[i]['cover']['url'].replaceAll('t_thumb', 't_cover_big')}';
       String gameId = '${decoded[i]['id']}';
       gameList.add(GameCard(formattedUrl, gameId));

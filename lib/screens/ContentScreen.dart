@@ -26,7 +26,7 @@ class _ContentScreenState extends State<ContentScreen> {
   Color text_color = const Color.fromRGBO(155, 168, 183, 1);
   Color button_color = const Color.fromRGBO(10, 147, 150, 1);
 
-  final _debouncer = Debouncer(milliseconds: 300);
+  final _debouncer = Debouncer(milliseconds: 400);
 
   int currentPageIndex = 0;
 
@@ -338,6 +338,7 @@ class _ContentScreenState extends State<ContentScreen> {
                                             return;
                                           }
                                           _changePassword(newPassword);
+                                          Navigator.pop(context);
                                         },
                                         style: TextButton.styleFrom(
                                           backgroundColor: Colors.transparent,
