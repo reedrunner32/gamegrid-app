@@ -1,16 +1,17 @@
-# gamegrid
+# GameGrid
 
-A game review app.
+A game review app that allows users to create, edit, and delete reviews for games from a variety of platforms such as PC, Xbox, Nintendo, and PlayStation.
 
-## Getting Started
+## Screenshots
 
-This project is a starting point for a Flutter application.
+<img src="https://github.com/reedrunner32/gamegrid-app/blob/master/common/gameoptions.png" width="330"> <img src="https://github.com/reedrunner32/gamegrid-app/blob/master/common/searchscreen.png" width="330"> <img src="https://github.com/reedrunner32/gamegrid-app/blob/master/common/recentreviews.png" width="330">
 
-A few resources to get you started if this is your first Flutter project:
+## Credits
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Special thanks to my amazing team members 
+* [Manaf Naceur](https://github.com/buballooo) (Project Manager / Collaborator)
+* Mahdy Ferhat (API)
+* Omory Rowe (API)
+* Jose Sanchez (Database)
+* [Julian Collazo](https://github.com/JulCo04) (Frontend Web)
+* Cristian Suarez-Lores (Frontend Web)
